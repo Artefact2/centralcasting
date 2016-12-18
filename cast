@@ -1,0 +1,16 @@
+#!/usr/bin/env php
+<?php
+
+require __DIR__.'/inc.php';
+
+if($argc !== 2 || !file_exists($argv[1])) {
+	fprintf(STDERR, "Usage: %s <script>\n", $argv[0]);
+	die(1);
+}
+
+$s = new State();
+$s->char = new Character();
+
+require $argv[1];
+
+PrintCharacterEntries($s->char);
