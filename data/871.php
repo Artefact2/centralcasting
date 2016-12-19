@@ -1,6 +1,6 @@
 <?php
 
-Table($s, "871A", "", Roll(1, 20), [
+Table($s, "871A", "", Roll(20), [
 	"1" => "Commander of the",
 	"2" => "Custodian of the",
 	"3" => "Grim Sentinel of the",
@@ -23,7 +23,7 @@ Table($s, "871A", "", Roll(1, 20), [
 	"20" => "Watchwarder of the",
 ]);
 
-Table($s, "871B", "", Roll(1, 20), [
+Table($s, "871B", "", Roll(20), [
 	"1-10" => "",
 	"11" => "Highland",
 	"12" => "Lowland",
@@ -37,7 +37,7 @@ Table($s, "871B", "", Roll(1, 20), [
 	"20" => "Frozen",
 ]);
 
-Table($s, "871C", "", Roll(1, 20), [
+Table($s, "871C", "", Roll(20), [
 	"1" => "Coasts",
 	"2" => "Creation",
 	"3" => "Domain",

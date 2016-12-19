@@ -49,7 +49,12 @@ function Table(State $s, $id, $name, int $roll, array $entries) {
 	assert(false);
 }
 
-function Roll($n, $sides) {
+function Roll($n, $sides = null) {
+	if($sides === null) {
+		$sides = $n;
+		$n = 1;
+	}
+	
 	$r = 0;
 
 	assert($n >= 0);

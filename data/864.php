@@ -1,7 +1,7 @@
 <?php
 
 $table = function($roll = null) use(&$s, &$table) {
-	Table($s, "864", "Deity", $roll ?? (Roll(1, 20) + $s->char->CuMod), [
+	Table($s, "864", "Deity", $roll ?? (Roll(20) + $s->char->CuMod), [
 		"-1" => "Ancestor worship",
 		"2" => "Beast gods",
 		"3" => "Hunting god",
@@ -15,7 +15,7 @@ $table = function($roll = null) use(&$s, &$table) {
 		"14" => "Storm (air) god",
 		"15" => [ "Evil god (see below)", function() use(&$s, &$table) {
 				do {
-					$reroll = Roll(1, 20) + $s->char->CuMod;
+					$reroll = Roll(20) + $s->char->CuMod;
 				} while($reroll === 15);
 				$table($reroll);
 			}],
@@ -29,7 +29,7 @@ $table = function($roll = null) use(&$s, &$table) {
 		"23" => "Night goddess",
 		"24" => "God of thieves",
 		"25-" => [ "Decadent god (see below)", function() use(&$s, &$table) {
-				$reroll = Roll(1, 20) + $s->char->CuMod;
+				$reroll = Roll(20) + $s->char->CuMod;
 				if($reroll >= 25) return "Disguised evil god";
 				else $table($reroll);
 			}],
