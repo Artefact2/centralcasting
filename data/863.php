@@ -16,9 +16,7 @@ $table = function($roll = null) use(&$s, &$table) {
 					"9" => "Anachronistic weapon (gun, laser rifle, flint handaxe, etc.)",
 				]);
 			}],
-		"2" => [ "Guardianship of a young NPC ward", function() use(&$s) {
-				/* XXX 761 */
-			}],
+		"2" => [ "Guardianship of a young NPC ward", function() use(&$s) { Invoke($s, "761"); }],
 		"3" => [ "Unusual pet", function() use(&$s) {
 				/* XXX 760 */
 			}],

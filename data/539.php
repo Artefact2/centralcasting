@@ -33,14 +33,14 @@ $table = function($roll = null) use(&$s, &$table) {
 								Table($s, "", "Friend type", Roll(8), [
 									"1-4" => "Owner becomes good friend",
 									"5-7" => "Owner becomes patron", /* XXX 543 */
-									"8" => "Owner becomes companion", /* XXX 761 */
+									"8" => [ "Owner becomes companion", function() use(&$s) { Invoke($s, "761C"); } ],
 								]);
 							}],
 						"2" => "Owner converted to religion that abhors slavery ; paid ".Roll(2, 10)." gp and set free",
 						"3-4" => "Reunited with relatives, including former enslaved relatives",
 						"5" => "Owner dies, will says to free slaves and divide property (".Roll(2, 10)." other slaves)",
 						"6-7" => "Unable to find work and enlisted in the military", /* XXX 535 */
-						"8" => "Another slave remains as companion", /* XXX 761 */
+						"8" => [ "Another slave remains as companion", function() use(&$s) { Invoke($s, "761C"); } ],
 						"9" => [ "Saved owner's life, freed and got gift as reward", function() use(&$s) {
 								Invoke($s, "863");
 							}],
@@ -109,8 +109,8 @@ $table = function($roll = null) use(&$s, &$table) {
 				if($success) {
 					$table(1);
 					if($leader) {
-						$s->char->entries[] = [ "", "", "Now have ".Roll(6)." low-ability NPC follower(s)" ];
-						/* XXX 761C */
+						$s->char->entries[] = [ "", "", "Now have ".($f = Roll(6))." low-ability NPC follower(s)" ];
+						for($i = 0; $i < $f; ++$i) Invoke($s, "761C");
 					}
 				} else {
 					$s->char->entries[] = [ "", "", "Tortured and received a permanent injury" ];
