@@ -124,7 +124,7 @@ $table = function($roll = null) use(&$s, &$table) {
 		"15" => "Used as breeding stock", /* XXX */
 		"16" => "Resold ".Roll(3)." time(s)", /* XXX */
 		"17" => [ "Branded", function() use(&$s) {
-				/* XXX 867 */
+				Invoke($s, "867");
 				if(Roll(6) >= 5) {
 					return "Branded (very recognisable slave brand)";
 				} else {

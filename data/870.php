@@ -9,9 +9,7 @@ $table = function($roll = null) use(&$s, &$table) {
 				return "Impressive facial scar (-1 Charisma)";
 			}
 		}],
-		"2" => [ "Impressive body scars", function() use(&$s) {
-				/* XXX 867 */
-			}],
+		"2" => [ "Impressive body scars", function() use(&$s) { Invoke($s, "867"); } ],
 		"3" => [ "Eye put out", function() use(&$s) {
 				$s->char->entries[] = [
 					"", "", "Depth perception is gone, -1 rank in all combat/visual skills"
