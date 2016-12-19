@@ -114,7 +114,7 @@ $table = function($roll = null) use(&$s, &$table) {
 					}
 				} else {
 					$s->char->entries[] = [ "", "", "Tortured and received a permanent injury" ];
-					/* XXX 870 */
+					Invoke($s, "870");
 				}
 			}],
 		"13" => "Promoted to a position of authority",
@@ -134,7 +134,7 @@ $table = function($roll = null) use(&$s, &$table) {
 		"18" => [ "Escape attempt fails, gets branded and beaten", function() use(&$s, &$table) {
 				$table(17);
 				if(Roll(6) === 6) {
-					/* XXX 870 */
+					Invoke($s, "870");
 				}
 			}],
 		"19-20" => [ "Enslaved for ".Roll(4)." more year(s)", function() use(&$s, &$table) {
