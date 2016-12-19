@@ -1,7 +1,7 @@
 <?php
 
-$table = function($roll = null) use(&$s, &$table) {
-	Table($s, "870", "Serious Wound", $roll ?? Roll(20), [
+$table = function() use(&$s, &$table) {
+	Table($s, "870", "Serious Wound", function() { return Roll(20); }, [
 		"1" => [ "Impressive facial scar", function() {
 			if(Roll(100) <= 50) {
 				return "Impressive facial scar (+1 Charisma)";
@@ -81,19 +81,12 @@ $table = function($roll = null) use(&$s, &$table) {
 		"18" => "Back injury, -".Roll(6)." Strength",
 		"19" => "Liver damage, alcohol becomes poisonous, -1 Constitution",
 		"20" => [ null, function() use(&$s, &$table) {
-				/* Reroll without duplicates */
-				$have = [];
+				TableForgetRerollInfo($s, "870", "20");
 				$count = Roll(2) + 1;
-				$n = 0;
-
-				while($n < $count) {
-					$r = Roll(19);
-					if(isset($have[$r])) continue;
-					$have[$r] = true;
-					$table($r);
-					++$n;
+				while(--$count >= 0) {
+					$table();
 				}
 			}],
-	]);
+	], TABLE_REROLL_DUPLICATES);
 };
 $table();
