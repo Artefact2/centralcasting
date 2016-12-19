@@ -8,8 +8,8 @@ Table($s, "101", "Character Race", Roll(1, 20), [
 	"19" => "Half Elf",
 	"20" => [ "Other Race", function() use(&$s) {
 			Table($s, "101O", "Other Races", Roll(1, 10), [
-				"1-3" => "Beastman",
-				"4-5" => "Reptileman",
+				"1-3" => "Beastman (minotaur, centaur, satyr, etc.)",
+				"4-5" => "Reptileman (dragon, serpent men, etc.)",
 				"6" => "Orc",
 				"7-10" => "Half Orc",
 			]);

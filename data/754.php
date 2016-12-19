@@ -7,8 +7,8 @@ Table($s, "754", "Guardian", Roll(1, 20), [
 	"6-8" => "Raised in an orphanage",
 	"9-10" => [ "Adopted in another family", function() use(&$s) { Invoke($s, "106"); } ],
 	"11" => [ "Raised by priests/monks in a temple", function() use(&$s) { Invoke($s, "864"); } ],
-	"12" => "Raised by nonhumans", /* XXX */
-	"13" => "Sold into indentured servitude to pay parent's depts", /* XXX */
+	"12" => [ "Raised by nonhumans", function() use(&$s) { Invoke($s, "751"); } ],
+	"13" => [ "Sold into indentured servitude to pay parent's depts", function() use(&$s) { Invoke($s, "539"); } ],
 	"14" => "Raised on the street by outcasts (beggars and prostitutes)",
 	"15" => "Raised by a thieves' guild", /* XXX */
 	"16" => "Passed from relative to relative until reaching the age of majority",

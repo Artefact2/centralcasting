@@ -1,7 +1,6 @@
 <?php
 
 /* XXX: civilized nobles have d4 hobbies instead of an occupation */
-/* XXX: titles */
 
 $rawdata = [
 	'E' =>   [ 'Emperor',        60,          Roll(1, 4) + 3,            100, Roll(1, 20) * 10 ],
