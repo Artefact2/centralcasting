@@ -67,8 +67,10 @@ function Roll($n, $sides = null) {
 	return $r;
 }
 
-function Invoke(State $s, $dataref) {
-	require __DIR__.'/data/'.$dataref.'.php';
+function Invoke(State $s, $dataref) {	
+	$f = __DIR__.'/data/'.$dataref.'.php';
+	assert(file_exists($f));
+	require $f;
 }
 
 function PrintCharacterEntries(Character $c) {

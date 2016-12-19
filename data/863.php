@@ -18,7 +18,7 @@ $table = function($roll = null) use(&$s, &$table) {
 			}],
 		"2" => [ "Guardianship of a young NPC ward", function() use(&$s) { Invoke($s, "761"); }],
 		"3" => [ "Unusual pet", function() use(&$s) {
-				/* XXX 760 */
+				/* XXX 759 */
 			}],
 		"4" => [ "Piece of jewelry", function() use(&$s) {
 				/* NB: book says to roll d10 but has no value for 8 */
