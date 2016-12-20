@@ -57,6 +57,11 @@ foreach($datas as $name => $path) {
 			printf("\"%s\" -> \"%s\"\n", $name, $sm);
 		}
 	}
+	
+	/* XXX may not always indicate we're rerolling the *same* table */
+	if(preg_match('%(TableReroller\()|($table\()%U', $source, $match)) {
+		printf("\"%s\" -> \"%s\"\n", $name, $name);
+	}
 }
 
 echo "}\n";
