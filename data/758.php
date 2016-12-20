@@ -38,21 +38,21 @@ foreach($rawdata as $k => $line) {
 	];
 }
 
-if($s->char->CuMod === -3) {
-	Table($s, "758A", "Nobles", Roll(100), [
+if($s->char->CuMod <= -2) {
+	Table($s, "758A", "Primitive Nobles", Roll(100), [
 		"1" => $tdata["HK"],
 		"2-30" => $tdata["CT"],
 		"31-100" => $tdata["SCT"],
 	]);
-} else if($s->char->CuMod === 0) {
-	Table($s, "758A", "Nobles", Roll(100), [
+} else if($s->char->CuMod <= 0) {
+	Table($s, "758A", "Nomad Nobles", Roll(100), [
 		"1-10" => $tdata["KA"],
 		"11-40" => $tdata["CT"],
 		"41-80" => $tdata["SCT"],
 		"81-100" => $tdata["H"],
 	]);
-} else if($s->char->CuMod === 2) {
-	Table($s, "758A", "Nobles", Roll(100), [
+} else if($s->char->CuMod <= 2) {
+	Table($s, "758A", "Barbarian Nobles", Roll(100), [
 		"1-2" => $tdata["HK"],
 		"3-15" => $tdata["KI"],
 		"16-25" => $tdata["PR"],
@@ -63,8 +63,8 @@ if($s->char->CuMod === -3) {
 		"76-80" => Roll(100) <= 21 ? $tdata["PRU"] : $tdata["PC"],
 		"81-100" => $tdata["H"],
 	]);
-} else if($s->char->CuMod >= 4) {
-	Table($s, "758A", "Nobles", Roll(100), [
+} else {
+	Table($s, "758A", "Civilized Nobles", Roll(100), [
 		"1" => $tdata["E"],
 		"2-5" => $tdata["K"],
 		"6-15" => $tdata["PR"],
@@ -78,12 +78,9 @@ if($s->char->CuMod === -3) {
 		"79-90" => Roll(100) <= 21 ? $tdata["PRU"] : $tdata["PC"],
 		"91-100" => $tdata["K"],
 	]);
-} else {
-	assert(false);
 }
 
-while($s->char->LandTitles > 0) {
+while(--$s->char->LandTitles >= 0) {
 	Invoke($s, "871");
-	--$s->char->LandTitles;
 }
 unset($s->char->LandTitles);

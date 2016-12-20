@@ -1,17 +1,15 @@
 <?php
 
 Table($s, "114A", "Parents Occupation", Roll(20), [
-	"1-12" => [ "Head of household has one occupation", function() use(&$s) {
-			Invoke($s, "420-423");
-		}],
-	"13-14" => [ "Head of household has one full-time occupation and another part-time occupation", function() use(&$s) {
-			$s->char->entries[] = [ "", "", "Full-time occupation:" ];
-			Invoke($s, "420-423");
-			$s->char->entries[] = [ "", "", "Part-time occupation:" ];
-			$s->char->CuMod -= 2;
-			Invoke($s, "420-423");
-			$s->char->CuMod += 2;
-		}],
+	"1-12" => [ "Head of household has one occupation", Invoker($s, "420-423") ],
+	"13-14" => [ "Head of household has one full-time occupation and another part-time occupation", Combiner(
+		EntryAdder($s, "Full-time occupation:"),
+		Invoker($s, "420-423"),
+		EntryAdder($s, "Part-time occupation:"),
+		CharIncrementer($s, "CuMod", -2),
+		Invoker($s, "420-423"),
+		CharIncrementer($s, "CuMod", 2)
+	)],
 	"15-16" => [ "Head of household has no occupation, other parent works", function() use(&$s) {
 			$sub = 0;
 			
@@ -30,16 +28,14 @@ Table($s, "114A", "Parents Occupation", Roll(20), [
 			Invoke($s, "420-423");
 			$s->char->CuMod += $sub;
 		}],
-	"17-18" => [ "Both parents in household have an occupation", function() use(&$s) {
-			$s->char->entries[] = [ "", "", "Mother:" ];
-			Invoke($s, "420-423");
-			$s->char->entries[] = [ "", "", "Father:" ];
-			Invoke($s, "420-423");
-		}],
-	"19" => [ "Head of household is/was an adventurer", function() use(&$s) {
-			/* XXX 757 */
-		}],
-	"20" => [ "Head of household has no visible occupation, money just seems to be available when needed", function() use(&$s) {
-			$s->char->entries[] = [ "", "", "See GM special 978#114" ];
-		}],
+	"17-18" => [ "Both parents in household have an occupation", Combiner(
+		EntryAdder($s, "Mother:"),
+		Invoker($s, "420-423"),
+		EntryAdder($s, "Father:"),
+		Invoker($s, "420-423")
+	)],
+	"19" => "Head of household is/was an adventurer", /* XXX 757 */
+	"20" => [ "Head of household has no visible occupation, money just seems to be available when needed",
+	          EntryAdder($s, "See GM special 978#114")
+	],
 ]);

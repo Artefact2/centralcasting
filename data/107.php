@@ -6,11 +6,14 @@ $s->char->illegitSiblings = 0;
 $table = function() use(&$s, &$table) {
 	Table($s, "107", "Siblings", Roll(20), [
 		"1-2" => null,
-		"3-9" => [ null, function() use(&$s) { $s->char->siblings += Roll(3); }],
-		"10-15" => [ null, function() use(&$s) { $s->char->siblings += Roll(3) + 1; }],
-		"16-17" => [ null, function() use(&$s) { $s->char->siblings += Roll(4) + 2; }],
-		"18-19" => [ null, function() use(&$s) { $s->char->siblings += Roll(2, 4); }],
-		"20" => [ null, function() use(&$s, &$table) { $s->char->illegitSiblings += Roll(3); $table(); }],
+		"3-9" => [ null, CharIncrementer($s, "siblings", Roll(3)) ],
+		"10-15" => [ null, CharIncrementer($s, "siblings", Roll(3) + 1) ],
+		"16-17" => [ null, CharIncrementer($s, "siblings", Roll(4) + 2) ],
+		"18-19" => [ null, CharIncrementer($s, "siblings", Roll(2, 4)) ],
+		"20" => [ null, Combiner(
+			CharIncrementer($s, "illegitSiblings", Roll(3)),
+			TableReroller($s, $table)
+		)],
 	]);
 };
 $table();

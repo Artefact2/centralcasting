@@ -13,12 +13,7 @@ $table = function($roll = null) use(&$s, &$table) {
 		"12" => "Sun (fire) god",
 		"13" => "Moon goddess",
 		"14" => "Storm (air) god",
-		"15" => [ "Evil god (see below)", function() use(&$s, &$table) {
-				do {
-					$reroll = Roll(20) + $s->char->CuMod;
-				} while($reroll === 15);
-				$table($reroll);
-			}],
+		"15" => [ "Evil god (see below)", TableReroller($s, $table, Roller(1, 20, $s->char->CuMod), 1, [15]) ],
 		"16" => "War god",
 		"17" => "Love goddess",
 		"18" => "Underworld deity",

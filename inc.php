@@ -127,3 +127,52 @@ function EditCharacter(Character $c, $id, $newval) {
 
 	assert(false);
 }
+
+function Combiner(callable ...$lambdas): callable {
+	return function() use($lambdas) {
+		foreach($lambdas as $l) $l();
+	};
+}
+
+function Invoker(State $s, $dataref): callable {
+	return function() use(&$s, $dataref) {
+		Invoke($s, $dataref);
+	};
+}
+
+function CharIncrementer(State $s, $k, $v): callable {
+	return function() use(&$s, $k, $v) {
+		$s->char->$k += $v;
+	};
+}
+
+function TableReroller(State $s, callable $table, callable $roller = null, int $count = 1, array $avoid = []): callable {
+	assert($count >= 0);
+	assert($roller !== null || $avoid === []);
+
+	return function() use(&$s, $table, $roller, $count, $avoid) {
+		while(--$count >= 0) {
+			if($roller !== null) {
+				do {
+					$roll = $roller();
+				} while(in_array($roll, $avoid, true));
+			
+				$table($roll);
+			} else {
+				$table();
+			}
+		}
+	};
+}
+
+function Roller($n, $sides = null, $plusmod = 0): callable {
+	return function() use($n, $sides, $plusmod) {
+		return Roll($n, $sides) + $plusmod;
+	};
+}
+
+function EntryAdder(State $s, string $entry, string $name = "", string $id = ""): callable {
+	return function() use(&$s, $entry, $name, $id) {
+		$s->char->entries[] = [ $id, $name, $entry ];
+	};
+}

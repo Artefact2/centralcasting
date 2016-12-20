@@ -21,7 +21,7 @@ $table = function($roll = null) use(&$s, &$table) {
 		"38" => "*Unnaturally potent storms raged",
 		"39-41" => [ "*Born at exactly midnight", function() use(&$s) {
 				$subtable = function() use(&$s) {
-					Table($s, "113M", "Midnight Birth Consequence", function() { return Roll(10); }, [
+					Table($s, "113M", "Midnight Birth Consequence", Roller(10), [
 						"1" => "+d6 to Magical Ability attribute the hour after midnight",
 						"2-3" => "Night vision",
 						"4-5" => "Extremely pale skin (1 HP lost per hour of exposure to bright daylight)",
@@ -36,7 +36,7 @@ $table = function($roll = null) use(&$s, &$table) {
 			}],
 		"42-44" => [ "*Born at exactly noon", function() use(&$s) {
 				$subtable = function() use(&$s) {
-					Table($s, "113N", "Noon Birth Consequence", function() { return Roll(10); }, [
+					Table($s, "113N", "Noon Birth Consequence", Roller(10), [
 						"1" => "+d6 to Magical Ability attribute the hour after noon",
 						"2-3" => "No night vision (blind in darkness)",
 						"4-5" => "Extremely tanned skin (+1 natural armor)",
@@ -49,9 +49,7 @@ $table = function($roll = null) use(&$s, &$table) {
 				$sub = Roll(3);
 				while(--$sub >= 0) $subtable();
 			}],
-		"46-48" => [ "*Seer declares character will be afflicted by long forgotten ancient family curse", function() use(&$s) {
-				/* XXX 868 */
-			}],
+		"46-48" => "*Seer declares character will be afflicted by long forgotten ancient family curse", /* XXX 868 */
 		"49-50" => [ "*Goose laid golden egg when character was born", function() use(&$s) {
 				$r = Roll(10);
 				if($r >= 7) $s->char->entries[] = [ "", "", "And still has it" ];
@@ -71,12 +69,10 @@ $table = function($roll = null) use(&$s, &$table) {
 		"87-88" => "*Old hag (witch) prophesies character's death", /* XXX 545 */
 		"89-93" => "*Born with unusual physical affliction", /* XXX 874 */
 		"94" => "Born with phychic powers", /* XXX 873 1d3 */
-		"95-99" => [ "Mysterious stranger bestows a gift on the character at birth", function() use(&$s) {
-				Invoke($s, "863");
-			}],
+		"95-99" => [ "Mysterious stranger bestows a gift on the character at birth", Invoker($s, "863") ],
 		"100" => [ null, function() use(&$s, &$table) {
 				TableForgetRerollInfo($s, "113", "100");
-				$reroll = function() { return Roll(100) + 20; };
+				$reroll = Roller(1, 100, 20);
 				$table($reroll);
 				$table($reroll);
 		}],
