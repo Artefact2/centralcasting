@@ -7,6 +7,10 @@
  * License, Version 2, as published by Sam Hocevar. See
  * http://sam.zoy.org/wtfpl/COPYING for more details. */
 
+assert_options(ASSERT_ACTIVE, 1);
+assert_options(ASSERT_WARNING, 1);
+assert_options(ASSERT_BAIL, 1);
+
 class State {}
 
 class Character {
@@ -37,6 +41,10 @@ function Table(State $s, $id, $name, $roll, array $entries, int $flags = 0) {
 				list($lo, $hi) = explode('-', $range, 2);
 				if($lo === '') $lo = PHP_INT_MIN;
 				if($hi === '') $hi = PHP_INT_MAX;
+
+				/* XXX: this is very ugly */
+				if(is_string($lo) && $lo[0] === 'm') $lo = -intval(substr($lo, 1));
+				if(is_string($hi) && $hi[0] === 'm') $hi = -intval(substr($hi, 1));
 
 				if($roll < $lo || $roll > $hi) continue;
 			} else {

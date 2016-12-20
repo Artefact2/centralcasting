@@ -45,14 +45,14 @@ if($s->char->CuMod <= -2) {
 		"31-100" => $tdata["SCT"],
 	]);
 } else if($s->char->CuMod <= 0) {
-	Table($s, "758A", "Nomad Nobles", Roll(100), [
+	Table($s, "758B", "Nomad Nobles", Roll(100), [
 		"1-10" => $tdata["KA"],
 		"11-40" => $tdata["CT"],
 		"41-80" => $tdata["SCT"],
 		"81-100" => $tdata["H"],
 	]);
 } else if($s->char->CuMod <= 2) {
-	Table($s, "758A", "Barbarian Nobles", Roll(100), [
+	Table($s, "758C", "Barbarian Nobles", Roll(100), [
 		"1-2" => $tdata["HK"],
 		"3-15" => $tdata["KI"],
 		"16-25" => $tdata["PR"],
@@ -64,7 +64,7 @@ if($s->char->CuMod <= -2) {
 		"81-100" => $tdata["H"],
 	]);
 } else {
-	Table($s, "758A", "Civilized Nobles", Roll(100), [
+	Table($s, "758D", "Civilized Nobles", Roll(100), [
 		"1" => $tdata["E"],
 		"2-5" => $tdata["K"],
 		"6-15" => $tdata["PR"],

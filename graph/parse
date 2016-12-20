@@ -1,0 +1,35 @@
+#!/usr/bin/env php
+<?php
+
+function getcolor(string $s): string {
+	if($s !== '' && ctype_digit($s[0])) {
+		$i = (int)$s[0];
+		if($i > 0 && $i < 9) {
+			return '/set39/'.$s[0];
+		}
+	}
+	return '/set39/9';
+}
+
+echo "digraph {\n";
+echo "rankdir=\"LR\"\n";
+
+foreach(glob(__DIR__.'/../data/*.php') as $path) {
+	$name = pathinfo($path, PATHINFO_FILENAME); 
+
+	$source = file_get_contents($path);
+	
+	printf("\"%s\" [style=filled fillcolor=\"%s\"]\n", $name, getcolor($name));
+
+	preg_match_all('%Invoker?\(([^)]+)\)%U', $source, $matches);
+	foreach($matches[1] as $m) {
+		preg_match_all('%"([^"]+)"%U', $m, $submatches);
+		foreach($submatches[1] as $sm) {
+			printf("\"%s\" -> \"%s\"\n", $name, $sm);
+		}
+	}
+}
+
+echo "{ rank=same; \"420\" \"421\" \"422\" \"423\" }\n";
+
+echo "}\n";

@@ -27,6 +27,6 @@ To Do
 * Finish all the tables!
 * Explain how to extend tables and how to write scripts
 * Write scripts for NPCs, evil guys, good guys, etc.
-* Generate a huge directed graph of all table connections
+* ~~Generate a huge directed graph of all table connections~~
 * (Maybe) Web interface
 * (Maybe) Make a pre-filled character sheet
