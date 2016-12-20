@@ -1,5 +1,7 @@
 <?php
 
+/*<<< Name: Player Character >>>*/
+
 Invoke($s, "101");
 Invoke($s, "102");
 Invoke($s, "103");

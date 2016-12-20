@@ -4,8 +4,8 @@ Table($s, "422B", "Special Barbarian Occupation", Roll(20), [
 	"1-7" => [ "Civilized occupation", Invoker($s, "423A") ],
 	"8-9" => "Priest/Shaman",
 	"10" => "Healer/Herbalist",
-	"11" => "Adventurer", /* XXX 757 */
-	"12" => "Career criminal", /* XXX 755 */
+	"11" => [ "Adventurer", Invoker($s, "757") ],
+	"12" => [ "Career criminal", Invoker($s, "755") ],
 	"13" => "Ship builder",
 	"14" => "Barbarian wizard, witch or warlock (more feared than respected)",
 	"15" => "Counselor/Philosopher",

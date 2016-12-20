@@ -13,13 +13,42 @@ function getcolor(string $s): string {
 
 echo "digraph {\n";
 echo "rankdir=\"LR\"\n";
+echo "overlap=false\n";
+echo "splines=true\n";
+
+$datas = [];
 
 foreach(glob(__DIR__.'/../data/*.php') as $path) {
-	$name = pathinfo($path, PATHINFO_FILENAME); 
+	$datas[pathinfo($path, PATHINFO_FILENAME)] = $path;
+}
 
+foreach($datas as $name => $path) {
 	$source = file_get_contents($path);
 	
-	printf("\"%s\" [style=filled fillcolor=\"%s\"]\n", $name, getcolor($name));
+	preg_match('%Table\([^,]+,\s*("'.$name.'"|\''.$name.'\')\s*,\s*(("[^"]*")|(\'[^\']*\'))\s*,%U', $source, $match);
+	$displayname = $name;
+	if(isset($match[2])) {
+		$displayname .= "\n".substr($match[2], 1, -1);
+	} else {
+		preg_match('%/\*<<< Name: (.+) >>>\*/%U', $source, $match);
+		if(isset($match[1])) {
+			$displayname .= "\n".$match[1];
+		} else {
+			fprintf(STDERR, "NOTICE: data %s has no name\n", $name);
+		}
+	}
+
+	if(preg_match('%^[0-9]%', $name)) {
+		if(preg_match('%[A-Z]$%', $name)) {
+			$shape = 'note';
+		} else {
+			$shape = isset($datas[$name.'A']) ? 'folder' : 'box';
+		}
+	} else {
+		$shape = 'doublecircle';
+	}
+	
+	printf("\"%s\" [style=filled fillcolor=\"%s\" label=\"%s\" shape=%s]\n", $name, getcolor($name), $displayname, $shape);
 
 	preg_match_all('%Invoker?\(([^)]+)\)%U', $source, $matches);
 	foreach($matches[1] as $m) {
@@ -29,7 +58,5 @@ foreach(glob(__DIR__.'/../data/*.php') as $path) {
 		}
 	}
 }
-
-echo "{ rank=same; \"420\" \"421\" \"422\" \"423\" }\n";
 
 echo "}\n";

@@ -43,7 +43,7 @@ Table($s, "423B", "Lower Class Occupation", Roll(20), [
 		][Roll(4) - 1].")";
 	}],
 	"17" => "Street vendor",
-	"18" => "Soldier", /* XXX 535 */
+	"18" => [ "Soldier", Invoker($s, "535") ],
 	"19" => [ "Craftsman", Invoker($s, "424A") ],
 	"20" => "Second hand shopkeeper",
 ]);

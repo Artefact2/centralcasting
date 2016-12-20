@@ -115,7 +115,10 @@ function Roll($n, $sides = null) {
 
 function Invoke(State $s, $dataref) {	
 	$f = __DIR__.'/data/'.$dataref.'.php';
-	assert(file_exists($f));
+	if(!file_exists($f)) {
+		fprintf(STDERR, "WARNING: data %s not implemented\n", $dataref);
+		return;
+	}
 	require $f;
 }
 

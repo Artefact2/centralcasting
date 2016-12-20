@@ -17,7 +17,7 @@ $table = function($roll = null) use(&$s, &$table) {
 				]);
 			}],
 		"2" => [ "Guardianship of a young NPC ward", Invoker($s, "761") ],
-		"3" => "Unusual pet", /* XXX 759 */
+		"3" => [ "Unusual pet", Invoker($s, "759") ],
 		"4" => [ "Piece of jewelry", function() use(&$s) {
 				/* NB: book says to roll d10 but has no value for 8 */
 				$subtable = function($roll = null) use(&$s, &$subtable) {

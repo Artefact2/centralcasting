@@ -42,7 +42,7 @@ $table = function($roll = null) use(&$s, &$table) {
 				}
 			}],
 		"13" => "Promoted to a position of authority",
-		"14" => "Become owner's favorite, senior slave in the household, another slaves becomes rival", /* XXX 762 */
+		"14" => [ "Become owner's favorite, senior slave in the household, another slaves becomes rival", Invoker($s, "762") ],
 		"15" => "Used as breeding stock", /* XXX */
 		"16" => "Resold ".Roll(3)." time(s)", /* XXX */
 		"17" => [ "Branded", function() use(&$s) {
@@ -61,7 +61,7 @@ $table = function($roll = null) use(&$s, &$table) {
 			}],
 		"19-20" => [ "Enslaved for ".Roll(4)." more year(s)", TableReroller($s, $table, Roller(1, 20, 1), Roll(3)) ],
 		"21" => [ "Exotic event frees character", function() use(&$s) {
-				/* XXX 544 */
+				Invoke($s, "544");
 				$s->char->enslaved = false;
 			}],
 	]);

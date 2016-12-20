@@ -11,15 +11,11 @@ Table($s, "423C", "Middle Class Occupation", Roll(20), [
 			return "Instructor (weapon use)";
 
 			case 2:
-			/* XXX 876 */
+			Invoke($s, "876");
 			return "Instructor (unusual skill)";
 			
 			case 3:
-			/* d4 decides */
-			/* XXX 877A */
-			/* XXX 877B */
-			/* XXX 877C */
-			/* XXX 877D */
+			Invoke($s, [ "877A", "877B", "877C", "877D" ][Roll(4) - 1]);
 			return "Instructor (military skill)";
 
 			case 4:
@@ -28,7 +24,7 @@ Table($s, "423C", "Middle Class Occupation", Roll(20), [
 			
 			}
 		}],
-	"10" => "Government official (if high position, assistant to)", /* XXX 752 */
+	"10" => [ "Government official (if high position, assistant to)", Invoker($s, "752") ],
 	"11" => [ "Craftsman", Invoker($s, "424A") ],
 	"12" => "Chef (restaurant or noble family)",
 	"13" => [ "Overseer (supervisor) of industry:", Invoker($s, "423A") ],

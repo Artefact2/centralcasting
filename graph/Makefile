@@ -1,6 +1,6 @@
 SOURCES=$(shell find ../data -type f -name "*.php")
 
-graph.svg: graph.dot
+graph.svg: graph.dot Makefile
 	dot -Tsvg $< > $@
 
 graph.dot: $(SOURCES) parse

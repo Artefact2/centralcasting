@@ -1,5 +1,7 @@
 <?php
 
+/*<<< Name: Nobles >>>*/
+
 /* XXX: civilized nobles have d4 hobbies instead of an occupation */
 
 $rawdata = [
