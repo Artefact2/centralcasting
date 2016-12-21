@@ -1,6 +1,6 @@
 <?php
 
-/*<<< Name: Occupations >>>*/
+/*<<< Name: Occupation Check >>>*/
 
 /* Yes, -2, this is not a typo */
 if($s->char->CuMod <= -2) {

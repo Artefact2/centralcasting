@@ -35,7 +35,13 @@ class Character {
 	public $LegitMod = 0;
 	public $BiMod = 0;
 	public $TiMod = 0;
-	
+
+	public $traits = [
+		'L' => 0,
+		'D' => 0,
+		'N' => 0,
+		'R' => 0,
+	];
 	public $entries = [];
 };
 
@@ -158,6 +164,17 @@ function EditCharacter(Character $c, $id, $newval) {
 	assert(false);
 }
 
+/* XXX handle duplicates */
+function GetCharacterValue(Character $c, $id, $default = null) {
+	foreach($c->entries as $e) {
+		if($e[0] === $id) {
+			return $e[2];
+		}
+	}
+
+	return $default;
+}
+
 function Combiner(callable ...$lambdas): callable {
 	return function() use($lambdas) {
 		foreach($lambdas as $l) $l();
@@ -201,8 +218,10 @@ function Roller($n, $sides = null, $plusmod = 0): callable {
 	};
 }
 
-function EntryAdder(State $s, string $entry, string $name = "", string $id = ""): callable {
+function EntryAdder(State $s, $entry, string $name = "", string $id = ""): callable {
 	return function() use(&$s, $entry, $name, $id) {
+		if($entry === null) return;
+		assert(is_string($entry));
 		$s->char->entries[] = [ $id, $name, $entry ];
 	};
 }
@@ -213,4 +232,26 @@ function Repeater($count, callable $action): callable {
 	return function() use($count, $action) {
 		while(--$count >= 0) $action();
 	};
+}
+
+function TraitAdder(State $s, string $type): callable {
+	return function() use(&$s, $type) {
+		++$s->char->traits[$type];
+	};
+}
+
+function RandomTrait(State $s): callable {
+	return TraitAdder($s, 'R');
+}
+
+function LightsideTrait(State $s): callable {
+	return TraitAdder($s, 'L');
+}
+
+function DarksideTrait(State $s): callable {
+	return TraitAdder($s, 'D');
+}
+
+function NeutralTrait(State $s): callable {
+	return TraitAdder($s, 'N');
 }
