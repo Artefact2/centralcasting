@@ -10,7 +10,7 @@ $table = function() use(&$s, &$table) {
 		"6" => "And joins the circus",
 		"7" => [ "And falls into the hands of criminals", Combiner(DarksideTrait($s), Invoker($s, "534")) ],
 		"8" => [ "And lives with nonhumans", Invoker($s, "751") ],
-		"9" => [ "And wanders the land, +1 rank in survival skills" ],
+		"9" => "And wanders the land, +1 rank in survival skills",
 		"10" => [ null, Combiner(
 			EntryAdder($s, "Combine events below (discard conflicts):"),
 			TableReroller($s, $table, null, Roll(3) + 1)

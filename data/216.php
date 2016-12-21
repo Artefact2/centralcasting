@@ -1,6 +1,6 @@
 <?php
 
-/*<<< Name: Special Events of Childhood & Adolescence >>>*/
+/*<<< Name: Special Event of Childhood & Adolescence >>>*/
 
 switch($s->char->ageRange) {
 case Character::CHILD:

@@ -1,7 +1,7 @@
 <?php
 
 $table = function($roll = null) use(&$s, &$table) {
-	Table($s, "217", "Significant Events of Adulthood", $roll ?? Roller(2, 20, $s->char->SolMod), [
+	Table($s, "217", "Significant Event of Adulthood", $roll ?? Roller(2, 20, $s->char->SolMod), [
 		"m1" => [ "Free trapped predatory beast while foraging/hunting for food, returns favor later", LightsideTrait($s) ],
 		"0" => [ "Learn new occupation (rank 2) to earn a living", Combiner(NeutralTrait($s), Invoker($s, "420-423")) ],
 		"1-2" => [ "Something wonderful occurs", Combiner(RandomTrait($s), Invoker($s, "529")) ],
@@ -74,28 +74,7 @@ $table = function($roll = null) use(&$s, &$table) {
 		"29-32" => [ "Character has romantic encounter", Combiner(RandomTrait($s), Invoker($s, "542")) ],
 		"33" => [ "Character acquires hobby", Invoker($s, "427") ],
 		"34" => [ "Character develops jaded tastes for exotic (possibly expensive) pleasures", DarksideTrait($s) ],
-		"35-36" => [ "Character accused of a crime he did not commit", Combiner(Invoker($s, "875"), function() use(&$s) {
-					Table($s, "", "", Roll(6), [
-						"1" => [ "Character is imprisoned", Combiner(DarksideTrait($s), Invoker($s, "540")) ],
-						"2" => [ "Character is publicly stockaded and flogged as example, -33% Charisma", DarksideTrait($s) ],
-						"3" => [ "Character is tortured to reveal names of accomplices", Combiner(
-							DarksideTrait($s), function() use(&$s) {
-								if(Roll(6) < 6) return;
-								$s->char->entries[] = [ "", "", "And receives a serious wound" ];
-								Invoke($s, "870");
-							})],
-						"4" => [ "Character is found innocent but suffered serious humiliation, -".Roll(3)." Charisma", DarksideTrait($s) ],
-						"5" => [ "Character is sentenced to death, but rescued by notorious outlaws", Combiner(
-							NeutralTrait($s),
-							function() use(&$s) {
-								if(Roll(6) < 6) return;
-								$s->char->entries[] = [ "", "", "And joins the outlaws for ".Roll(6)." year(s)" ];
-								Invoke($s, "534C"); /* XXX check flow, book says to begin with 534C */
-							}
-						)],
-						"6" => [ "Character sold into slavery", Combiner(DarksideTrait($s), Invoker($s, "539")) ],
-					]);
-				})],
+		"35-36" => [ "Character accused of a crime he did not commit", Combiner(Invoker($s, "875"), Invoker($s, "217B")) ],
 		"37-38" => [ null, function() use(&$s) {
 				if($s->char->type === Character::PC) {
 					return "Age ".Roll(6)." year(s)";
