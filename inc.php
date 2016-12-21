@@ -138,13 +138,19 @@ function Roll($n, $sides = null) {
 	return $r;
 }
 
-function Invoke(State $s, $dataref) {	
-	$f = __DIR__.'/data/'.$dataref.'.php';
-	if(!file_exists($f)) {
-		fprintf(STDERR, "WARNING: data %s not implemented\n", $dataref);
-		return;
+function Invoke(State $s, string ...$datarefs) {
+	foreach($datarefs as $dataref) {
+		$f = __DIR__.'/data/'.$dataref.'.php';
+		if(!file_exists($f)) {
+			fprintf(STDERR, "WARNING: data %s not implemented\n", $dataref);
+			continue;
+		}
+
+		/* Isolate scope of each invoked element */
+		(function($f) use(&$s) {
+			require $f;
+		})($f);
 	}
-	require $f;
 }
 
 function PrintCharacterEntries(Character $c) {
@@ -183,9 +189,9 @@ function Combiner(callable ...$lambdas): callable {
 	};
 }
 
-function Invoker(State $s, $dataref): callable {
-	return function() use(&$s, $dataref) {
-		Invoke($s, $dataref);
+function Invoker(State $s, string ...$datarefs): callable {
+	return function() use(&$s, $datarefs) {
+		Invoke($s, ...$datarefs);
 	};
 }
 

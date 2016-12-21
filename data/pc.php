@@ -2,16 +2,7 @@
 
 /*<<< Name: Player Character >>>*/
 
-Invoke($s, "101");
-Invoke($s, "102");
-Invoke($s, "103");
-Invoke($s, "104");
-Invoke($s, "106");
-Invoke($s, "107");
-Invoke($s, "109");
-Invoke($s, "110");
-Invoke($s, "112");
-Invoke($s, "114");
+Invoke($s, "101", "102", "103", "104", "106", "107", "109", "110", "112", "114");
 
 $s->char->ageRange = Character::CHILD;
 $s->char->entries[] = [ "", "", "Character is now a child" ];
