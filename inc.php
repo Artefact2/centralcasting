@@ -70,6 +70,8 @@ function Table(State $s, $id, $name, $roll, array $entries, int $flags = 0) {
 
 				if($roll < $lo || $roll > $hi) continue;
 			} else {
+				if(is_string($range) && $range[0] === 'm') $range = -intval(substr($range, 1));
+				
 				if($roll !== (int)$range) continue;
 			}
 

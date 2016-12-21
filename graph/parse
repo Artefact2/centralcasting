@@ -38,8 +38,7 @@ function get_full_name(string $name, string $path, string $contents) {
 
 echo "digraph {\n";
 echo "rankdir=\"LR\"\n";
-echo "overlap=false\n";
-echo "splines=true\n";
+echo "graph [pad=.1 nodesep=.1 ranksep=.5]\n";
 
 $datas = [];
 
