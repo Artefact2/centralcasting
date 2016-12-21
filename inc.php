@@ -20,7 +20,15 @@ class State {
 }
 
 class Character {
-	public $isNPC = false;
+	const PC = 0;
+	const NPC = 1;
+
+	const CHILD = 0;
+	const ADOLESCENT = 1;
+	const ADULT = 2;
+	
+	public $type = self::PC;
+	public $ageRange = self::CHILD;
 	
 	public $CuMod = 0;
 	public $SolMod = 0;
@@ -134,7 +142,7 @@ function Invoke(State $s, $dataref) {
 function PrintCharacterEntries(Character $c) {
 	foreach($c->entries as $e) {
 		if($e[2] === null) continue;
-		printf("(%-4s) %30s: %s\n", $e[0], $e[1], $e[2]);
+		printf("(%-4s) %30.30s: %s\n", $e[0], $e[1], $e[2]);
 	}
 }
 

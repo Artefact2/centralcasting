@@ -85,7 +85,7 @@ Table($s, "114B", "Noteworthy Items", Roll(20), [
 				Table($s, "", "", Roller(6), [
 					"1" => [ "Has rival", function() use(&$s) {
 							Invoke($s, "762");
-							if($s->char->isNPC === false && Roll(6) >= 5) {
+							if($s->char->type === Character::PC && Roll(6) >= 5) {
 								$s->char->entries[] = [ "", "", "Rival actively seeks out character" ];
 							}
 						}],
