@@ -1,7 +1,9 @@
 #!/usr/bin/env php
 <?php
 
-function getcolor(string $s): string {
+require __DIR__.'/../inc.php';
+
+function colorize(string $s): string {
 	if($s !== '' && ctype_digit($s[0])) {
 		$i = (int)$s[0];
 		if($i > 0 && $i < 9) {
@@ -9,6 +11,22 @@ function getcolor(string $s): string {
 		}
 	}
 	return '/set39/9';
+}
+
+function get_full_name(string $name, string $path, string $contents) {
+	preg_match('%/\*<<< Name: (.+) >>>\*/%U', $contents, $match);
+	if(isset($match[1])) {
+		return $match[1];
+	}
+
+	$s = new State();
+	require $path;
+
+	if($s->char->entries === [] || $s->char->entries[0][1] === '' || $s->char->entries[0][0] !== $name) {
+		return null;
+	} else {
+		return $s->char->entries[0][1];
+	}
 }
 
 echo "digraph {\n";
@@ -25,19 +43,13 @@ foreach(glob(__DIR__.'/../data/*.php') as $path) {
 foreach($datas as $name => $path) {
 	$source = file_get_contents($path);
 	
-	preg_match('%Table\([^,]+,\s*("'.$name.'"|\''.$name.'\')\s*,\s*(("[^"]*")|(\'[^\']*\'))\s*,%U', $source, $match);
-	$displayname = $name;
-	if(isset($match[2])) {
-		$displayname .= "\n".substr($match[2], 1, -1);
-	} else {
-		preg_match('%/\*<<< Name: (.+) >>>\*/%U', $source, $match);
-		if(isset($match[1])) {
-			$displayname .= "\n".$match[1];
-		} else {
-			fprintf(STDERR, "NOTICE: data %s has no name\n", $name);
-		}
-	}
+	$fullname = get_full_name($name, $path, $source);
+	$displayname = $fullname ? $name."\n".$fullname : $name;
 
+	if($fullname === null) {
+		fprintf(STDERR, "NOTICE: data %s has no name\n", $name);
+	}
+	
 	if(preg_match('%^[0-9]%', $name)) {
 		if(preg_match('%[A-Z]$%', $name)) {
 			$shape = 'note';
@@ -48,7 +60,7 @@ foreach($datas as $name => $path) {
 		$shape = 'doublecircle';
 	}
 	
-	printf("\"%s\" [style=filled fillcolor=\"%s\" label=\"%s\" shape=%s]\n", $name, getcolor($name), $displayname, $shape);
+	printf("\"%s\" [style=filled fillcolor=\"%s\" label=\"%s\" shape=%s]\n", $name, colorize($name), $displayname, $shape);
 
 	preg_match_all('%Invoker?\(([^)]+)\)%U', $source, $matches);
 	foreach($matches[1] as $m) {
@@ -59,7 +71,7 @@ foreach($datas as $name => $path) {
 	}
 	
 	/* XXX may not always indicate we're rerolling the *same* table */
-	if(preg_match('%(TableReroller\()|($table\()%U', $source, $match)) {
+	if(preg_match('%(TableReroller\()|(\$table\()%U', $source, $match)) {
 		printf("\"%s\" -> \"%s\"\n", $name, $name);
 	}
 }

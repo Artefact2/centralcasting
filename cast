@@ -9,7 +9,6 @@ if($argc !== 2 || !file_exists($argv[1])) {
 }
 
 $s = new State();
-$s->char = new Character();
 
 require $argv[1];
 

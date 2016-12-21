@@ -11,7 +11,13 @@ assert_options(ASSERT_ACTIVE, 1);
 assert_options(ASSERT_WARNING, 1);
 assert_options(ASSERT_BAIL, 1);
 
-class State {}
+class State {
+	public $char;
+
+	public function __construct() {
+		$this->char = new Character();
+	}
+}
 
 class Character {
 	public $CuMod = 0;
@@ -65,8 +71,8 @@ function Table(State $s, $id, $name, $roll, array $entries, int $flags = 0) {
 			}
 
 			$entry = [ $id, $name, $e ];
-		
-			if(is_string($e)) $s->char->entries[] =& $entry;
+			$s->char->entries[] =& $entry;
+			
 			if(is_callable($action)) {
 				$ret = $action();
 				if(is_string($ret)) {
@@ -124,6 +130,7 @@ function Invoke(State $s, $dataref) {
 
 function PrintCharacterEntries(Character $c) {
 	foreach($c->entries as $e) {
+		if($e[2] === null) continue;
 		printf("(%-4s) %30s: %s\n", $e[0], $e[1], $e[2]);
 	}
 }
