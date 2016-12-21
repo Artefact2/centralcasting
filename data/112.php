@@ -21,6 +21,5 @@ Table($s, "112", "Unusual Birth", Roll(100) + $s->char->BiMod, [
 		}],
 ]);
 
-while(--$s->char->unusualBirthOccurences >= 0) {
-	Invoke($s, "113");
-}
+Repeater($s->char->unusualBirthOccurences, Invoker($s, "113"))();
+unset($s->char->unusualBirthOccurences);

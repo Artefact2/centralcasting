@@ -20,6 +20,8 @@ class State {
 }
 
 class Character {
+	public $isNPC = false;
+	
 	public $CuMod = 0;
 	public $SolMod = 0;
 	public $LegitMod = 0;
@@ -83,6 +85,7 @@ function Table(State $s, $id, $name, $roll, array $entries, int $flags = 0) {
 			return;
 		}
 
+		fprintf(STDERR, "WARNING: table %s is incomplete, got roll %d\n", $id, $roll);
 		assert(false);
 	}
 }
@@ -143,6 +146,7 @@ function EditCharacter(Character $c, $id, $newval) {
 		}
 	}
 
+	fprintf(STDERR, "WARNING: couldn't find key %s in character\n", $id);
 	assert(false);
 }
 
@@ -192,5 +196,13 @@ function Roller($n, $sides = null, $plusmod = 0): callable {
 function EntryAdder(State $s, string $entry, string $name = "", string $id = ""): callable {
 	return function() use(&$s, $entry, $name, $id) {
 		$s->char->entries[] = [ $id, $name, $entry ];
+	};
+}
+
+function Repeater($count, callable $action): callable {
+	if(is_callable($count)) $count = $count();
+	assert(is_int($count) && $count >= 0);
+	return function() use($count, $action) {
+		while(--$count >= 0) $action();
 	};
 }

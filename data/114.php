@@ -3,4 +3,11 @@
 /*<<< Name: Parents & NPCs >>>*/
 
 Invoke($s, "114A");
-Invoke($s, "114B");
+
+$count = Roll(3);
+while(--$count >= 0) {
+	if($s->char->isNPC === false) {
+		$s->char->entries[] = [ "", "", Roll(6) <= 4 ? 'To head of household:' : 'To other parent (if applicable):' ];
+	}
+	Invoke($s, "114B");
+}

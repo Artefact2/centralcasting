@@ -1,7 +1,7 @@
 <?php
 
 $table = function($roll = null) use(&$s, &$table) {
-	Table($s, "113", "Unusual Birth Circumstance", $roll ?? function() { return Roll(100); }, [
+	Table($s, "113", "Unusual Birth Circumstance", $roll ?? Roller(100), [
 		"1-5" => "*Noteworth person near home died when character was born",
 		"6-10" => "*Wolves and dogs set up a howling when character was born",
 		"11-20" => "*Mother died in childbirth",
@@ -19,14 +19,8 @@ $table = function($roll = null) use(&$s, &$table) {
 		"32-34" => "*Water froze or boiled by itself",
 		"35-37" => "Seasonally unnatural weather occured",
 		"38" => "*Unnaturally potent storms raged",
-		"39-41" => [ "*Born at exactly midnight", function() use(&$s) {
-				$sub = Roll(3);
-				while(--$sub >= 0) Invoke($s, "113A");
-			}],
-		"42-44" => [ "*Born at exactly noon", function() use(&$s) {
-				$sub = Roll(3);
-				while(--$sub >= 0) Invoke($s, "113B");
-			}],
+		"39-41" => [ "*Born at exactly midnight", Repeater(Roll(3), Invoker($s, "113A")) ],
+		"42-44" => [ "*Born at exactly noon", Repeater(Roll(3), Invoker($s, "113B")) ],
 		"46-48" => [ "*Seer declares character will be afflicted by long forgotten ancient family curse", Invoker($s, "868") ],
 		"49-50" => [ "*Goose laid golden egg when character was born", function() use(&$s) {
 				$r = Roll(10);
@@ -46,10 +40,7 @@ $table = function($roll = null) use(&$s, &$table) {
 		"86" => "Character is one of a set of identical triplets",
 		"87-88" => [ "*Old hag (witch) prophesies character's death", Invoker($s, "545") ],
 		"89-93" => [ "*Born with unusual physical affliction", Invoker($s, "874") ],
-		"94" => [ "Born with phychic powers", function() use(&$s) {
-				$c = Roll(3);
-				while(--$c >= 0) Invoke($s, "873");
-			}],
+		"94" => [ "Born with phychic powers", Repeater(Roll(3), Invoker($s, "873")) ],
 		"95-99" => [ "Mysterious stranger bestows a gift on the character at birth", Invoker($s, "863") ],
 		"100" => [ null, function() use(&$s, &$table) {
 				TableForgetRerollInfo($s, "113", "100");

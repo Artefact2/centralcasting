@@ -49,10 +49,7 @@ $table = function() use(&$s, &$table) {
 		"19" => "Liver damage, alcohol becomes poisonous, -1 Constitution",
 		"20" => [ null, function() use(&$s, &$table) {
 				TableForgetRerollInfo($s, "870", "20");
-				$count = Roll(2) + 1;
-				while(--$count >= 0) {
-					$table();
-				}
+				Repeater(Roll(2) + 1, $table)();
 			}],
 	], TABLE_REROLL_DUPLICATES);
 };

@@ -82,7 +82,5 @@ if($s->char->CuMod <= -2) {
 	]);
 }
 
-while(--$s->char->LandTitles >= 0) {
-	Invoke($s, "871");
-}
+Repeater($s->char->LandTitles, Invoker($s, "871"))();
 unset($s->char->LandTitles);
