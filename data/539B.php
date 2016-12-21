@@ -6,7 +6,7 @@ $table = function($roll = null) use(&$s, &$table) {
 		"1" => [ "Befriended by owner", function() use(&$s) {
 				Table($s, "", "", Roll(8), [
 					"1-4" => "Owner becomes good friend",
-					"5-7" => "Owner becomes patron", Invoker($s, "543") ],
+					"5-7" => [ "Owner becomes patron", Invoker($s, "543") ],
 					"8" => [ "Owner becomes companion", Invoker($s, "761C") ],
 				]);
 			}],
