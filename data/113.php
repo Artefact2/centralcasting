@@ -21,6 +21,7 @@ $table = function($roll = null) use(&$s, &$table) {
 		"38" => "*Unnaturally potent storms raged",
 		"39-41" => [ "*Born at exactly midnight", Repeater(Roll(3), Invoker($s, "113A")) ],
 		"42-44" => [ "*Born at exactly noon", Repeater(Roll(3), Invoker($s, "113B")) ],
+		"45" => [ null, TableReroller($s, $table) ], /* Another error in the book! :-) */
 		"46-48" => [ "*Seer declares character will be afflicted by long forgotten ancient family curse", Invoker($s, "868") ],
 		"49-50" => [ "*Goose laid golden egg when character was born", function() use(&$s) {
 				$r = Roll(10);
