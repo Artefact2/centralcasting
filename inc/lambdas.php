@@ -18,7 +18,13 @@ function Combiner(callable ...$lambdas): callable {
 
 function Invoker(string ...$datas): callable {
 	return function(State $s) use($datas) {
-		$s->invokeTables(...$datas);
+		$s->invoke(...$datas);
+	};
+}
+
+function ModifierIncreaser(string $k, int $v): callable {
+	return function($s) use($k, $v) {
+		$s->getActiveCharacter()->increaseModifier($k, $v);
 	};
 }
 
@@ -26,12 +32,6 @@ function Invoker(string ...$datas): callable {
 
 
 /* XXX broken code below */
-
-function CharIncrementer(State $s, $k, $v): callable {
-	return function() use(&$s, $k, $v) {
-		$s->char->$k += $v;
-	};
-}
 
 function TableReroller(State $s, callable $table, callable $roller = null, int $count = 1, array $avoid = []): callable {
 	assert($count >= 0);

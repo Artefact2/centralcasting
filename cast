@@ -18,7 +18,5 @@ if($argc !== 2) {
 }
 
 $s = new State();
-$s->invokeScripts($argv[1]);
-
-echo "Player Character\n================\n";
+$s->invoke($argv[1]);
 $s->getRootCharacter()->printPlaintextSummary();

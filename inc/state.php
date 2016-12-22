@@ -36,7 +36,7 @@ class State {
 		return $c;
 	}
 
-	private function invoke(callable $action, string ...$datas): void {
+	private function genericInvoke(callable $action, string ...$datas): void {
 		foreach($datas as $data) {
 			$f = __DIR__.'/../data/'.$data.'.php';
 			if(!file_exists($f)) {
@@ -48,28 +48,22 @@ class State {
 		}
 	}
 
-	public function invokeScripts(string ...$datas): void {
-		$this->invoke(function($f) {
+	public function invoke(string ...$datas): void {
+		$this->genericInvoke(function($f) {
 			$s = $this;
-			require $f;
+			$ret = require $f;
+			if($ret instanceof RandomExecutor) {
+				$ret->execute($this);
+			}
 		}, ...$datas);
 	}
 
 	public function invokeTable(string $data, ...$executeArgs) {
-		$this->invoke(function($f) {
+		$this->invoke(function($f) use($executeArgs) {
 			$s = $this;
 			$table = require $f;
 			assert($table instanceof RandomExecutor);
 			$table->execute($this, ...$executeArgs);
 		}, $data);
-	}
-
-	public function invokeTables(string ...$datas) {
-		$this->invoke(function($f) {
-			$s = $this;
-			$table = require $f;
-			assert($table instanceof RandomExecutor);
-			$table->execute($this);
-		}, ...$datas);
 	}
 }

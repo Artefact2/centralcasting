@@ -20,6 +20,14 @@ class Character {
 	private $name;
 	private $type;
 	private $ageRange;
+
+	private $modifiers = [
+		'CuMod' => 0, /* Cultural modifier */
+		'SolMod' => 0, /* Social status modifier */
+		'LegitMod' => 0, /* Birth legitimacy modifier */
+		'BiMod' => 0, /* Birth modifier */
+		'TiMod' => 0, /* Title modifier */
+	];
 	
 	public $CuMod = 0;
 	public $SolMod = 0;
@@ -42,7 +50,7 @@ class Character {
 		$this->setType($type);
 		$this->setAgeRange($ageRange);
 
-		$this->rootEntry = new Entry("000", "(Root entry)");
+		$this->rootEntry = new Entry("000", "Root entry");
 		$this->activeEntry = $this->rootEntry;
 	}
 
@@ -70,6 +78,21 @@ class Character {
 		$this->ageRange = $ageRange;
 	}
 
+	public function getModifier(string $mod): int {
+		assert(isset($this->modifiers[$mod]));
+		return $this->modifiers[$mod];
+	}
+
+	public function setModifier(string $mod, int $v): void {
+		assert(isset($this->modifiers[$mod]));
+		$this->modifiers[$mod] = $v;
+	}
+
+	public function increaseModifier(string $mod, int $v): void {
+		assert(isset($this->modifiers[$mod]));
+		$this->modifiers[$mod] += $v;
+	}
+
 	public function getRootEntry(): Entry {
 		return $this->rootEntry;
 	}
@@ -89,10 +112,21 @@ class Character {
 	}
 
 	public function printPlaintextSummary(): void {
-		$prefix = '|   ';
-		$len = 120;
+		static $prefix = '|   ';
+		static $cprefix = '+ ';
+		static $len = 120;
 
-		$traverse = function(Entry $e, int $level) use($len, $prefix, &$traverse) {
+		$modline = [];
+		foreach($this->modifiers as $k => $v) {
+			$modline[] = sprintf("%s: %+2d", $k, $v);
+		}
+		$modline = implode(", ", $modline);
+
+		$hlen = $len - strlen($modline) - 3;
+		printf("%-".$hlen.".".$hlen."s (%s)\n", $this->getName(), $modline);
+		echo str_repeat("=", $len), "\n";
+
+		$traverse = function(Entry $e, int $level) use($len, $prefix, $cprefix, &$traverse) {
 			$prefix = str_repeat($prefix, $level);			
 			$lines = $e->getLines();
 			if($lines === []) $lines[] = '';
@@ -100,11 +134,11 @@ class Character {
 			foreach($lines as $line) {
 				if($first) {
 					$first = false;
-					$hlen = $len - 6;
+					$hlen = $len - 7;
 					printf(
 						"%-".$hlen.".".$hlen."s(%-5.5s)\n",
 						$prefix
-						.($e->getChildren() === [] ? '' : '* ')
+						.($e->getChildren() === [] ? '' : $cprefix)
 						.$e->getSourceName().': '
 						.$line, $e->getSourceID()
 					);
