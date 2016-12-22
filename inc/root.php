@@ -7,43 +7,19 @@
  * License, Version 2, as published by Sam Hocevar. See
  * http://sam.zoy.org/wtfpl/COPYING for more details. */
 
+namespace HeroesOfLegend;
+
 assert_options(ASSERT_ACTIVE, 1);
 assert_options(ASSERT_WARNING, 1);
 assert_options(ASSERT_BAIL, 1);
 
-class State {
-	public $char;
+require __DIR__.'/state.php';
+require __DIR__.'/character.php';
+require __DIR__.'/entries.php';
+require __DIR__.'/tables.php';
+require __DIR__.'/lambdas.php';
 
-	public function __construct() {
-		$this->char = new Character();
-	}
-}
-
-class Character {
-	const PC = 0;
-	const NPC = 1;
-
-	const CHILD = 0;
-	const ADOLESCENT = 1;
-	const ADULT = 2;
-	
-	public $type = self::PC;
-	public $ageRange = self::CHILD;
-	
-	public $CuMod = 0;
-	public $SolMod = 0;
-	public $LegitMod = 0;
-	public $BiMod = 0;
-	public $TiMod = 0;
-
-	public $traits = [
-		'L' => 0,
-		'D' => 0,
-		'N' => 0,
-		'R' => 0,
-	];
-	public $entries = [];
-};
+/* XXX broken code below */
 
 const TABLE_REROLL_DUPLICATES = 1;
 
@@ -153,13 +129,6 @@ function Invoke(State $s, string ...$datarefs) {
 	}
 }
 
-function PrintCharacterEntries(Character $c) {
-	foreach($c->entries as $e) {
-		if($e[2] === null) continue;
-		printf("(%-4s) %30.30s: %s\n", $e[0], $e[1], $e[2]);
-	}
-}
-
 function EditCharacter(Character $c, $id, $newval) {
 	foreach($c->entries as &$e) {
 		if($e[0] === $id) {
@@ -181,85 +150,4 @@ function GetCharacterValue(Character $c, $id, $default = null) {
 	}
 
 	return $default;
-}
-
-function Combiner(callable ...$lambdas): callable {
-	return function() use($lambdas) {
-		foreach($lambdas as $l) $l();
-	};
-}
-
-function Invoker(State $s, string ...$datarefs): callable {
-	return function() use(&$s, $datarefs) {
-		Invoke($s, ...$datarefs);
-	};
-}
-
-function CharIncrementer(State $s, $k, $v): callable {
-	return function() use(&$s, $k, $v) {
-		$s->char->$k += $v;
-	};
-}
-
-function TableReroller(State $s, callable $table, callable $roller = null, int $count = 1, array $avoid = []): callable {
-	assert($count >= 0);
-	assert($roller !== null || $avoid === []);
-
-	return function() use(&$s, $table, $roller, $count, $avoid) {
-		while(--$count >= 0) {
-			if($roller !== null) {
-				do {
-					$roll = $roller();
-				} while(in_array($roll, $avoid, true));
-			
-				$table($roll);
-			} else {
-				$table();
-			}
-		}
-	};
-}
-
-function Roller($n, $sides = null, $plusmod = 0): callable {
-	return function() use($n, $sides, $plusmod) {
-		return Roll($n, $sides) + $plusmod;
-	};
-}
-
-function EntryAdder(State $s, $entry, string $name = "", string $id = ""): callable {
-	return function() use(&$s, $entry, $name, $id) {
-		if($entry === null) return;
-		assert(is_string($entry));
-		$s->char->entries[] = [ $id, $name, $entry ];
-	};
-}
-
-function Repeater($count, callable $action): callable {
-	if(is_callable($count)) $count = $count();
-	assert(is_int($count) && $count >= 0);
-	return function() use($count, $action) {
-		while(--$count >= 0) $action();
-	};
-}
-
-function TraitAdder(State $s, string $type): callable {
-	return function() use(&$s, $type) {
-		++$s->char->traits[$type];
-	};
-}
-
-function RandomTrait(State $s): callable {
-	return TraitAdder($s, 'R');
-}
-
-function LightsideTrait(State $s): callable {
-	return TraitAdder($s, 'L');
-}
-
-function DarksideTrait(State $s): callable {
-	return TraitAdder($s, 'D');
-}
-
-function NeutralTrait(State $s): callable {
-	return TraitAdder($s, 'N');
 }

@@ -10,7 +10,7 @@ mean, in terms of roleplaying.
 Dependencies
 ============
 
-PHP 7 CLI.
+PHP 7.1.
 
 Usage
 =====
@@ -18,7 +18,7 @@ Usage
 Generate a PC:
 
 ~~~
-./cast data/pc.php
+./cast pc
 ~~~
 
 To Do
