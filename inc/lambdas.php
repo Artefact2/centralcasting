@@ -44,7 +44,18 @@ function Repeater(int $count, callable $action): callable {
 	};
 }
 
+function SubtableInvoker(Roller $r, array $entries) {
+	$anon = new AnonymousSubtable($r, $entries);
+	return function(State $s) use($anon) {
+		$anon->execute($s);
+	};
+}
 
+function LineAdder(string $line) {
+	return function(State $s) use($line) {
+		$s->getActiveCharacter()->getActiveEntry()->addLine($line);
+	};
+}
 
 
 /* XXX broken code below */

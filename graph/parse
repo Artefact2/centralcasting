@@ -79,7 +79,7 @@ foreach($datas as $name => $path) {
 
 	/* XXX replace this by properly iterating through tables, using ->executeAll() */
 	preg_match_all(
-		'%((->invoke|Invoker)\((?<mc>[^)]+)\)|((->invokeTable|TableInvoker)\((?<sc>[^,]),))%U',
+		'%((->invoke|[^e]Invoker)\((?<mc>[^)]+)\)|((->invokeTable|TableInvoker)\((?<sc>[^,]),))%U',
 		$source, $matches
 	);
 	foreach($matches['mc'] ?: $matches['sc'] as $m) {

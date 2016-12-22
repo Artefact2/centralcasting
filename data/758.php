@@ -86,6 +86,6 @@ return new NamedTable("758D", "Nobles", DiceRoller::from("d100"), [
 	"51-60" => $tdata["C"],
 	"61-75" => $tdata["B"],
 	"76-78" => $tdata["BL"],
-	"79-90" => Roll(100) <= 21 ? $tdata["PRU"] : $tdata["PC"],
+	"79-90" => Roll("d100") <= 21 ? $tdata["PRU"] : $tdata["PC"],
 	"91-100" => $tdata["K"],
 ]);

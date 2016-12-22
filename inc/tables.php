@@ -159,6 +159,29 @@ class NamedTable extends RandomTable implements PayloadCreator {
 	}
 }
 
-class AnonymousTable extends RandomTable {
-	/* TODO */
+class AnonymousSubtable extends RandomTable implements PayloadCreator {
+	public function __construct(Roller $roller, array $entries) {
+		parent::__construct($roller, $entries, $this);
+	}
+
+	public function createPayload(?string $text, ?callable $action): callable {
+		assert($text !== null || $action !== null);
+
+		return function(State $s) use($text, $action) {			
+			$ch = $s->getActiveCharacter();
+			$e = $ch->getActiveEntry();
+
+			if($text !== null) $e->addLine($text);			
+			if($action === null) return;
+			
+			$newtext = $action($s);
+			
+			if(is_string($newtext)) {
+				if($newtext === '') $newtext = null;
+				assert($e->replaceLine($text, $newtext) === true);
+			} else {
+				assert($newtext === null);
+			}
+		};
+	}
 }
