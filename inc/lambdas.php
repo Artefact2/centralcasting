@@ -79,14 +79,6 @@ function TableReroller(State $s, callable $table, callable $roller = null, int $
 	};
 }
 
-function EntryAdder(State $s, $entry, string $name = "", string $id = ""): callable {
-	return function() use(&$s, $entry, $name, $id) {
-		if($entry === null) return;
-		assert(is_string($entry));
-		$s->char->entries[] = [ $id, $name, $entry ];
-	};
-}
-
 function TraitAdder(State $s, string $type): callable {
 	return function() use(&$s, $type) {
 		++$s->char->traits[$type];

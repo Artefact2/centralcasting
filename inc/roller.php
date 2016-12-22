@@ -83,6 +83,23 @@ class DiceRoller implements Roller {
 	}
 }
 
+class RerollFilter implements Roller {
+	private $roller;
+	private $filter;
+	
+	public function __construct(Roller $roller, callable $filter) {
+		$this->roller = $roller;
+		$this->filter = $filter;
+	}
+
+	public function roll(?State $s = null): int {
+		do {
+			$roll = $this->roller->roll($s);
+		} while(($this->filter)($roll) === false);
+		return $roll;
+	}
+}
+
 /* Just syntactic sugar */
 function Roll(string $dicespec, ?State $s = null): int {
 	return DiceRoller::from($dicespec)->roll($s);

@@ -19,4 +19,6 @@ if($argc !== 2) {
 
 $s = new State();
 $s->invoke($argv[1]);
+
+$s->getRootCharacter()->getRootEntry()->prune();
 $s->getRootCharacter()->printPlaintextSummary();

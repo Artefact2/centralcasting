@@ -24,10 +24,15 @@ class Entry {
 		if($line !== null) $this->addLine($line);
 	}
 
-	public function replaceLine(string $old, ?string $new): bool {
+	public function replaceLine(?string $old, ?string $new): bool {
+		if($old === null) {
+			$this->addLine($new);
+			return true;
+		}
+		
 		foreach($this->lines as $k => &$val) {
 			if($val === $old) {
-				if($old !== null) $val = $new;
+				if($new !== null) $val = $new;
 				else unset($this->lines[$k]);
 				
 				return true;
@@ -37,12 +42,34 @@ class Entry {
 		return false;
 	}
 
-	public function addLine(string $line): void {
+	public function findAndReplaceLines(string $id, array $newlines): ?array {
+		if($this->sourceID === $id) {
+			$oldlines = $this->lines;
+			$this->lines = $newlines;
+			return $oldlines;
+		}
+
+		foreach($this->children as $c) {
+			if(($oldlines = $c->findAndReplaceLines($id, $newlines)) !== null) {
+				return $oldlines;
+			}
+		}
+
+		return null;
+	}
+
+	public function addLine(?string $line): void {
+		if($line === null) return;
+		
 		assert(strpos($line, "\n") === false);
 		$this->lines[] = $line;
 	}
 
 	public function addChild(Entry $child): void {
+		if(($parent = $child->getParent()) !== null) {
+			assert($parent->removeChild($child) === true);
+		}
+		
 		$child->setParent($this);
 		$this->children[] = $child;
 	}
@@ -85,5 +112,38 @@ class Entry {
 
 	public function isEmpty(): bool {
 		return $this->children === [] && $this->lines === [];
+	}
+
+	public function isTrivial(): bool {
+		return $this->lines === [];
+	}
+
+	public function prune(): void {
+		foreach($this->children as $c) $c->prune();
+		if($this->parent === null) return;
+
+		if($this->isTrivial()) {
+			$canprune = true;
+			
+			foreach($this->children as $c) {
+				if($c->getSourceID() !== $this->getSourceID()) {
+					$canprune = false;
+					break;
+				}
+			}
+
+			if($canprune) {
+				foreach($this->children as $c) {
+					$this->parent->addChild($c);
+				}
+			}
+
+			assert($this->isEmpty());
+		}
+		
+		if($this->isEmpty()) {
+			assert($this->parent->removeChild($this) === true);
+			return;
+		}
 	}
 }

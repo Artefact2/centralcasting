@@ -151,10 +151,6 @@ class NamedTable extends RandomTable implements PayloadCreator {
 				assert($newtext === null);
 			}
 			$ch->setActiveEntry($sub->getParent());
-
-			if($sub->isEmpty()) {
-				assert($sub->getParent()->removeChild($sub) === true);
-			}
 		};
 	}
 }

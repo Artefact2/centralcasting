@@ -13,13 +13,18 @@ class Character {
 	const PC = 0;
 	const NPC = 1;
 
-	const CHILD = 0;
-	const ADOLESCENT = 1;
-	const ADULT = 2;
+	const CHILD = 10;
+	const ADOLESCENT = 11;
+	const ADULT = 12;
+
+	const MALE = 20;
+	const FEMALE = 21;
 
 	private $name;
 	private $type;
 	private $ageRange;
+	private $alive; /* bool */
+	private $gender;
 
 	private $modifiers = [
 		'CuMod' => 0, /* Cultural modifier */
@@ -28,13 +33,16 @@ class Character {
 		'BiMod' => 0, /* Birth modifier */
 		'TiMod' => 0, /* Title modifier */
 	];
-	
-	public $CuMod = 0;
-	public $SolMod = 0;
-	public $LegitMod = 0;
-	public $BiMod = 0;
-	public $TiMod = 0;
 
+	private $mother; /* ?Character */
+	private $father; /* ?Character */
+	private $guardian; /* ?Character */
+	private $grandparents; /* ?Character[] */
+	private $cousins; /* int */
+	private $siblings; /* int */
+	private $illegitSiblings; /* int */
+
+	/* XXX */
 	public $traits = [
 		'L' => 0,
 		'D' => 0,
@@ -45,38 +53,78 @@ class Character {
 	private $rootEntry;
 	private $activeEntry;
 
-	public function __construct($name = 'Unnamed character', $type = self::PC, $ageRange = self::CHILD) {
+	public function __construct(string $name, int $type, int $ageRange) {
 		$this->setName($name);
 		$this->setType($type);
 		$this->setAgeRange($ageRange);
+
+		$this->mother = null;
+		$this->father = null;
+		$this->guardian = null;
+		$this->grandparents = [ null, null, null, null ]; /* MGM, MGF, PGM, PGF */
+		$this->cousins = 0;
+		$this->siblings = 0;
+		$this->illegitSiblings = 0;
+
+		$this->alive = true;
+		$this->gender = null;
 
 		$this->rootEntry = new Entry("000", "Root entry");
 		$this->activeEntry = $this->rootEntry;
 	}
 
-	public function getName(): string {
-		return $this->name;
+	public static function PC(): Character {
+		return new self('Player Character', self::PC, self::CHILD);
 	}
 
-	public function setName(string $name): void {
-		$this->name = $name;
+	public static function NPC(string $name): Character {
+		return new self($name, self::NPC, self::ADULT);
 	}
 
-	public function getType(): int {
-		return $this->type;
-	}
+	public function getName(): string { return $this->name;	}
+	public function setName(string $name): void { $this->name = $name; }
 
+	public function getType(): int { return $this->type; }
 	public function setType(int $type): void {
+		assert(in_array($type, [ self::PC, self::NPC ], true));
 		$this->type = $type;
 	}
 
-	public function getAgeRange(): int {
-		return $this->ageRange;
-	}
-
+	public function getAgeRange(): int { return $this->ageRange; }
 	public function setAgeRange(int $ageRange): void {
+		assert(in_array($ageRange, [ self::CHILD, self::ADOLESCENT, self::ADULT ], true));
 		$this->ageRange = $ageRange;
 	}
+
+	public function getMother(): ?Character { return $this->mother; }
+	public function setMother(?Character $m): void { $this->mother = $m; }
+
+	public function getFater(): ?Character { return $this->father; }
+	public function setFather(?Character $f): void { $this->father = $f; }
+
+	public function getGuardian(): ?Character { return $this->guardian; }
+	public function setGuardian(?Character $g): void { $this->guardian = $g; }
+
+	public function getGrandparents(): array { return $this->grandparents; }
+	public function setGrandparent(int $pos, ?Character $gp): void {
+		assert($pos >= 0 && $pos <= 3);
+		$this->grandparents[$pos] = $gp;
+	}
+
+	public function getNumCousins(): int { return $this->cousins; }
+	public function setNumCousins(int $n): void {
+		assert($n >= 0);
+		$this->cousins = $n;
+	}
+
+	public function getGender(): int { return $this->gender; }
+	public function setGender(int $g): void {
+		assert(in_array($g, [ self::MALE, self::FEMALE ], true));
+		$this->gender = $g;
+	}
+
+	public function isAlive(): bool { return $this->alive; }
+	public function kill(): void { $this->alive = false; }
 
 	public function getModifier(string $mod): int {
 		assert(isset($this->modifiers[$mod]));
