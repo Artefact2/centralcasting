@@ -8,6 +8,8 @@
  * License, Version 2, as published by Sam Hocevar. See
  * http://sam.zoy.org/wtfpl/COPYING for more details. */
 
+namespace HeroesOfLegend;
+
 require __DIR__.'/../inc/root.php';
 
 function colorize(string $s): string {
@@ -27,13 +29,11 @@ function get_full_name(string $name, string $path, string $contents) {
 	}
 
 	$s = new State();
-	require $path;
+	$s->invoke($name);
 
-	if($s->char->entries === [] || $s->char->entries[0][1] === '' || $s->char->entries[0][0] !== $name) {
-		return null;
-	} else {
-		return $s->char->entries[0][1];
-	}
+	$ch = $s->getActiveCharacter()->getRootEntry()->getChildren();
+	if(count($ch) !== 1) return null;
+	return $ch[0]->getSourceName();
 }
 
 echo "digraph {\n";
@@ -48,6 +48,12 @@ foreach(glob(__DIR__.'/../data/*.php') as $path) {
 
 foreach($datas as $name => $path) {
 	$source = file_get_contents($path);
+
+	if(strpos($source, "namespace HeroesOfLegend;\n") === false) {
+		/* XXX */
+		fprintf(STDERR, "NOTICE: data %s needs upgrading\n", $name);
+		continue;
+	}
 	
 	$fullname = get_full_name($name, $path, $source);
 	$displayname = $fullname ? $name."\n".$fullname : $name;
@@ -66,19 +72,21 @@ foreach($datas as $name => $path) {
 		$shape = 'doublecircle';
 	}
 	
-	printf("\"%s\" [style=filled fillcolor=\"%s\" label=\"%s\" shape=%s]\n", $name, colorize($name), $displayname, $shape);
+	printf(
+		"\"%s\" [style=filled fillcolor=\"%s\" label=\"%s\" shape=%s]\n",
+		$name, colorize($name), $displayname, $shape
+	);
 
-	preg_match_all('%Invoker?\(([^)]+)\)%U', $source, $matches);
-	foreach($matches[1] as $m) {
-		preg_match_all('%"([^"]+)"%U', $m, $submatches);
-		foreach($submatches[1] as $sm) {
+	/* XXX replace this by properly iterating through tables, using ->executeAll() */
+	preg_match_all(
+		'%((->invoke|Invoker)\((?<mc>[^)]+)\)|((->invokeTable|TableInvoker)\((?<sc>[^,]),))%U',
+		$source, $matches
+	);
+	foreach($matches['mc'] ?: $matches['sc'] as $m) {
+		preg_match_all('%(?<Q>"|\')(?<tablename>[1-9][0-9]*[A-Z]*)\k<Q>%U', $m, $submatches);
+		foreach($submatches['tablename'] as $sm) {
 			printf("\"%s\" -> \"%s\"\n", $name, $sm);
 		}
-	}
-	
-	/* XXX may not always indicate we're rerolling the *same* table */
-	if(preg_match('%(TableReroller\()|(\$table\()%U', $source, $match)) {
-		printf("\"%s\" -> \"%s\"\n", $name, $name);
 	}
 }
 

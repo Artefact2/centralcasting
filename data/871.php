@@ -3,7 +3,6 @@
 namespace HeroesOfLegend;
 
 return new NamedTable("871", "Special Nobility Title", DiceRoller::from("d1"), [
-	"1" => Invoker("871A", "871B", "871C"), /* XXX merge entries */
 	"1" => function(State $s) {
 		$s->invoke("871A", "871B", "871C");
 		$e = $s->getActiveCharacter()->getActiveEntry();
