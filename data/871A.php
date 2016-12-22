@@ -1,6 +1,8 @@
 <?php
 
-Table($s, "871A", "Position of Merit", Roll(20), [
+namespace HeroesOfLegend;
+
+return new NamedTable("871A", "Position of Merit", DiceRoller::from("d20"), [
 	"1" => "Commander of the",
 	"2" => "Custodian of the",
 	"3" => "Grim Sentinel of the",

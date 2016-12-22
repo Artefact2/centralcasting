@@ -18,6 +18,7 @@ require __DIR__.'/character.php';
 require __DIR__.'/entries.php';
 require __DIR__.'/tables.php';
 require __DIR__.'/lambdas.php';
+require __DIR__.'/roller.php';
 
 /* XXX broken code below */
 
@@ -94,39 +95,6 @@ function TableForgetRerollInfo(State $s, $id = null, $range = null) {
 	}
 
 	unset($s->char->_table[$id][$range]);
-}
-
-function Roll($n, $sides = null) {
-	if($sides === null) {
-		$sides = $n;
-		$n = 1;
-	}
-	
-	$r = 0;
-
-	assert($n >= 0);
-	assert($sides >= 1);
-
-	for($i = 0; $i < $n; ++$i) {
-		$r += 1 + (mt_rand() % $sides);
-	}
-
-	return $r;
-}
-
-function Invoke(State $s, string ...$datarefs) {
-	foreach($datarefs as $dataref) {
-		$f = __DIR__.'/data/'.$dataref.'.php';
-		if(!file_exists($f)) {
-			fprintf(STDERR, "WARNING: data %s not implemented\n", $dataref);
-			continue;
-		}
-
-		/* Isolate scope of each invoked element */
-		(function($f) use(&$s) {
-			require $f;
-		})($f);
-	}
 }
 
 function EditCharacter(Character $c, $id, $newval) {

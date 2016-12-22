@@ -22,9 +22,25 @@ function Invoker(string ...$datas): callable {
 	};
 }
 
+function TableInvoker(string $data, ...$executeArgs): callable {
+	return function(State $s) use($data, $executeArgs) {
+		$s->invokeTable($data, ...$executeArgs);
+	};
+}
+
 function ModifierIncreaser(string $k, int $v): callable {
 	return function($s) use($k, $v) {
 		$s->getActiveCharacter()->increaseModifier($k, $v);
+	};
+}
+
+function Repeat(int $count, callable $action, ...$args): void {
+	while(--$count >= 0) $action(...$args);
+}
+
+function Repeater(int $count, callable $action): callable {
+	return function(...$args) use($count, $action) {
+		Repeat($count, $action, ...$args);
 	};
 }
 
@@ -52,25 +68,11 @@ function TableReroller(State $s, callable $table, callable $roller = null, int $
 	};
 }
 
-function Roller($n, $sides = null, $plusmod = 0): callable {
-	return function() use($n, $sides, $plusmod) {
-		return Roll($n, $sides) + $plusmod;
-	};
-}
-
 function EntryAdder(State $s, $entry, string $name = "", string $id = ""): callable {
 	return function() use(&$s, $entry, $name, $id) {
 		if($entry === null) return;
 		assert(is_string($entry));
 		$s->char->entries[] = [ $id, $name, $entry ];
-	};
-}
-
-function Repeater($count, callable $action): callable {
-	if(is_callable($count)) $count = $count();
-	assert(is_int($count) && $count >= 0);
-	return function() use($count, $action) {
-		while(--$count >= 0) $action();
 	};
 }
 

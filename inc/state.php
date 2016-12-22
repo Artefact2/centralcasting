@@ -58,8 +58,8 @@ class State {
 		}, ...$datas);
 	}
 
-	public function invokeTable(string $data, ...$executeArgs) {
-		$this->invoke(function($f) use($executeArgs) {
+	public function invokeTable(string $data, ...$executeArgs): void {
+		$this->genericInvoke(function($f) use($executeArgs) {
 			$s = $this;
 			$table = require $f;
 			assert($table instanceof RandomExecutor);

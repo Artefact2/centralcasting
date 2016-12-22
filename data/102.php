@@ -2,7 +2,7 @@
 
 namespace HeroesOfLegend;
 
-return new NamedTable("102", "Cultural Background", Roller(10), [
+return new NamedTable("102", "Cultural Background", DiceRoller::from("d10"), [
 	"1" => [ "Primitive", ModifierIncreaser("CuMod", -3) ],
 	"2-3" => "Nomad",
 	"4-6" => [ "Barbarian", ModifierIncreaser("CuMod", 2) ],

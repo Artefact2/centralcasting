@@ -10,7 +10,7 @@
 namespace HeroesOfLegend;
 
 interface RandomExecutor {
-	public function execute(State $s, ?callable $roller = null, bool $combineRoll = false): void;
+	public function execute(State $s, ?Roller $roller = null, bool $combineRoll = false): void;
 	public function executeAll(State $s): void;
 }
 
@@ -41,7 +41,7 @@ class RandomTable implements RandomExecutor {
 		return [ (int)$range, (int)$range ];
 	}
 	
-	public function __construct(callable $roller, array $entries, PayloadCreator $pc) {
+	public function __construct(Roller $roller, array $entries, PayloadCreator $pc) {
 		$this->roller = $roller;		
 		$this->actions = [];
 		$this->pc = $pc;
@@ -91,12 +91,12 @@ class RandomTable implements RandomExecutor {
 		}
 	}
 
-	public function execute(State $s, ?callable $roller = null, bool $combineRoll = false): void {
+	public function execute(State $s, ?Roller $roller = null, bool $combineRoll = false): void {
 		if($combineRoll === true) {
 			assert($roller !== null);
-			$roll = $roller() + ($this->roller)();
+			$roll = $roller($s) + $this->roller->roll($s);
 		} else {
-			$roll = $roller ? $roller() : ($this->roller)();
+			$roll = $roller ? $roller->roll($s) : $this->roller->roll($s);
 		}
 
 		assert(is_int($roll));
@@ -112,7 +112,7 @@ class RandomTable implements RandomExecutor {
 	}
 
 	public function executeAll(State $s): void {
-
+		/* TODO */
 	}
 }
 
@@ -120,7 +120,7 @@ class NamedTable extends RandomTable implements PayloadCreator {
 	private $id;
 	private $name;
 
-	public function __construct(string $id, string $name, callable $roller, array $entries) {
+	public function __construct(string $id, string $name, Roller $roller, array $entries) {
 		parent::__construct($roller, $entries, $this);
 		
 		assert(preg_match('%^[1-9][0-9]*[A-Z]*$%', $id));
@@ -135,16 +135,30 @@ class NamedTable extends RandomTable implements PayloadCreator {
 
 		return function(State $s) use($text, $action) {
 			$sub = new Entry($this->id, $this->name, $text);
+			
 			$ch = $s->getActiveCharacter();
 			$ch->getActiveEntry()->addChild($sub);
+			
 			if($action === null) return;
+			
 			$ch->setActiveEntry($sub);
-			$action($s);
+			$newtext = $action($s);
+			
+			if(is_string($newtext)) {
+				if($newtext === '') $newtext = null;
+				assert($sub->replaceLine($text, $newtext) === true);
+			} else {
+				assert($newtext === null);
+			}
 			$ch->setActiveEntry($sub->getParent());
+
+			if($sub->isEmpty()) {
+				assert($sub->getParent()->removeChild($sub) === true);
+			}
 		};
 	}
 }
 
 class AnonymousTable extends RandomTable {
-
+	/* TODO */
 }

@@ -114,6 +114,7 @@ class Character {
 	public function printPlaintextSummary(): void {
 		static $prefix = '|   ';
 		static $cprefix = '+ ';
+		static $ncprefix = '| ';
 		static $len = 120;
 
 		$modline = [];
@@ -126,10 +127,14 @@ class Character {
 		printf("%-".$hlen.".".$hlen."s (%s)\n", $this->getName(), $modline);
 		echo str_repeat("=", $len), "\n";
 
-		$traverse = function(Entry $e, int $level) use($len, $prefix, $cprefix, &$traverse) {
-			$prefix = str_repeat($prefix, $level);			
+		$traverse = function(Entry $e, int $level) use($len, $prefix, $cprefix, $ncprefix, &$traverse) {
+			$prefix = str_repeat($prefix, $level);
+
 			$lines = $e->getLines();
 			if($lines === []) $lines[] = '';
+
+			$haschildren = $e->getChildren() !== [];
+			
 			$first = true;
 			foreach($lines as $line) {
 				if($first) {
@@ -138,12 +143,17 @@ class Character {
 					printf(
 						"%-".$hlen.".".$hlen."s(%-5.5s)\n",
 						$prefix
-						.($e->getChildren() === [] ? '' : $cprefix)
+						.($haschildren ? $cprefix : '')
 						.$e->getSourceName().': '
 						.$line, $e->getSourceID()
 					);
 				} else {
-					printf("%-".$len.".".$len."s\n", $prefix.$line);
+					printf(
+						"%-".$len.".".$len."s\n",
+						$prefix
+						.($haschildren ? $ncprefix : '')
+						.$line
+					);
 				}
 			}
 

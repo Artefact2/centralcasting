@@ -24,6 +24,19 @@ class Entry {
 		if($line !== null) $this->addLine($line);
 	}
 
+	public function replaceLine(string $old, ?string $new): bool {
+		foreach($this->lines as $k => &$val) {
+			if($val === $old) {
+				if($old !== null) $val = $new;
+				else unset($this->lines[$k]);
+				
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	public function addLine(string $line): void {
 		assert(strpos($line, "\n") === false);
 		$this->lines[] = $line;
@@ -32,6 +45,17 @@ class Entry {
 	public function addChild(Entry $child): void {
 		$child->setParent($this);
 		$this->children[] = $child;
+	}
+
+	public function removeChild(Entry $child): bool {
+		foreach($this->children as $k => $c) {
+			if($c === $child) {
+				unset($this->children[$k]);
+				return true;
+			}
+		}
+		
+		return false;
 	}
 
 	public function getSourceID(): string {
@@ -57,5 +81,9 @@ class Entry {
 
 	public function getChildren(): array {
 		return $this->children;
+	}
+
+	public function isEmpty(): bool {
+		return $this->children === [] && $this->lines === [];
 	}
 }

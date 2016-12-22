@@ -2,7 +2,7 @@
 
 namespace HeroesOfLegend;
 
-return new NamedTable("101", "Character Race", Roller(20), [
+return new NamedTable("101", "Character Race", DiceRoller::from("d20"), [
 	"1-14" => "Human",
 	"15-16" => "Elf",
 	"17" => "Dwarf",
