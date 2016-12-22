@@ -2,9 +2,11 @@
 
 /*<<< Name: Player Character >>>*/
 
+$s->char->type = Character::PC;
+$s->char->ageRange = Character::CHILD;
+
 Invoke($s, "101", "102", "103", "104", "106", "107", "109", "110", "112", "114");
 
-$s->char->ageRange = Character::CHILD;
 $s->char->entries[] = [ "", "", "Character is now a child" ];
 $s->char->entries[] = [ "", "", "At age ".Roll(12)." (human equivalent):" ];
 Invoke($s, "215");
