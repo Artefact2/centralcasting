@@ -4,7 +4,7 @@ namespace HeroesOfLegend;
 
 /*<<< Name: Race Event Check >>>*/
 
-$race = $s->getActiveCharacter()->getRootEntry()->findDescendantsByID("101");
+$race = $s->getActiveCharacter()->getRootEntry()->findDescendantByID("101");
 if($race === null) $race = "Human";
 else $race = $race->getLines()[0];
 

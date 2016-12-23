@@ -2,6 +2,8 @@
 
 namespace HeroesOfLegend;
 
+/* XXX reroll nonsensical results */
+
 return new NamedTable("753", "Relative", DiceRoller::from("d20"), [
 	"1" => "First cousin",
 	"2" => "Second cousin",

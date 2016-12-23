@@ -25,6 +25,7 @@ class Character {
 	private $ageRange;
 	private $alive; /* bool */
 	private $gender;
+	private $enslaved; /* bool */
 
 	private $modifiers = [
 		'CuMod' => 0, /* Cultural modifier */
@@ -69,6 +70,7 @@ class Character {
 
 		$this->alive = true;
 		$this->gender = null;
+		$this->enslaved = false;
 
 		$this->rootEntry = new Entry("000", "Root entry");
 		$this->activeEntry = $this->rootEntry;
@@ -144,6 +146,10 @@ class Character {
 
 	public function isAlive(): bool { return $this->alive; }
 	public function kill(): void { $this->alive = false; }
+
+	public function isEnslaved(): bool { return $this->enslaved; }
+	public function enslave(): void { $this->enslaved = true; }
+	public function free(): void { $this->enslaved = false; }
 
 	public function getModifier(string $mod): int {
 		assert(isset($this->modifiers[$mod]));

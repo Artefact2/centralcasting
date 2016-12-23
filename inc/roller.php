@@ -108,7 +108,7 @@ class TrivialRoller implements Roller {
 	}
 
 	public function roll(?State $s = null): int {
-		return $val;
+		return $this->val;
 	}
 }
 
