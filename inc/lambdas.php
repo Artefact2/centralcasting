@@ -91,3 +91,18 @@ function DarksideTrait(): callable {
 function NeutralTrait(): callable {
 	return TraitAdder('N');
 }
+
+function CharacterSandboxer(bool $moveEntries, &$puppet, callable ...$actions): callable {
+	return function(State $s) use($actions, $moveEntries, &$puppet) {
+		$puppet = Character::PC("Sandboxed Puppet");
+		$s->pushActiveCharacter($puppet);
+		foreach($actions as $a) $a($s);
+		$s->popActiveCharacter($puppet);
+		if($moveEntries) {
+			$ae = $s->getActiveCharacter()->getActiveEntry();
+			foreach($puppet->getRootEntry()->getChildren() as $pe) {
+				$ae->addChild($pe);
+			}
+		}
+	};
+}

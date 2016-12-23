@@ -19,12 +19,7 @@ return new NamedTable("750", "Other", DiceRoller::from("d20"), [
 		}],
 	"5" => "Mentor (wise person who guides character)",
 	"6" => "Thief",
-	"7" => [ "Noble person", function(State $s) {
-		$ac = $s->getActiveCharacter();
-		$timod = $ac->getModifier('TiMod');
-		$s->invoke("758");
-		$ac->setModifier('TiMod', $timod);
-	}],
+	"7" => [ "Noble person", CharacterSandboxer(true, $char, Invoker("758")) ],
 	"8" => [ "Monster", Invoker("756") ],
 	"9" => "Neighbor (GM decides)",
 	"10" => "Character's lover", /* XXX not always applicable */
