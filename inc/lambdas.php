@@ -51,9 +51,22 @@ function SubtableInvoker(Roller $r, array $entries, ?int $flags = 0, &$outTable 
 	};
 }
 
-function LineAdder(string $line) {
+function LineAdder(string $line): callable {
 	return function(State $s) use($line) {
 		$s->getActiveCharacter()->getActiveEntry()->addLine($line);
+	};
+}
+
+function SubentryCreator(string $id, string $name, ?string $text, callable ...$actions) {
+	return function(State $s) use($id, $name, $text, $actions) {
+		$sub = new Entry($id, $name, $text);
+		$ac = $s->getActiveCharacter();
+		$ac->getActiveEntry()->addChild($sub);
+		$ac->setActiveEntry($sub);
+
+		foreach($actions as $action) $action($s);
+		
+		$ac->setActiveEntry($sub->getParent());
 	};
 }
 
