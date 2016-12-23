@@ -58,6 +58,18 @@ class Entry {
 		return null;
 	}
 
+	public function findDescendantByID(string $id): ?Entry {
+		if($this->sourceID === $id) {
+			return $this;
+		}
+
+		foreach($this->children as $c) {
+			if(($e = $c->findDescendantByID($id)) !== null) return $e;
+		}
+
+		return null;
+	}
+
 	public function addLine(?string $line): void {
 		if($line === null) return;
 		

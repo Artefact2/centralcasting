@@ -1,29 +1,33 @@
- <?php
+<?php
+
+namespace HeroesOfLegend;
 
 /*<<< Name: Race Event Check >>>*/
 
-$race = GetCharacterValue($s->char, "101", "Human");
+$race = $s->getActiveCharacter()->getRootEntry()->findDescendantsByID("101");
+if($race === null) $race = "Human";
+else $race = $race->getLines()[0];
 
 switch($race) {
 case "Elf":
-	Invoke($s, "530");
+	$s->invoke("530");
 	break;
 
 case "Dwarf":
-	Invoke($s, "531");
+	$s->invoke("531");
 	break;
 
 case "Halfling":
-	Invoke($s, "532");
+	$s->invoke("532");
 
 case "Human":
 case "Half Elf":
-	$s->char->entries[] = [ "", "", "Encounter (and befriend) nonhumans:" ];
-	Invoke($s, "751");
+	LineAdder("Encounter (and befriend) nonhumans:")($s);
+	$s->invoke("751");
 	break;
 
 default:
 	/* XXX may be inaccurate, are other races considered monsters? */
-	Invoke($s, "533");
+	$s->invoke("533");
 	break;
 }

@@ -1,8 +1,10 @@
 <?php
 
-Table($s, "419A", "Type of Occupation", Roll(10), [
-	"1-2" => [ null, Invoker($s, "424A") ],
-	"3-4" => [ null, Invoker($s, "424B") ],
-	"5-6" => [ null, Invoker($s, "424C") ],
-	"7-10" => [ null, Invoker($s, "420-423") ],
+namespace HeroesOfLegend;
+
+return new NamedTable("419A", "Type of Occupation", DiceRoller::from("d10"), [
+	"1-2" =>  Invoker("424A"),
+	"3-4" =>  Invoker("424B"),
+	"5-6" =>  Invoker("424C"),
+	"7-10" => Invoker("420-423"),
 ]);

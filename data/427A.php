@@ -1,6 +1,8 @@
 <?php
 
-Table($s, "427A", "Type of Hobby", Roll(20), [
+namespace HeroesOfLegend;
+
+return new NamedTable("427A", "Type of Hobby", DiceRoller::from("d20"), [
 	"1" => "Collect something (weapons, animals, books, paintings, signatures, etc.)",
 	"2" => "Dancing (participating, or spectating)",
 	"3" => "Play a musical instrument (brass, wind, stringed, percussion, etc.)",
@@ -13,7 +15,7 @@ Table($s, "427A", "Type of Hobby", Roll(20), [
 	"10" => "Study: ".[
 		"history", "religion", "art", "astronomy",
 		"astrology", "other cultures", "magic", "weapons",
-	][Roll(8) - 1],
+	][Roll("d8-1")],
 	"11" => "Sport and athletics: ".[
 		"wrestling (+1 Strength)",
 		"running (+1 Constitution)",
@@ -23,7 +25,7 @@ Table($s, "427A", "Type of Hobby", Roll(20), [
 		"swimming (can swim)",
 		"archery (can wield bows)",
 		"boxing (can fight with fists)",
-	][Roll(8) - 1],
+	][Roll("d8-1")],
 	"12" => "Build detailed models",
 	"13" => "Appreciate and critique arts (music, drama, poetry, etc.)",
 	"14" => "Hairdressing and cosmetics",

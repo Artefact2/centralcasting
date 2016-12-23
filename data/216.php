@@ -1,14 +1,16 @@
 <?php
 
+namespace HeroesOfLegend;
+
 /*<<< Name: Special Event of Childhood & Adolescence >>>*/
 
-switch($s->char->ageRange) {
+switch($s->getActiveCharacter()->getAgeRange()) {
 case Character::CHILD:
-	Invoke($s, "216A");
+	$s->invoke("216A");
 	break;
 
 case Character::ADOLESCENT:
-	Invoke($s, "216B");
+	$s->invoke("216B");
 	break;
 
 default:

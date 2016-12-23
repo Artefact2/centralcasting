@@ -20,3 +20,5 @@ if($cumod <= -2) {
 	/* Civilized */
 	$s->invoke("423A");
 }
+
+$s->invoke("426");

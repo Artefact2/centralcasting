@@ -51,7 +51,7 @@ function SubtableInvoker(Roller $r, array $entries, ?int $flags = 0, &$outTable 
 	};
 }
 
-function LineAdder(string $line): callable {
+function LineAdder(?string $line): callable {
 	return function(State $s) use($line) {
 		$s->getActiveCharacter()->getActiveEntry()->addLine($line);
 	};
@@ -70,46 +70,24 @@ function SubentryCreator(string $id, string $name, ?string $text, callable ...$a
 	};
 }
 
-
-/* XXX broken code below */
-
-function TableReroller(State $s, callable $table, callable $roller = null, int $count = 1, array $avoid = []): callable {
-	assert($count >= 0);
-	assert($roller !== null || $avoid === []);
-
-	return function() use(&$s, $table, $roller, $count, $avoid) {
-		while(--$count >= 0) {
-			if($roller !== null) {
-				do {
-					$roll = $roller();
-				} while(in_array($roll, $avoid, true));
-			
-				$table($roll);
-			} else {
-				$table();
-			}
-		}
+function TraitAdder(string $type): callable {
+	return function(State $s) use($type) {
+		$s->getActiveCharacter()->addTrait($type);
 	};
 }
 
-function TraitAdder(State $s, string $type): callable {
-	return function() use(&$s, $type) {
-		++$s->char->traits[$type];
-	};
+function RandomTrait(): callable {
+	return TraitAdder('R');
 }
 
-function RandomTrait(State $s): callable {
-	return TraitAdder($s, 'R');
+function LightsideTrait(): callable {
+	return TraitAdder('L');
 }
 
-function LightsideTrait(State $s): callable {
-	return TraitAdder($s, 'L');
+function DarksideTrait(): callable {
+	return TraitAdder('D');
 }
 
-function DarksideTrait(State $s): callable {
-	return TraitAdder($s, 'D');
-}
-
-function NeutralTrait(State $s): callable {
-	return TraitAdder($s, 'N');
+function NeutralTrait(): callable {
+	return TraitAdder('N');
 }

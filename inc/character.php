@@ -42,12 +42,11 @@ class Character {
 	private $siblings; /* int */
 	private $illegitSiblings; /* int */
 
-	/* XXX */
-	public $traits = [
-		'L' => 0,
-		'D' => 0,
-		'N' => 0,
-		'R' => 0,
+	private $traits = [
+		'L' => 0, /* Lightside */
+		'D' => 0, /* Darkside */
+		'N' => 0, /* Neutral */
+		'R' => 0, /* Random */
 	];
 	
 	private $rootEntry;
@@ -161,6 +160,11 @@ class Character {
 		$this->modifiers[$mod] += $v;
 	}
 
+	public function addTrait(string $type): void {
+		assert(isset($this->traits[$type]));
+		++$this->traits[$type];
+	}
+
 	public function getRootEntry(): Entry {
 		return $this->rootEntry;
 	}
@@ -179,6 +183,7 @@ class Character {
 		$this->activeEntry = $e;
 	}
 
+	/* XXX wrap long lines */
 	public function printPlaintextSummary(): void {
 		static $prefix = '|   ';
 		static $cprefix = '+ ';

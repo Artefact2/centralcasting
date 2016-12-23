@@ -1,7 +1,6 @@
 <?php
 
-/*<<< Name: Apprenticeship >>>*/
+namespace HeroesOfLegend;
 
 /* XXX duration, ranks, the master etc. */
-Invoke($s, "419A");
-Invoke($s, "419B");
+SubentryCreator("419", "Apprenticeship", null, Invoker("419A", "419B"))($s);
