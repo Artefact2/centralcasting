@@ -36,7 +36,7 @@ $nt = new NamedTable("113", "Unusual Birth Circumstance", DiceRoller::from("d100
 	"58-62" => "*Infant character left to die on hillside, discovered and subsequently raised by foster parents",
 	"63-64" => [ "*Birth happens immediately after a tragedy", Invoker("528") ],
 	"65-69" => [ "*Born with unusual birthmark", Invoker("866") ],
-	"70-75" => [ "*Born with curse", Invoker("686") ],
+	"70-75" => [ "*Born with curse", Invoker("868") ],
 	"76-81" => [ "*Born with blessing", Invoker("869") ],
 	"82-85" => "Character has a ".(Roll("d2") === 1 ? 'male' : 'female')." fraternal twin",
 	"86" => "Character is one of a set of identical triplets",
