@@ -165,6 +165,9 @@ $nt->addPostExecuteHook(function(State $s) {
 	}
 
 	$ac->setActiveEntry($ae);
+
+	/* XXX if imprisoned, invoke 540 */
+	/* XXX reduce prison time for wealthy chars */
 });
 
 return $nt;

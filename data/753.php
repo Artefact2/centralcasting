@@ -10,15 +10,43 @@ return new NamedTable("753", "Relative", DiceRoller::from("d20"), [
 	"3" => "Distant cousin",
 	"4" => "Son",
 	"5" => "Daughter",
-	"6" => "Sister",
-	"7" => "Brother",
+	"6" => function(State $s) {
+		if($s->getActiveCharacter()->getNumSisters() > 0) {
+			return "Sister";
+		} else if($s->getActiveCharacter()->getNumBrothers() > 0) {
+			return "Brother";
+		}
+		$s->invoke("753");
+		return '';
+	},
+	"7" => function(State $s) {
+		if($s->getActiveCharacter()->getNumBrothers() > 0) {
+			return "Brother";
+		} else if($s->getActiveCharacter()->getNumSisters() > 0) {
+			return "Sister";
+		}
+		$s->invoke("753");
+		return '';
+	},
 	"8" => "Spouse",
 	"9" => "Aunt",
 	"10" => "Uncle",
 	"11" => "Great aunt",
 	"12" => "Great uncle",
-	"13" => "Mother",
-	"14" => "Father",
+	"13" => function(State $s) {
+		if($s->getActiveCharacter()->hasMother()) {
+			return "Mother";
+		}
+		$s->invoke("753");
+		return '';
+	},
+	"14" => function(State $s) {
+		if($s->getActiveCharacter()->hasFather()) {
+			return "Father";
+		}
+		$s->invoke("753");
+		return '';
+	},
 	"15" => "Grandmother",
 	"16" => "Grandfather",
 	"17" => "Great grandmother",

@@ -40,7 +40,8 @@ class Character {
 	private $guardian; /* ?Character */
 	private $grandparents; /* ?Character[] */
 	private $cousins; /* int */
-	private $siblings; /* int */
+	private $brothers; /* int */
+	private $sisters; /* int */
 	private $illegitSiblings; /* int */
 
 	private $traits = [
@@ -65,7 +66,8 @@ class Character {
 		$this->guardian = null;
 		$this->grandparents = [ null, null, null, null ]; /* MGM, MGF, PGM, PGF */
 		$this->cousins = 0;
-		$this->siblings = 0;
+		$this->brothers = 0;
+		$this->sisters = 0;
 		$this->illegitSiblings = 0;
 
 		$this->alive = true;
@@ -126,10 +128,30 @@ class Character {
 		$this->cousins = $n;
 	}
 
-	public function getNumSiblings(): int { return $this->siblings; }
-	public function setNumSiblings(int $n): void {
+	public function getNumBrothers(): int { return $this->brothers; }
+	public function setNumBrothers(int $n): void {
 		assert($n >= 0);
-		$this->siblings = $n;
+		$this->brothers = $n;
+	}
+
+	public function getNumSisters(): int { return $this->sisters; }
+	public function setNumSisters(int $n): void {
+		assert($n >= 0);
+		$this->sisters = $n;
+	}
+
+	public function getNumSiblings(): int {
+		return $this->brothers + $this->sisters;
+	}
+
+	public function pickRandomSibling(): ?string {
+		if($this->brothers === 0 && $this->sisters === 0) return null;
+		$r = Roll("d".($this->brothers + $this->sisters));
+		if($r <= $this->brothers) {
+			return 'Brother';
+		} else {
+			return 'Sister';
+		}
 	}
 
 	public function getNumIllegitSiblings(): int { return $this->illegitSiblings; }

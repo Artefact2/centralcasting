@@ -4,14 +4,15 @@ namespace HeroesOfLegend;
 
 $produceSiblings = function(int $c) {
 	return function(State $s) use($c) {
-		$ac = $s->getActiveCharacter();
-		$ac->setNumSiblings($ac->getNumSiblings() + $c);
-		$s->invoke("108");
-
 		$genders = [ 0, 0 ];
 		while(--$c >= 0) {
 			++$genders[(int)(Roll("d20") <= 9)];
 		}
+		
+		$ac = $s->getActiveCharacter();
+		$ac->setNumBrothers($ac->getNumBrothers() + $genders[0]);
+		$ac->setNumSisters($ac->getNumSisters() + $genders[1]);
+		$s->invoke("108");
 
 		$result = [];
 		if($genders[0] > 0) $result[] = $genders[0]." brother(s)";
