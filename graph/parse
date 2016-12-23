@@ -32,7 +32,6 @@ function get_full_name(string $name, string $path, string $contents) {
 	$s->invoke($name);
 
 	$ch = $s->getActiveCharacter()->getRootEntry()->getChildren();
-	if(count($ch) !== 1) return null;
 	return $ch[0]->getSourceName();
 }
 
@@ -83,7 +82,7 @@ foreach($datas as $name => $path) {
 		$source, $matches
 	);
 	foreach(array_merge($matches['mc'], $matches['sc']) as $m) {
-		preg_match_all('%(?<Q>"|\')(?<tablename>[1-9][0-9]*[A-Z]*)\k<Q>%U', $m, $submatches);
+		preg_match_all('%(?<Q>"|\')(?<tablename>[1-9][0-9]*[A-Z]*|[1-9][0-9]*-[1-9][0-9]*)\k<Q>%U', $m, $submatches);
 		foreach($submatches['tablename'] as $sm) {
 			printf("\"%s\" -> \"%s\"\n", $name, $sm);
 		}

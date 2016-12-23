@@ -1,41 +1,55 @@
 <?php
 
-Table($s, "114A", "Occupation", Roll(20), [
-	"1-12" => [ "Head of household has one occupation", Invoker($s, "420-423") ],
+namespace HeroesOfLegend;
+
+return new NamedTable("114A", "Occupation", DiceRoller::from("d20"), [
+	"1-12" => [ "Head of household has one occupation", Invoker("420-423") ],
 	"13-14" => [ "Head of household has one full-time occupation and another part-time occupation", Combiner(
-		EntryAdder($s, "Full-time occupation:"),
-		Invoker($s, "420-423"),
-		EntryAdder($s, "Part-time occupation:"),
-		CharIncrementer($s, "CuMod", -2),
-		Invoker($s, "420-423"),
-		CharIncrementer($s, "CuMod", 2)
+		LineAdder("Full-time occupation:"),
+		Invoker("420-423"),
+		LineAdder("Part-time occupation:"),
+		ModifierIncreaser("CuMod", -2),
+		Invoker("420-423"),
+		ModifierIncreaser("CuMod", 2)
 	)],
-	"15-16" => [ "Head of household has no occupation, other parent works", function() use(&$s) {
-			$sub = 0;
+	"15-16" => [ "Head of household has no occupation, other parent works", function(State $s) {
+		$ac = $s->getActiveCharacter();
+		if(!$ac->hasMother() || !$ac->hasFather()) {
+			$s->invoke("114A");
+			return '';
+		}
+
+		$sub = 0;
 			
-			switch(Roll(6)) {
-			case 6:
-				$sub = -2;
-				break;
+		switch(Roll(6)) {
+		case 6:
+			$sub = -2;
+			break;
 
-			case 4:
-			case 5:
-				$sub = 2;
-				break;
-			}
+		case 4:
+		case 5:
+			$sub = 2;
+			break;
+		}
 
-			$s->char->CuMod -= $sub;
-			Invoke($s, "420-423");
-			$s->char->CuMod += $sub;
-		}],
-	"17-18" => [ "Both parents in household have an occupation", Combiner(
-		EntryAdder($s, "Mother:"),
-		Invoker($s, "420-423"),
-		EntryAdder($s, "Father:"),
-		Invoker($s, "420-423")
-	)],
-	"19" => [ "Head of household is/was an adventurer", Invoker($s, "757") ],
+		$s->char->CuMod -= $sub;
+		Invoke($s, "420-423");
+		$s->char->CuMod += $sub;
+	}],
+	"17-18" => [ "Both parents in household have an occupation", function(State $s) {
+		$ac = $s->getActiveCharacter();
+		if(!$ac->hasMother() || !$ac->hasFather()) {
+			$s->invoke("114A");
+			return '';
+		}
+
+		LineAdder("Mother:")($s);
+		$s->invoke("420-423");
+		LineAdder("Father:")($s);
+		$s->invoke("420-423");
+	}],
+	"19" => [ "Head of household is/was an adventurer", Invoker("757") ],
 	"20" => [ "Head of household has no visible occupation, money just seems to be available when needed",
-	          EntryAdder($s, "See GM special 978#114")
+	          LineAdder("See GM special 978#114")
 	],
 ]);

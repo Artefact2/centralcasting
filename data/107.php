@@ -1,48 +1,52 @@
 <?php
 
-$s->char->siblings = 0;
-$s->char->illegitSiblings = 0;
+namespace HeroesOfLegend;
 
-$table = function() use(&$s, &$table) {
-	Table($s, "107", "Siblings", Roll(20), [
-		"1-2" => null,
-		"3-9" => [ null, CharIncrementer($s, "siblings", Roll(3)) ],
-		"10-15" => [ null, CharIncrementer($s, "siblings", Roll(3) + 1) ],
-		"16-17" => [ null, CharIncrementer($s, "siblings", Roll(4) + 2) ],
-		"18-19" => [ null, CharIncrementer($s, "siblings", Roll(2, 4)) ],
-		"20" => [ null, Combiner(
-			CharIncrementer($s, "illegitSiblings", Roll(3)),
-			TableReroller($s, $table)
-		)],
-	]);
+$produceSiblings = function(int $c) {
+	return function(State $s) use($c) {
+		$ac = $s->getActiveCharacter();
+		$ac->setNumSiblings($ac->getNumSiblings() + $c);
+		$s->invoke("108");
+
+		$genders = [ 0, 0 ];
+		while(--$c >= 0) {
+			++$genders[(int)(Roll("d20") <= 9)];
+		}
+
+		$result = [];
+		if($genders[0] > 0) $result[] = $genders[0]." brother(s)";
+		if($genders[1] > 0) $result[] = $genders[1]." sister(s)";
+		return implode(" and ", $result);
+	};
 };
-$table();
 
-$illegit = $legit = [ 'm' => 0, 'f' => 0 ];
-for($i = 0; $i < $s->char->siblings; ++$i) {
-	$legit[Roll(20) <= 9 ? 'm' : 'f']++;
-}
-for($i = 0; $i < $s->char->illegitSiblings; ++$i) {
-	$illegit[Roll(20) <= 9 ? 'm' : 'f']++;
-}
+return new NamedTable("107", "Siblings", DiceRoller::from("d20"), [
+	"1-2" => function(State $s) {
+		if($s->getActiveCharacter()->getNumIllegitSiblings() > 0) {
+			return "No legitimate siblings";
+		} else {
+			return "No siblings";
+		}
+	},
+	"3-9" => $produceSiblings(Roll("d3")),
+	"10-15" => $produceSiblings(Roll("d3+1")),
+	"16-17" => $produceSiblings(Roll("d4+2")),
+	"18-19" => $produceSiblings(Roll("2d4")),
+	"20" => Combiner(
+		Invoker("107"),
+		function(State $s) {
+			$c = Roll("d3");
+			$ac = $s->getActiveCharacter();
+			$ac->setNumIllegitSiblings($ac->getNumIllegitSiblings() + $c);
 
-$siblings = [];
+			$genders = [ 0, 0 ];
+			while(--$c >= 0) {
+				++$genders[(int)(Roll("d20") <= 9)];
+			}
 
-if($legit['m'] > 0) $siblings[] = $legit['m'].' brother(s)';
-if($legit['f'] > 0) $siblings[] = $legit['f'].' sister(s)';
-
-if($illegit['m'] > 0) $siblings[] = $illegit['m'].' illegitimate brother(s)';
-if($illegit['f'] > 0) $siblings[] = $illegit['f'].' illegitimate sister(s)';
-
-if($siblings === []) {
-	$siblings[] = 'None, only child';
-}
-
-$s->char->entries[] = [ "107", "Siblings", implode(', ', $siblings) ];
-
-if($s->char->siblings > 0) {
-	Invoke($s, "108");
-}
-
-unset($s->char->siblings);
-unset($s->char->illegitSiblings);
+			$result = [];
+			if($genders[0] > 0) $result[] = $genders[0]." illegitimate brother(s)";
+			if($genders[1] > 0) $result[] = $genders[1]." illegitimate sister(s)";
+			LineAdder(implode(" and ", $result))($s);
+		}),
+]);

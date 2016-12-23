@@ -1,6 +1,8 @@
 <?php
 
-Table($s, "751", "Nonhuman", Roll(20), [
+namespace HeroesOfLegend;
+
+return new NamedTable("751", "Nonhuman", DiceRoller::from("d20"), [
 	"1-4" => "Elf",
 	"5-8" => "Dwarf",
 	"9-11" => "Halfling",

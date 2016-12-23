@@ -1,6 +1,8 @@
 <?php
 
-Table($s, "761C", "What kind of companion?", Roll(10), [
+namespace HeroesOfLegend;
+
+return new NamedTable("761C", "What kind?", DiceRoller::from("d10"), [
 	"1-3" => "Loyal Friend",
 	"4-5" => "Bumbling Buddy",
 	"6" => "Grim Ally",

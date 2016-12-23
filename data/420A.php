@@ -1,10 +1,14 @@
 <?php
 
-Table($s, "420A", "Primitive Occupation", Roll(20), [
+namespace HeroesOfLegend;
+
+$nt = new NamedTable("420A", "Primitive Occupation", DiceRoller::from("d20"), [
 	"1-9" => "Fisherman",
 	"10-18" => "Hunter",
 	"19" => "Warrior",
-	"20" => [ "Special occupation", Invoker($s, "420B") ],
+	"20" => [ "Special occupation", Invoker("420B") ],
 ]);
 
-Invoke($s, "426");
+$nt->addPostExecuteHook(Invoker("426"));
+
+return $nt;

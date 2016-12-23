@@ -10,10 +10,12 @@ $pc->setName('Player Character');
 $pc->setType(Character::PC);
 $pc->setAgeRange(Character::CHILD);
 
-$s->invoke("101", "102", "103", "104", "106");
-return;
+SubentryCreator(
+	"100", "Birth Events", null,
+	Invoker("101", "102", "103", "104", "106", "107", "109", "110", "112", "114")
+)($s);
 
-$s->invokeTables("107", "109", "110", "112", "114");
+return;
 
 $s->char->entries[] = [ "", "", "Character is now a child" ];
 $s->char->entries[] = [ "", "", "At age ".Roll(12)." (human equivalent):" ];
