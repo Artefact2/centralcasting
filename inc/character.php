@@ -223,10 +223,12 @@ class Character {
 			$haschildren = $e->getChildren() !== [];
 			
 			$first = true;
+			$snprefix = '';
 			foreach($lines as $line) {
 				if($first) {
 					$first = false;
 					$hlen = $len - 7;
+					$snprefix = str_repeat(' ', strlen($e->getSourceName()) + 2);
 					printf(
 						"%-".$hlen.".".$hlen."s(%-5.5s)\n",
 						$prefix
@@ -239,6 +241,7 @@ class Character {
 						"%-".$len.".".$len."s\n",
 						$prefix
 						.($haschildren ? $ncprefix : '')
+						.$snprefix
 						.$line
 					);
 				}
