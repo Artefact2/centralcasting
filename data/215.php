@@ -39,7 +39,7 @@ return new NamedTable("215", "Significant Event of Childhood & Adolescence", Dic
 	"16" => [ "Change/upheaval occurs in family", Combiner(RandomTrait(), Invoker("215B")) ],
 	"17" => [ "Something bad happens to character", Combiner(DarksideTrait(), SubtableInvoker(DiceRoller::from("d4"), [
 		"1" => [ "Sexually molested by adult", Invoker("750") ],
-		"2" => [ "Tragedy occurs", Invoker("758") ],
+		"2" => [ "Tragedy occurs", Invoker("528") ],
 		"3" => [ "Character teases/angers old woman (witch), has curse put on him", Invoker("868") ],
 		"4" => [ "Character acquires rival", Invoker("762") ],
 	]))],
