@@ -100,6 +100,18 @@ class RerollFilter implements Roller {
 	}
 }
 
+class TrivialRoller implements Roller {
+	private $val;
+	
+	public function __construct(int $val) {
+		$this->val = $val;
+	}
+
+	public function roll(?State $s = null): int {
+		return $val;
+	}
+}
+
 /* Just syntactic sugar */
 function Roll(string $dicespec, ?State $s = null): int {
 	return DiceRoller::from($dicespec)->roll($s);
