@@ -21,7 +21,7 @@ interface PayloadCreator {
 class RandomTable implements RandomExecutor {
 	private $id;
 	private $roller;
-	private $actions; /* [ int $lo, int $hi, callable $payload ] */
+	private $actions; /* [ string $range, int $lo, int $hi, callable $payload ] */
 	private $pc;
 	private $posthooks;
 
@@ -86,7 +86,7 @@ class RandomTable implements RandomExecutor {
 			}
 
 			$payload = $this->pc->createPayload($text, $action);
-			$this->actions[] = [ $lo, $hi, function(State $s) use($payload) {
+			$this->actions[] = [ $range, $lo, $hi, function(State $s) use($payload) {
 					$payload($s);
 					foreach($this->posthooks as $ph) {
 						$ph($s);
@@ -95,12 +95,12 @@ class RandomTable implements RandomExecutor {
 		}
 
 		usort($this->actions, function($a, $b) {
-			return ($a[0] <=> $b[0]) ?: ($a[1] <=> $b[1]);
+			return ($a[1] <=> $b[1]) ?: ($a[2] <=> $b[2]);
 		});
 
 		/* Make sure table has no holes or overlapping ranges */
 		$phi = null;
-		foreach($this->actions as [ $lo, $hi, ]) {
+		foreach($this->actions as [ , $lo, $hi, ]) {
 			assert($phi === null || $lo === $phi + 1);
 			$phi = $hi;
 		}
@@ -118,17 +118,17 @@ class RandomTable implements RandomExecutor {
 
 		assert(is_int($roll));
 		
-		foreach($this->actions as [ $lo, $hi, $payload ]) {
+		foreach($this->actions as [ $range, $lo, $hi, $payload ]) {
 			if($roll < $lo || $roll > $hi) continue;
 
 			if($this->flags & self::REROLL_DUPLICATES) {
-				if($s->getActiveCharacter()->isTableRangeVisited($this->id, $lo.'~'.$hi)) {
+				if($s->getActiveCharacter()->isTableRangeVisited($this->id, $range)) {
 					$this->execute($s, $roller, $combineRoll);
 					return;
 				}
 			}
 
-			$s->getActiveCharacter()->markVisitedTableRange($this->id, $lo.'~'.$hi);
+			$s->getActiveCharacter()->markVisitedTableRange($this->id, $range);
 			$payload($s);
 			return;
 		}
