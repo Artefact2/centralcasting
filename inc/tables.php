@@ -23,9 +23,10 @@ class RandomTable implements RandomExecutor {
 	private $roller;
 	private $actions; /* [ int $lo, int $hi, callable $payload ] */
 	private $pc;
+	private $posthooks;
 
 	const REROLL_DUPLICATES = 1;
-
+	
 	private $flags;
 
 	public static function parseRange(string $range): array {
@@ -51,6 +52,7 @@ class RandomTable implements RandomExecutor {
 		$this->roller = $roller;		
 		$this->actions = [];
 		$this->pc = $pc;
+		$this->posthooks = [];
 		$this->flags = $flags;
 		
 		foreach($entries as $range => $e) {
@@ -82,8 +84,14 @@ class RandomTable implements RandomExecutor {
 					$text = $action = null;
 				}
 			}
-		
-			$this->actions[] = [ $lo, $hi, $this->pc->createPayload($text, $action) ];
+
+			$payload = $this->pc->createPayload($text, $action);
+			$this->actions[] = [ $lo, $hi, function(State $s) use($payload) {
+					$payload($s);
+					foreach($this->posthooks as $ph) {
+						$ph($s);
+					}
+				}];
 		}
 
 		usort($this->actions, function($a, $b) {
@@ -97,6 +105,8 @@ class RandomTable implements RandomExecutor {
 			$phi = $hi;
 		}
 	}
+
+	public function addPostExecuteHook(callable $c) { $this->posthooks[] = $c; }
 
 	public function execute(State $s, ?Roller $roller = null, bool $combineRoll = false): void {
 		if($combineRoll === true) {
