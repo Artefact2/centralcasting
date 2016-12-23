@@ -2,7 +2,7 @@
 
 namespace HeroesOfLegend;
 
-$nt = new NamedTable("539B", "Freedom consequence", DiceRoller::from("d10"), [
+$nt = new NamedTable("539B", "Freedom Consequence", DiceRoller::from("d10"), [
 	"1" => [ "Befriended by owner", SubtableInvoker(DiceRoller::from("d8"), [
 		"1-4" => "Owner becomes good friend",
 		"5-7" => [ "Owner becomes patron", Invoker("543") ],

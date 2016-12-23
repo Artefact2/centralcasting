@@ -4,7 +4,7 @@ namespace HeroesOfLegend;
 
 $p = Roll("d2") === 1 ? 'Left' : 'Right';
 
-return new NamedTable("870B", "Body part", DiceRoller::from("d6"), [
+return new NamedTable("870B", "Body Part", DiceRoller::from("d6"), [
 	"1" => "$p hand, -1 Dexterity, -1 rank in all manual skills",
 	"2" => "$p arm, -1 Dexterity, -1 rank in all manual skills",
 	"3" => "$p foot, -1 Dexterity, -50% movement speed",

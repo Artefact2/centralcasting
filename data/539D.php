@@ -2,7 +2,7 @@
 
 namespace HeroesOfLegend;
 
-return new NamedTable("539D", "Enslaved event", DiceRoller::from("d20"), [
+return new NamedTable("539D", "Enslaved Event", DiceRoller::from("d20"), [
 	"1" => [ "Character escaped", Invoker("539A") ],
 	"2" => [ "Willingly freed by owner", Invoker("539B") ],
 	"3" => [ "Ruler of the land declared slavery illegal, got free with ".Roll("d100")." gp", function(State $s) {

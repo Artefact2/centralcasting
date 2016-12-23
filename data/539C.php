@@ -2,7 +2,7 @@
 
 namespace HeroesOfLegend;
 
-return new NamedTable("539C", "Death consequence", DiceRoller::from("d6"), [
+return new NamedTable("539C", "Death Consequence", DiceRoller::from("d6"), [
 	"1" => "Sold to a new owner", /* XXX */
 	"2" => [ "Freed", Invoker("539B") ],
 	"3" => [ "ALL owner possesions must be buried with him", Combiner(LineAdder("But character escapes!"), Invoker("539A")) ],

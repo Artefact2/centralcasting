@@ -2,7 +2,7 @@
 
 namespace HeroesOfLegend;
 
-$nt = new NamedTable("539A", "Escape consequence", DiceRoller::from("d8"), [
+$nt = new NamedTable("539A", "Escape Consequence", DiceRoller::from("d8"), [
 	"1" => "Offered ".Roll("d10*100")." gp reward",
 	"2" => "Accompanied by ".Roll("d6")." slaves",
 	"3" => "Government pays a bounty of ".Roll("d10*10")." gp for escaped slaves",
