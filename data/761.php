@@ -1,7 +1,5 @@
 <?php
 
-/*<<< Name: Companions >>>*/
+namespace HeroesOfLegend;
 
-Invoke($s, "761A");
-Invoke($s, "761B");
-Invoke($s, "761C");
+SubentryCreator("761", "Companion", null, Invoker("761A", "761B", "761C"))($s);

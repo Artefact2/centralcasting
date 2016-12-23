@@ -1,6 +1,8 @@
 <?php
 
-Table($s, "757B", "Adventurer Prowess", Roll(20), [
+namespace HeroesOfLegend;
+
+return new NamedTable("757B", "Adventurer Prowess", DiceRoller::from("d20"), [
 	"1-5" => "Beginner (rank 3 or less)",
 	"6-14" => "Veteran (rank 4 to 5)",
 	"15-19" => "Locally famous hero (not someone you cross casually, rank 6 or better)",

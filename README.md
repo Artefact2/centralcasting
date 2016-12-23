@@ -10,7 +10,7 @@ mean, in terms of roleplaying.
 Dependencies
 ============
 
-PHP 7 CLI.
+PHP 7.1.
 
 Usage
 =====
@@ -18,7 +18,7 @@ Usage
 Generate a PC:
 
 ~~~
-./cast data/pc.php
+./cast pc
 ~~~
 
 To Do
@@ -27,9 +27,9 @@ To Do
 * Finish all the tables!
 * Explain how to extend tables and how to write scripts
 * Write scripts for NPCs, evil guys, good guys, etc.
-* A tree-like structure for table results (better for nested things)
-* Keep a lot more state (children, parents, etc.) to avoid nonsensical results
-* Proper encapsulation! Code is a mess right now
+* ~~A tree-like structure for table results (better for nested things)~~
+* ~~Keep a lot more state (children, parents, etc.) to avoid nonsensical results~~ (Still improvable)
+* ~~Proper encapsulation! Code is a mess right now~~ (Still improvable)
 * ~~Generate a huge directed graph of all table connections~~
 * (Maybe) Web interface
 * (Maybe) Make a pre-filled character sheet

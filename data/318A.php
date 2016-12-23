@@ -1,9 +1,11 @@
 <?php
 
-Table($s, "318A", "Personality Trait Check", Roll(100), [
+namespace HeroesOfLegend;
+
+return new NamedTable("318A", "Personality Trait Check", DiceRoller::from("d100"), [
 	"1-50" => null,
-	"51-65" => [ null, Combiner(NeutralTrait($s), Invoker($s, "318B")) ],
-	"66-80" => [ null, Combiner(LightsideTrait($s), Invoker($s, "647")) ],
-	"81-95" => [ null, Combiner(DarksideTrait($s), Invoker($s, "648")) ],
-	"96-100" => [ null, Invoker($s, "649") ],
+	"51-65" =>  Combiner(NeutralTrait(),   Invoker("318B", "318D")),
+	"66-80" =>  Combiner(LightsideTrait(), Invoker("647", "318D")),
+	"81-95" =>  Combiner(DarksideTrait(),  Invoker("648", "318D")),
+	"96-100" =>                            Invoker("649"),
 ]);

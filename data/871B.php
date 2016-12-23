@@ -1,6 +1,8 @@
 <?php
 
-Table($s, "871B", "Location Locator", Roll(20), [
+namespace HeroesOfLegend;
+
+return new NamedTable("871B", "Location Locator", DiceRoller::from("d20"), [
 	"1-10" => "",
 	"11" => "Highland",
 	"12" => "Lowland",

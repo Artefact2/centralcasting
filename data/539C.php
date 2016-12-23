@@ -1,25 +1,25 @@
 <?php
 
-Table($s, "539C", "Death consequence", Roll(6), [
+namespace HeroesOfLegend;
+
+return new NamedTable("539C", "Death consequence", DiceRoller::from("d6"), [
 	"1" => "Sold to a new owner", /* XXX */
-	"2" => [ "Freed", Invoker($s, "539B") ],
-	"3" => [ "ALL owner possesions must be buried with him, but character escapes", Invoker($s, "539A") ],
-	"4" => [ "All slaves now owned by owner's relative", function() use(&$s) { Invoke($s, "753"); } ],
-	"5" => [ "Accused of killing the owner, escapes but death hangs over head", function() use(&$s) {
-			Invoke($s, "545");
-			$s->char->enslaved = false;
-		}],
-	"6" => [
-		"Freed by owners will and became heir ; assume control of all property and slaves",
-		function() use(&$s) {
-			if(Roll(10) < 5) {
-				$s->char->enslaved = false;
-				return;
-			}
-			$s->char->entries[] = [
-				"", "",
-				"But family has will voided, back to enslavement"
-			];
-		},
-	]
+	"2" => [ "Freed", Invoker("539B") ],
+	"3" => [ "ALL owner possesions must be buried with him", Combiner(LineAdder("But character escapes!"), Invoker("539A")) ],
+	"4" => [ "All slaves now owned by owner's relative", Invoker("753") ],
+	"5" => [ "Accused of killing the owner", function(State $s) {
+		LineAdder("Character escapes but death hangs over his/her head")($s);
+		$s->invoke("545");
+		$s->getActiveCharacter()->free();
+	}],
+	"6" => [ "Freed by owners will and became heir", function(State $s) {
+		LineAdder("Assume control of all property and slaves")($s);
+			
+		if(Roll("d10") < 5) {
+			$s->getActiveCharacter()->free();
+			return;
+		}
+
+		LineAdder("But family has will voided, back to enslavement")($s);
+	}],
 ]);

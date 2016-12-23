@@ -1,24 +1,14 @@
 <?php
 
-/*<<< Name: Alignment & Attitude >>>*/
+namespace HeroesOfLegend;
 
-Repeater($s->char->traits['L'], Combiner(
-	Invoker($s, "647"),
-	Invoker($s, "318D")
-))();
+$ac = $s->getActiveCharacter();
 
-Repeater($s->char->traits['D'], Combiner(
-	Invoker($s, "648"),
-	Invoker($s, "318D")
-))();
-
-
-Repeater($s->char->traits['N'], Combiner(
-	Invoker($s, "318B"),
-	Invoker($s, "318D")
-))();
-
-Repeater($s->char->traits['R'], Invoker($s, "318A"))();
-$s->char->traits['R'] = 0;
-
-Invoke($s, "318C");
+SubentryCreator(
+	"318", "Alignment & Attitude", null,
+	Repeater($ac->getNumTraits('L'), Invoker("647", "318D")),
+	Repeater($ac->getNumTraits('D'), Invoker("648", "318D")),
+	Repeater($ac->getNumTraits('N'), Invoker("318B", "318D")),
+	Repeater($ac->getNumTraits('R'), Invoker("318A")),
+	Invoker("318C")
+)($s);

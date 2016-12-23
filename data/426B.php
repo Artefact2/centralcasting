@@ -1,8 +1,10 @@
 <?php
 
-Table($s, "426B", "Achievement Level (NPCs ONLY)", Roll(20), [
+namespace HeroesOfLegend;
+
+return new NamedTable("426B", "Achievement Level (NPCs Only)", DiceRoller::from("d20"), [
 	"1-2" => [ "Apprentice", function() {
-		if(Roll(20) >= 19) {
+		if(Roll("d20") >= 19) {
 			return "Apprentice (acknowledged failure)";
 		}
 	}],
@@ -10,7 +12,7 @@ Table($s, "426B", "Achievement Level (NPCs ONLY)", Roll(20), [
 	"15-17" => "Skilled Tradesman",
 	"18-19" => "Master Craftsman",
 	"20" => [ "Grand Master", function() {
-		$r = Roll(20);
+		$r = Roll("d20");
 		if($r === 19) {
 			return "Grand Master (legendary skill)";
 		}

@@ -1,6 +1,8 @@
 <?php
 
-Table($s, "867", "Body Location", Roll(20), [
+namespace HeroesOfLegend;
+
+return new NamedTable("867", "Body Location", DiceRoller::from("d20"), [
 	"1" => "Right foot",
 	"2" => "Left foot",
 	"3" => "Right leg",

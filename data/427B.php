@@ -1,27 +1,32 @@
 <?php
 
-$ranks = Roll(4);
+namespace HeroesOfLegend;
 
-if($s->char->ageRange === Character::CHILD) $ranks -= 2;
+$ranks = Roll("d4");
 
-if($s->char->SolMod <= -2) {
+$ac = $s->getActiveCharacter();
+if($ac->getAgeRange() === Character::CHILD) $ranks -= 2;
+
+$solmod = $ac->getModifier('SolMod');
+if($solmod <= -2) {
 	$ranks -= 1;
-} else if($s->char->SolMod >= 4) {
-	if($s->char->SolMod >= 8) {
+} else if($solmod >= 4) {
+	if($solmod >= 8) {
 		$ranks += 1;
 	}
 
 	$ranks += 1;
 }
 
-if(GetCharacterValue($s->char, "758") !== null) $ranks += 2;
+if($ac->getModifier('TiMod') > 0) $ranks += 2;
 
-if($s->char->CuMod <= -2) {
+$cumod = $ac->getModifier('CuMod');
+if($cumod <= -2) {
 	$ranks -= 2;
-} else if($s->char->CuMod <= 0) {
+} else if($cumod <= 0) {
 	$ranks -= 1;
-} else if($s->char->CuMod >= 4) {
+} else if($cumod >= 4) {
 	$ranks += 1;
 }
 
-$s->char->entries[] = [ "427B", "Hobby Proficiency", "rank ".max(1, $ranks) ];
+SubentryCreator("427B", "Hobby Proficiency", "rank ".max(1, $ranks))($s);

@@ -1,5 +1,7 @@
 <?php
 
+namespace HeroesOfLegend;
+
 $adj = [
 	"Hard worker", "Lazy",
 	"Ambitious", "Laid back/Casual",
@@ -28,17 +30,13 @@ while($adj !== []) {
 	$good = array_shift($adj);
 	$bad = array_shift($adj);
 
-	$tdata[(string)$i] = [ "Adjective", function() use($good, $bad) {
-			return Roll(6) <= 4 ? $good : $bad;
-		}];
+	$tdata[(string)$i] = function() use($good, $bad) {
+		return Roll("d6") <= 4 ? $good : $bad;
+	};
 
 	++$i;
 }
 
-$tdata["20"] = [
-	null, function() use(&$s) {
-		Invoke($s, Roll(6) <= 4 ? "647" : "648");
-	},
-];
+$tdata["20"] = Invoker(Roll("d6") <= 4 ? "647" : "648");
 	
-Table($s, "426A", "Work Attitude", Roll(20), $tdata);
+return new NamedTable("426A", "Work Attitude", DiceRoller::from("d20"), $tdata);

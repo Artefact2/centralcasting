@@ -1,6 +1,10 @@
 <?php
 
-Table($s, "753", "Relative", Roll(20), [
+namespace HeroesOfLegend;
+
+/* XXX reroll nonsensical results */
+
+return new NamedTable("753", "Relative", DiceRoller::from("d20"), [
 	"1" => "First cousin",
 	"2" => "Second cousin",
 	"3" => "Distant cousin",
@@ -19,6 +23,6 @@ Table($s, "753", "Relative", Roll(20), [
 	"16" => "Grandfather",
 	"17" => "Great grandmother",
 	"18" => "Great grandfather",
-	"19" => "Descendant (".(Roll(3) + 1)." generation(s))",
+	"19" => "Descendant (".Roll("d3+1")." generation(s))",
 	"20" => "Unknown person claims to be related (GM special 978#753)",
 ]);

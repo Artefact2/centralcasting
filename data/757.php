@@ -1,4 +1,5 @@
 <?php
 
-/*<<< Name: Adventurer >>>*/
-Invoke($s, "757A", "757B", "7101");
+namespace HeroesOfLegend;
+
+SubentryCreator("757", "Adventurer", null, Invoker("757A", "757B", "7101"))($s);

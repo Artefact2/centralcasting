@@ -1,7 +1,9 @@
 <?php
 
+namespace HeroesOfLegend;
+
 /* NB: book says to roll d10 but has no value for 8 */
-Table($s, "863A", "Weapon", Roll(9), [
+return new NamedTable("863A", "Weapon", DiceRoller::from("d9"), [
 	"1" => "Ornate dagger",
 	"2" => "Ornate sword",
 	"3" => "Plain sword",

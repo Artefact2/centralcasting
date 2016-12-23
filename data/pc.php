@@ -1,23 +1,35 @@
 <?php
 
+namespace HeroesOfLegend;
+
 /*<<< Name: Player Character >>>*/
 
-$s->char->type = Character::PC;
-$s->char->ageRange = Character::CHILD;
+$pc = $s->getRootCharacter();
 
-Invoke($s, "101", "102", "103", "104", "106", "107", "109", "110", "112", "114");
+$pc->setName('Player Character');
+$pc->setType(Character::PC);
+$pc->setAgeRange(Character::CHILD);
 
-$s->char->entries[] = [ "", "", "Character is now a child" ];
-$s->char->entries[] = [ "", "", "At age ".Roll(12)." (human equivalent):" ];
-Invoke($s, "215");
+SubentryCreator(
+	"100", "Birth Events", null,
+	Invoker("101", "102", "103", "104", "106", "107", "109", "110", "112", "114")
+)($s);
 
-$s->char->ageRange = Character::ADOLESCENT;
-$s->char->entries[] = [ "", "", "Character is now an adolescent" ];
-$s->char->entries[] = [ "", "", "At age ".(Roll(6) + 12)." (human equivalent):" ];
-Invoke($s, "215");
+SubentryCreator(
+	"100", "Childhood Event(s), age ".Roll("d12")." (human equivalent)", null,
+	Invoker("215")
+)($s);
 
-$s->char->ageRange = Character::ADULT;
-$s->char->entries[] = [ "", "", "Character is now an adult" ];
-Invoke($s, "217");
+$pc->setAgeRange(Character::ADOLESCENT);
+SubentryCreator(
+	"100", "Adolescent Event(s), age ".Roll("d6+12")." (human equivalent)", null,
+	Invoker("215")
+)($s);
 
-Invoke($s, "318");
+$pc->setAgeRange(Character::ADULT);
+SubentryCreator(
+	"100", "Adulthood Event(s)", null,
+	Invoker("217")
+)($s);
+
+$s->invoke("318");

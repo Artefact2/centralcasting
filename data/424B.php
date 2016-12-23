@@ -1,6 +1,8 @@
 <?php
 
-Table($s, "424B", "Craft II", Roll(20), [
+namespace HeroesOfLegend;
+
+return new NamedTable("424B", "Craft II", DiceRoller::from("d20"), [
 	"1" => "Shipwright",
 	"2" => "Wheel/Cartwright",
 	"3" => "Distiller",

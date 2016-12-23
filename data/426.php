@@ -1,6 +1,7 @@
 <?php
 
+namespace HeroesOfLegend;
+
 /*<<< Name: Occupation Performance >>>*/
 
-Repeater(Roll(3), Invoker($s, "426A"));
-Invoke($s, "426B");
+SubentryCreator("426", "Occupation Performance", null, Repeater(Roll("d3"), Invoker("426A")), Invoker("426B"))($s);
