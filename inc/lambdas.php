@@ -44,10 +44,10 @@ function Repeater(int $count, callable $action): callable {
 	};
 }
 
-function SubtableInvoker(Roller $r, array $entries) {
-	$anon = new AnonymousSubtable($r, $entries);
-	return function(State $s) use($anon) {
-		$anon->execute($s);
+function SubtableInvoker(Roller $r, array $entries, ?int $flags = 0, &$outTable = null): callable {
+	$outTable = new AnonymousSubtable($r, $entries, $flags);
+	return function(State $s) use($outTable) {
+		$outTable->execute($s);
 	};
 }
 
