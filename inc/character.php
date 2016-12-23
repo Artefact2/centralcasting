@@ -53,6 +53,8 @@ class Character {
 	private $rootEntry;
 	private $activeEntry;
 
+	private $tableInfo; /* id -> range -> bool */
+
 	public function __construct(string $name, int $type, int $ageRange) {
 		$this->setName($name);
 		$this->setType($type);
@@ -71,6 +73,8 @@ class Character {
 
 		$this->rootEntry = new Entry("000", "Root entry");
 		$this->activeEntry = $this->rootEntry;
+
+		$this->tableInfo = [];
 	}
 
 	public static function PC(): Character {
@@ -105,6 +109,10 @@ class Character {
 	public function getGuardian(): ?Character { return $this->guardian; }
 	public function setGuardian(?Character $g): void { $this->guardian = $g; }
 
+	public function hasMother(): bool { return $this->mother !== null && $this->mother->alive; }
+	public function hasFather(): bool { return $this->father !== null && $this->father->alive; }
+	public function hasGuardian(): bool { return $this->guardian !== null && $this->guardian->alive; }
+
 	public function getGrandparents(): array { return $this->grandparents; }
 	public function setGrandparent(int $pos, ?Character $gp): void {
 		assert($pos >= 0 && $pos <= 3);
@@ -115,6 +123,18 @@ class Character {
 	public function setNumCousins(int $n): void {
 		assert($n >= 0);
 		$this->cousins = $n;
+	}
+
+	public function getNumSiblings(): int { return $this->siblings; }
+	public function setNumSiblings(int $n): void {
+		assert($n >= 0);
+		$this->siblings = $n;
+	}
+
+	public function getNumIllegitSiblings(): int { return $this->illegitSiblings; }
+	public function setNumIllegitSiblings(int $n): void {
+		assert($n >= 0);
+		$this->illegitSiblings = $n;
 	}
 
 	public function getGender(): int { return $this->gender; }
@@ -213,5 +233,28 @@ class Character {
 		foreach($this->getRootEntry()->getChildren() as $e) {
 			$traverse($e, 0);
 		}
+	}
+
+	public function markVisitedTableRange(string $id, string $range): void {
+		$this->tableInfo[$id][$range] = true;
+	}
+
+	public function isTableRangeVisited(string $id, string $range): bool {
+		return isset($this->tableInfo[$id][$range]);
+	}
+
+	public function forgetVisitedTableRange(?string $id, ?string $range): void {
+		assert($id !== null || $range === null);
+		if($range === null) {
+			if($id === null) {
+				$this->tableInfo = [];
+				return;
+			}
+
+			unset($this->tableInfo[$id]);
+			return;
+		}
+
+		unset($this->tableInfo[$id][$range]);
 	}
 }

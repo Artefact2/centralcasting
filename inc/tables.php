@@ -19,9 +19,14 @@ interface PayloadCreator {
 }
 
 class RandomTable implements RandomExecutor {
+	private $id;
 	private $roller;
 	private $actions; /* [ int $lo, int $hi, callable $payload ] */
 	private $pc;
+
+	const REROLL_DUPLICATES = 1;
+
+	private $flags;
 
 	public static function parseRange(string $range): array {
 		if(strpos($range, '-') !== false) {
@@ -41,10 +46,12 @@ class RandomTable implements RandomExecutor {
 		return [ (int)$range, (int)$range ];
 	}
 	
-	public function __construct(Roller $roller, array $entries, PayloadCreator $pc) {
+	public function __construct(string $id, Roller $roller, array $entries, PayloadCreator $pc, int $flags = 0) {
+		$this->id = $id;
 		$this->roller = $roller;		
 		$this->actions = [];
 		$this->pc = $pc;
+		$this->flags = $flags;
 		
 		foreach($entries as $range => $e) {
 			list($lo, $hi) = self::parseRange($range);
@@ -65,14 +72,14 @@ class RandomTable implements RandomExecutor {
 			}
 
 			if(!is_array($e)) {
-				assert(is_string($e) || is_callable($e));
-
 				if(is_string($e)) {
 					$text = $e;
 					$action = null;
-				} else {
+				} else if(is_callable($e)) {
 					$text = null;
 					$action = $e;
+				} else {
+					$text = $action = null;
 				}
 			}
 		
@@ -104,6 +111,14 @@ class RandomTable implements RandomExecutor {
 		foreach($this->actions as [ $lo, $hi, $payload ]) {
 			if($roll < $lo || $roll > $hi) continue;
 
+			if($this->flags & self::REROLL_DUPLICATES) {
+				if($s->getActiveCharacter()->isTableRangeVisited($this->id, $lo.'~'.$hi)) {
+					$this->execute($s, $roller, $combineRoll);
+					return;
+				}
+			}
+
+			$s->getActiveCharacter()->markVisitedTableRange($this->id, $lo.'~'.$hi);
 			$payload($s);
 			return;
 		}
@@ -120,8 +135,8 @@ class NamedTable extends RandomTable implements PayloadCreator {
 	private $id;
 	private $name;
 
-	public function __construct(string $id, string $name, Roller $roller, array $entries) {
-		parent::__construct($roller, $entries, $this);
+	public function __construct(string $id, string $name, Roller $roller, array $entries, int $flags = 0) {
+		parent::__construct($id, $roller, $entries, $this, $flags);
 		
 		assert(preg_match('%^[1-9][0-9]*[A-Z]*$%', $id));
 		assert($name !== '');
@@ -131,8 +146,6 @@ class NamedTable extends RandomTable implements PayloadCreator {
 	}
 	
 	public function createPayload(?string $text, ?callable $action): callable {
-		assert($text !== null || $action !== null);
-
 		return function(State $s) use($text, $action) {
 			$sub = new Entry($this->id, $this->name, $text);
 			
@@ -156,13 +169,11 @@ class NamedTable extends RandomTable implements PayloadCreator {
 }
 
 class AnonymousSubtable extends RandomTable implements PayloadCreator {
-	public function __construct(Roller $roller, array $entries) {
-		parent::__construct($roller, $entries, $this);
+	public function __construct(Roller $roller, array $entries, int $flags = 0) {
+		parent::__construct(sprintf("Anon%9.9d", mt_rand()), $roller, $entries, $this, $flags);
 	}
 
 	public function createPayload(?string $text, ?callable $action): callable {
-		assert($text !== null || $action !== null);
-
 		return function(State $s) use($text, $action) {			
 			$ch = $s->getActiveCharacter();
 			$e = $ch->getActiveEntry();
