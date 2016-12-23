@@ -85,30 +85,18 @@ class Entry {
 		return false;
 	}
 
-	public function getSourceID(): string {
-		return $this->sourceID;
-	}
-
-	public function getSourceName(): string {
-		return $this->sourceName;
-	}
+	public function getSourceID(): string { return $this->sourceID;	}
+	public function getSourceName(): string { return $this->sourceName;	}
 
 	public function getLines(): array {
 		/* Arrays are passed by value */
 		return $this->lines;
 	}
 
-	public function getParent(): ?Entry {
-		return $this->parent;
-	}
+	public function getParent(): ?Entry { return $this->parent;	}
+	public function setParent(?Entry $p): void { $this->parent = $p; }
 
-	public function setParent(?Entry $p): void {
-		$this->parent = $p;
-	}
-
-	public function getChildren(): array {
-		return $this->children;
-	}
+	public function getChildren(): array { return $this->children; }
 
 	public function isEmpty(): bool {
 		return $this->children === [] && $this->lines === [];
