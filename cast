@@ -12,13 +12,15 @@ namespace HeroesOfLegend;
 
 require __DIR__.'/inc/root.php';
 
-if($argc !== 2) {
-	fprintf(STDERR, "Usage: %s <script>\n", $argv[0]);
+if($argc === 1) {
+	fprintf(STDERR, "Usage: %s <scripts>…\n", $argv[0]);
 	die(1);
 }
 
 $s = new State();
-$s->invoke($argv[1]);
+
+array_shift($argv);
+foreach($argv as $script) $s->invoke($script);
 
 $s->getRootCharacter()->getRootEntry()->prune();
 $s->getRootCharacter()->printPlaintextSummary();
