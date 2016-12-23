@@ -136,9 +136,9 @@ class Entry {
 				foreach($this->children as $c) {
 					$this->parent->addChild($c);
 				}
+				
+				assert($this->isEmpty());
 			}
-
-			assert($this->isEmpty());
 		}
 		
 		if($this->isEmpty()) {
