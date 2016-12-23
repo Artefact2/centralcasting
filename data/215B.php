@@ -47,9 +47,9 @@ return new NamedTable("215B", "Family Change Event", DiceRoller::from("d6"), [
 		}
 
 		Combiner(
-			EntryAdder($s, "Character goes with ".(Roll("d2") === 1 ? 'mother' : 'father')),
-			EntryAdder($s, Roll(6) <= 4 ? "Mother remarries within ".Roll("d3")." year(s)" : null),
-			EntryAdder($s, Roll(6) <= 4 ? "Father remarries within ".Roll("d3")." year(s)" : null)
+			LineAdder("Character goes with ".(Roll("d2") === 1 ? 'mother' : 'father')),
+			LineAdder(Roll("d6") <= 4 ? "Mother remarries within ".Roll("d3")." year(s)" : null),
+			LineAdder(Roll("d6") <= 4 ? "Father remarries within ".Roll("d3")." year(s)" : null)
 		)($s);
 	}],
 	"6" => Repeater(2, Invoker("215B")),
