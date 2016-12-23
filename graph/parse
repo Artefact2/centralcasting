@@ -79,10 +79,10 @@ foreach($datas as $name => $path) {
 
 	/* XXX replace this by properly iterating through tables, using ->executeAll() */
 	preg_match_all(
-		'%((->invoke|[^e]Invoker)\((?<mc>[^)]+)\)|((->invokeTable|TableInvoker)\((?<sc>[^,]),))%U',
+		'%((->invoke|[^e]Invoker)\((?<mc>.+)\)|((->invokeTable|TableInvoker)\((?<sc>.+)(,|\))))%U',
 		$source, $matches
 	);
-	foreach($matches['mc'] ?: $matches['sc'] as $m) {
+	foreach(array_merge($matches['mc'], $matches['sc']) as $m) {
 		preg_match_all('%(?<Q>"|\')(?<tablename>[1-9][0-9]*[A-Z]*)\k<Q>%U', $m, $submatches);
 		foreach($submatches['tablename'] as $sm) {
 			printf("\"%s\" -> \"%s\"\n", $name, $sm);
