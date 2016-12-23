@@ -1,6 +1,8 @@
 <?php
 
-Table($s, "318B", "Neutral Trait", Roll(2, 20), [
+namespace HeroesOfLegend;
+
+return new NamedTable("318B", "Neutral Trait", DiceRoller::from("2d20"), [
 	"2" => "Curious (inquisitive, needs to know)",
 	"3" => "Hedonist (please is the most important thing)",
 	"4" => "Precise (always exacting)",

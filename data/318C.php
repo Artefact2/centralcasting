@@ -1,8 +1,11 @@
 <?php
 
-$l = $s->char->traits['L'];
-$d = $s->char->traits['D'];
-$n = $s->char->traits['N'];
+namespace HeroesOfLegend;
+
+$ac = $s->getActiveCharacter();
+$l = $ac->getNumTraits('L');
+$d = $ac->getNumTraits('D');
+$n = $ac->getNumTraits('N');
 
 if($l >= max($d, $n) + 2) {
 	$alignment = "Lightsided";
@@ -12,4 +15,4 @@ if($l >= max($d, $n) + 2) {
 	$alignment = "Neutral";
 }
 
-$s->char->entries[] = [ "318C", "Alignment", $alignment ];
+SubentryCreator("318C", "Alignment", $alignment)($s);

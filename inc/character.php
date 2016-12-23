@@ -160,6 +160,11 @@ class Character {
 		$this->modifiers[$mod] += $v;
 	}
 
+	public function getNumTraits(string $type): int {
+		assert(isset($this->traits[$type]));
+		return $this->traits[$type];
+	}
+	
 	public function addTrait(string $type): void {
 		assert(isset($this->traits[$type]));
 		++$this->traits[$type];

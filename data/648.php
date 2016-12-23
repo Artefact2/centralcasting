@@ -1,6 +1,8 @@
 <?php
 
-Table($s, "648", "Darkside Trait", Roll(2, 20), [
+namespace HeroesOfLegend;
+
+return new NamedTable("648", "Darkside Trait", DiceRoller::from("2d20"), [
 	"2" => "Pessimist (always see the bad side of things)",
 	"3" => "Egoist (selfish co ncern for own welfare)",
 	"4" => "Obstructive (acts to block other's actions)",

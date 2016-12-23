@@ -19,22 +19,14 @@ return new NamedTable("114A", "Occupation", DiceRoller::from("d20"), [
 			return '';
 		}
 
-		$sub = 0;
-			
-		switch(Roll(6)) {
-		case 6:
-			$sub = -2;
-			break;
-
-		case 4:
-		case 5:
-			$sub = 2;
-			break;
-		}
-
-		$s->char->CuMod -= $sub;
-		Invoke($s, "420-423");
-		$s->char->CuMod += $sub;
+		$r = Roll("d6");
+		if($r === 6) $add = 2;
+		else if($r >= 4) $add = -2;
+		else $add = 0;
+		
+		ModifierIncreaser("CuMod", $add);
+		Invoker("420-423");
+		ModifierIncreaser("CuMod", -$add);
 	}],
 	"17-18" => [ "Both parents in household have an occupation", function(State $s) {
 		$ac = $s->getActiveCharacter();

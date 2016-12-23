@@ -1,6 +1,8 @@
 <?php
 
-Table($s, "647", "Lightside Trait", Roll(2, 20), [
+namespace HeroesOfLegend;
+
+return new NamedTable("647", "Lightside Trait", DiceRoller::from("2d20"), [
 	"2" => "Optimist (always see the good side of things)",
 	"3" => "*Altruist (selfless concern for others' welfare)",
 	"4" => "Helpful (help others in need)",

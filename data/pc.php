@@ -32,6 +32,4 @@ SubentryCreator(
 	Invoker("217")
 )($s);
 
-return;
-
-$s->invokeTable($s, "318");
+$s->invoke("318");
