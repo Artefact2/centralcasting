@@ -195,11 +195,14 @@ class Character {
 	}
 
 	/* XXX wrap long lines */
-	public function printPlaintextSummary(): void {
+	public function printPlaintextSummary(?int $len = null): void {
 		static $prefix = '|   ';
 		static $cprefix = '+ ';
 		static $ncprefix = '| ';
-		static $len = 120;
+
+		if($len === null) {
+			$len = min(160, max(80, intval(shell_exec('tput cols'))));
+		}
 
 		$modline = [];
 		foreach($this->modifiers as $k => $v) {
