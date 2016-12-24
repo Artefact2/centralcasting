@@ -223,11 +223,11 @@ class Character {
 		$this->activeEntry = $e;
 	}
 
-	/* XXX wrap long lines */
 	public function printPlaintextSummary(?int $len = null): void {
-		static $prefix = '|   ';
-		static $cprefix = '+ ';
-		static $ncprefix = '| ';
+		static $prefix = '|   '; /* Per nesting level */
+		static $cprefix = '+ '; /* If children are present */
+		static $ncprefix = '| '; /* If no children */
+		static $wprefix = '> '; /* For wrapped lines */
 
 		if($len === null) {
 			$len = min(160, max(80, intval(shell_exec('tput cols'))));
@@ -243,36 +243,48 @@ class Character {
 		printf("%-".$hlen.".".$hlen."s (%s)\n", $this->getName(), $modline);
 		echo str_repeat("=", $len), "\n";
 
-		$traverse = function(Entry $e, int $level) use($len, $prefix, $cprefix, $ncprefix, &$traverse) {
-			$prefix = str_repeat($prefix, $level);
+		$traverse = function(Entry $e, int $level) use($len, $prefix, $cprefix, $ncprefix, $wprefix, &$traverse) {
+			$hprefix = $prefix = str_repeat($prefix, $level);
+			if($e->getChildren() !== []) {
+				$hprefix .= $cprefix;
+				$prefix .= $ncprefix;
+			}
+			$hprefix .= ($s = $e->getSourceName().': ');
+			$prefix .= str_repeat(' ', strlen($s));
+			$hsuffix = sprintf("(%-5.5s)", $e->getSourceID());
+			assert(strlen($hprefix) === strlen($prefix));
+
+			$wlen = strlen($wprefix);
+			$nhlen = $len - strlen($prefix);
+			$hlen = $nhlen - strlen($hsuffix);
+			assert($hlen > 0);
 
 			$lines = $e->getLines();
 			if($lines === []) $lines[] = '';
-
-			$haschildren = $e->getChildren() !== [];
+			$first = true;
+			foreach($lines as &$l) {
+				if($first === true) {
+					$first = false;
+					$l = explode("\n", wordwrap($l, $hlen, "\n"), 2);
+					if(count($l) >= 2) {
+						$l = array_merge(
+							[ $l[0] ],
+							explode("\n", wordwrap(str_replace("\n", " ", $wprefix.$l[1]), $nhlen - $wlen, "\n".$wprefix))
+						);
+					}
+					continue;
+				}
+				$l = explode("\n", wordwrap($l, $nhlen - $wlen, "\n".$wprefix));
+			}
+			$lines = array_merge(...$lines);
 			
 			$first = true;
-			$snprefix = '';
 			foreach($lines as $line) {
 				if($first) {
 					$first = false;
-					$hlen = $len - 7;
-					$snprefix = str_repeat(' ', strlen($e->getSourceName()) + 2);
-					printf(
-						"%-".$hlen.".".$hlen."s(%-5.5s)\n",
-						$prefix
-						.($haschildren ? $cprefix : '')
-						.$e->getSourceName().': '
-						.$line, $e->getSourceID()
-					);
+					printf("%s%-".$hlen.".".$hlen."s%s\n", $hprefix, $line, $hsuffix);
 				} else {
-					printf(
-						"%-".$len.".".$len."s\n",
-						$prefix
-						.($haschildren ? $ncprefix : '')
-						.$snprefix
-						.$line
-					);
+					printf("%s%-".$nhlen.".".$nhlen."s\n", $prefix, $line);
 				}
 			}
 
