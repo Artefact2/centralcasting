@@ -61,7 +61,7 @@ $nt = new NamedTable("113", "Unusual Birth Circumstance", DiceRoller::from("d100
 $nt->addPostExecuteHook(function(State $s) {
 	$ch = $s->getActiveCharacter()->getActiveEntry()->getChildren();
 	$lc = end($ch);
-	$fl = $lc->getLines()[0];
+	$fl = $lc->getLines()[0]; /* XXX not always defined */
 	if($fl[0] === '*') {
 		$lc->replaceLine($fl, substr($fl, 1));
 		$lc->addLine('And people who know this may treat character differently');
