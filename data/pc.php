@@ -16,19 +16,19 @@ SubentryCreator(
 )($s);
 
 SubentryCreator(
-	"100", "Childhood Event(s), age ".Roll("d12")." (human equivalent)", null,
+	"200", "Childhood Event(s), age ".Roll("d12")." (human equivalent)", null,
 	Invoker("215")
 )($s);
 
 $pc->setAgeRange(Character::ADOLESCENT);
 SubentryCreator(
-	"100", "Adolescent Event(s), age ".Roll("d6+12")." (human equivalent)", null,
+	"200", "Adolescent Event(s), age ".Roll("d6+12")." (human equivalent)", null,
 	Invoker("215")
 )($s);
 
 $pc->setAgeRange(Character::ADULT);
 SubentryCreator(
-	"100", "Adulthood Event(s)", null,
+	"200", "Adulthood Event(s)", null,
 	Invoker("217")
 )($s);
 

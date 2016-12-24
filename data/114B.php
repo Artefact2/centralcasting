@@ -2,7 +2,7 @@
 
 namespace HeroesOfLegend;
 
-return new NamedTable("114B", "Noteworthy Items", DiceRoller::from("d20"), [
+return new NamedTable("114B", "Noteworthy Item", DiceRoller::from("d20"), [
 	"1" => [ "NPC is noted for his personality", SubtableInvoker(DiceRoller::from("d6"), [
 		"1-3" => Invoker("647"),
 		"4-5" => Invoker("648"),
