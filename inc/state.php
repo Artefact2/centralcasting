@@ -13,8 +13,8 @@ class State {
 	private $rootChar; /* Character */
 	private $activeCharStack; /* Character[] */
 
-	public function __construct() {
-		$this->rootChar = Character::PC();
+	public function __construct(Character $root) {
+		$this->rootChar = $root;
 		$this->activeCharStack = [ $this->rootChar ];
 	}
 

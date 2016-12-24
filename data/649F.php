@@ -29,7 +29,7 @@ $nt = new NamedTable("649F", "Sexual Disorder", DiceRoller::from("2d8"), [
 		"7" => Invoker("649C"),
 		"8" => Invoker("863"),
 		"9" => Invoker("750"),
-		"10" => Invoker("753"),
+		"10" => CharacterSandboxer(false, $c, Invoker("753")),
 	])],
 	"14" => "Necrophilia",
 	"15-16" => Repeater(Roll("d2+1"), Invoker("649F")),

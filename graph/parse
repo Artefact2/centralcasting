@@ -28,7 +28,8 @@ function get_full_name(string $name, string $path, string $contents) {
 		return $match[1];
 	}
 
-	$s = new State();
+	$c = Character::NPC("Mr Foo");
+	$s = new State($c);
 	$s->invoke($name);
 
 	$ch = $s->getActiveCharacter()->getRootEntry()->getChildren();

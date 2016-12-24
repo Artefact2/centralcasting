@@ -17,7 +17,8 @@ if($argc === 1) {
 	die(1);
 }
 
-$s = new State();
+$c = Character::NPC("Default Character");
+$s = new State($c);
 
 array_shift($argv);
 foreach($argv as $script) $s->invoke($script);

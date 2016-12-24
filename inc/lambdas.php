@@ -94,7 +94,7 @@ function NeutralTrait(): callable {
 
 function CharacterSandboxer(bool $moveEntries, &$puppet, callable ...$actions): callable {
 	return function(State $s) use($actions, $moveEntries, &$puppet) {
-		$puppet = Character::PC("Sandboxed Puppet");
+		$puppet = Character::NPC("Sandboxed Puppet");
 		$s->pushActiveCharacter($puppet);
 		foreach($actions as $a) $a($s);
 		$s->popActiveCharacter($puppet);

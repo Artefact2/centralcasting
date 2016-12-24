@@ -85,7 +85,14 @@ class Character {
 	}
 
 	public static function NPC(string $name): Character {
-		return new self($name, self::NPC, self::ADULT);
+		$c = new self($name, self::NPC, self::ADULT);
+		$c->setMother(new self("Mother of ".$name, self::NPC, self::ADULT));
+		$c->setFather(new self("Father of ".$name, self::NPC, self::ADULT));
+		for($i = 0; $i < 4; ++$i) $c->setGrandparent($i, new self("Grandparent #".$i." of ".$name, self::NPC, self::ADULT));
+		$c->setNumCousins(10);
+		$c->setNumBrothers(2);
+		$c->setNumSisters(2);
+		return $c;
 	}
 
 	public function getName(): string { return $this->name;	}
