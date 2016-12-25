@@ -35,10 +35,8 @@ return new NamedTable("114A", "Occupation", DiceRoller::from("d20"), [
 			return '';
 		}
 
-		LineAdder("Mother:")($s);
-		$s->invoke("420-423");
-		LineAdder("Father:")($s);
-		$s->invoke("420-423");
+		SubentryCreator("114Y", "Mother", null, Invoker("420-423"))($s);
+		SubentryCreator("114Y", "Father", null, Invoker("420-423"))($s);
 	}],
 	"19" => [ "Head of household is/was an adventurer", Invoker("757") ],
 	"20" => [ "Head of household has no visible occupation, money just seems to be available when needed",
