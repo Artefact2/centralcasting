@@ -13,6 +13,9 @@ case Character::ADOLESCENT:
 	$s->invoke("216B");
 	break;
 
+case Character::ADULT:
+	break;
+
 default:
 	assert(false);
 }
