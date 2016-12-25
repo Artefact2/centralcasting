@@ -6,10 +6,10 @@ return new NamedTable("539D", "Enslaved Event", DiceRoller::from("d20"), [
 	"1" => [ "Character escaped", Invoker("539A") ],
 	"2" => [ "Willingly freed by owner", Invoker("539B") ],
 	"3" => [ "Ruler of the land declared slavery illegal, got free with ".Roll("d100")." gp", function(State $s) {
-		$s->getActiveCharacter()->free();
+		$s->getActiveCharacter()->setEnslaved(false);
 	}],
 	"4" => [ "Bought my freedom, remain as employee for ".Roll("d4")." year(s)", function(State $s) {
-		$s->getActiveCharacter()->free();
+		$s->getActiveCharacter()->setEnslaved(false);
 	}],
 	"5" => [ "Owner dies", Invoker("539C") ],
 	"6-7" => "Improves occupational skill by 1 rank", /* XXX */
@@ -23,7 +23,7 @@ return new NamedTable("539D", "Enslaved Event", DiceRoller::from("d20"), [
 		}
 		if($success = (Roll("d6") >= 5)) {
 			LineAdder("And revolt succeeded")($s);
-			$s->getActiveCharacter()->free();
+			$s->getActiveCharacter()->setEnslaved(false);
 		} else {
 			LineAdder("But revolt failed")($s);
 		}
@@ -67,6 +67,6 @@ return new NamedTable("539D", "Enslaved Event", DiceRoller::from("d20"), [
 	             Repeater(Roll("d3"), TableInvoker("539D", DiceRoller::from("d20+1"))) ],
 	"21" => [ "Exotic event frees character", function(State $s) {
 		$s->invoke("544");
-		$s->getActiveCharacter()->free();
+		$s->getActiveCharacter()->setEnslaved(false);
 	}],
 ]);

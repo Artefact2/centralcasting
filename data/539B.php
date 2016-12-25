@@ -18,7 +18,7 @@ $nt = new NamedTable("539B", "Freedom Consequence", DiceRoller::from("d10"), [
 ]);
 
 $nt->addPostExecuteHook(function(State $s) {
-	$s->getActiveCharacter()->free();
+	$s->getActiveCharacter()->setEnslaved(false);
 });
 
 return $nt;

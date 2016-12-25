@@ -10,13 +10,13 @@ return new NamedTable("539C", "Death Consequence", DiceRoller::from("d6"), [
 	"5" => [ "Accused of killing the owner", function(State $s) {
 		LineAdder("Character escapes but death hangs over his/her head")($s);
 		$s->invoke("545");
-		$s->getActiveCharacter()->free();
+		$s->getActiveCharacter()->setEnslaved(false);
 	}],
 	"6" => [ "Freed by owners will and became heir", function(State $s) {
 		LineAdder("Assume control of all property and slaves")($s);
 			
 		if(Roll("d10") < 5) {
-			$s->getActiveCharacter()->free();
+			$s->getActiveCharacter()->setEnslaved(false);
 			return;
 		}
 

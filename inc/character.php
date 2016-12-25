@@ -26,6 +26,7 @@ class Character {
 	private $alive; /* bool */
 	private $gender;
 	private $enslaved; /* bool */
+	private $imprisoned; /* bool */
 
 	private $modifiers = [
 		'CuMod' => 0, /* Cultural modifier */
@@ -43,6 +44,7 @@ class Character {
 	private $brothers; /* int */
 	private $sisters; /* int */
 	private $illegitSiblings; /* int */
+	private $spouse; /* ?Character */
 
 	private $traits = [
 		'L' => 0, /* Lightside */
@@ -69,10 +71,12 @@ class Character {
 		$this->brothers = 0;
 		$this->sisters = 0;
 		$this->illegitSiblings = 0;
+		$this->spouse = null;
 
 		$this->alive = true;
 		$this->gender = null;
 		$this->enslaved = false;
+		$this->imprisoned = false;
 
 		$this->rootEntry = new Entry("000", "Root entry");
 		$this->activeEntry = $this->rootEntry;
@@ -88,6 +92,7 @@ class Character {
 		$c = new self($name, self::NPC, self::ADULT);
 		$c->setMother(new self("Mother of ".$name, self::NPC, self::ADULT));
 		$c->setFather(new self("Father of ".$name, self::NPC, self::ADULT));
+		$c->setSpouse(new self("Lover of ".$name, self::NPC, self::ADULT));
 		for($i = 0; $i < 4; ++$i) $c->setGrandparent($i, new self("Grandparent #".$i." of ".$name, self::NPC, self::ADULT));
 		$c->setNumCousins(10);
 		$c->setNumBrothers(2);
@@ -110,18 +115,21 @@ class Character {
 		$this->ageRange = $ageRange;
 	}
 
+	public function hasMother(): bool { return $this->mother !== null && $this->mother->alive; }
 	public function getMother(): ?Character { return $this->mother; }
 	public function setMother(?Character $m): void { $this->mother = $m; }
 
-	public function getFater(): ?Character { return $this->father; }
+	public function hasFather(): bool { return $this->father !== null && $this->father->alive; }
+	public function getFather(): ?Character { return $this->father; }
 	public function setFather(?Character $f): void { $this->father = $f; }
 
+	public function hasGuardian(): bool { return $this->guardian !== null && $this->guardian->alive; }
 	public function getGuardian(): ?Character { return $this->guardian; }
 	public function setGuardian(?Character $g): void { $this->guardian = $g; }
 
-	public function hasMother(): bool { return $this->mother !== null && $this->mother->alive; }
-	public function hasFather(): bool { return $this->father !== null && $this->father->alive; }
-	public function hasGuardian(): bool { return $this->guardian !== null && $this->guardian->alive; }
+	public function hasSpouse(): bool { return $this->spouse !== null && $this->spouse->alive; }
+	public function getSpouse(): ?Character { return $this->spouse; }
+	public function setSpouse(?Character $s): void { $this->spouse = $s; }
 
 	public function getGrandparents(): array { return $this->grandparents; }
 	public function setGrandparent(int $pos, ?Character $gp): void {
@@ -177,8 +185,10 @@ class Character {
 	public function kill(): void { $this->alive = false; }
 
 	public function isEnslaved(): bool { return $this->enslaved; }
-	public function enslave(): void { $this->enslaved = true; }
-	public function free(): void { $this->enslaved = false; }
+	public function setEnslaved(bool $e): void { $this->enslaved = $e; }
+
+	public function isImprisoned(): bool { return $this->imprisoned; }
+	public function setImprisoned(bool $i): void { $this->imprisoned = $i; }
 
 	public function getModifier(string $mod): int {
 		assert(isset($this->modifiers[$mod]));
