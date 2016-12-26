@@ -24,7 +24,7 @@ return new NamedTable("543C", "What?", DiceRoller::from("2d8"), [
 	"12" => "Patron is outlawed, character is watched closely by (secret) police",
 	"13" => [ "Patron is noted for a physical affliction", Invoker("874") ],
 	"14" => "Learn an occupation (at rank ".Roll("d3").")",
-	"15" => [ "Patron sets character up in business (owned by patron, run by character)", Invoker("423") ],
+	"15" => [ "Patron sets character up in business (owned by patron, run by character)", Invoker("423A") ],
 	"16" => [ "Patron introduces character to several very influential people",
 	          LineAdder("The kind that often hires mercenaries and adventurers") ],
 ]);

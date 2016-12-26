@@ -2,7 +2,7 @@
 
 namespace HeroesOfLegend;
 
-return new NamedTable("752", "Government official", DiceRoller::from("d20"), [
+return new NamedTable("752", "Government Official", DiceRoller::from("d20"), [
 	"1" => "Scribe (note taker, transcribes laws)",
 	"2" => "Clerk (office worker)",
 	"3" => "City guard/constable (policeman)",
