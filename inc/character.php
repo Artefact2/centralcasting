@@ -45,6 +45,7 @@ class Character {
 	private $sisters; /* int */
 	private $illegitSiblings; /* int */
 	private $spouse; /* ?Character */
+	private $patron; /* ?Character */
 
 	private $traits = [
 		'L' => 0, /* Lightside */
@@ -72,6 +73,7 @@ class Character {
 		$this->sisters = 0;
 		$this->illegitSiblings = 0;
 		$this->spouse = null;
+		$this->patron = null;
 
 		$this->alive = true;
 		$this->gender = null;
@@ -130,6 +132,10 @@ class Character {
 	public function hasSpouse(): bool { return $this->spouse !== null && $this->spouse->alive; }
 	public function getSpouse(): ?Character { return $this->spouse; }
 	public function setSpouse(?Character $s): void { $this->spouse = $s; }
+
+	public function hasPatron(): bool { return $this->patron !== null && $this->patron->alive; }
+	public function getPatron(): ?Character { return $this->patron; }
+	public function setPatron(?Character $c): void { $this->patron = $c; }
 
 	public function getGrandparents(): array { return $this->grandparents; }
 	public function setGrandparent(int $pos, ?Character $gp): void {
