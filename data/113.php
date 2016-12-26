@@ -5,7 +5,12 @@ namespace HeroesOfLegend;
 $nt = new NamedTable("113", "Unusual Birth Circumstance", DiceRoller::from("d100"), [
 	"1-5" => "*Noteworth person near home died when character was born",
 	"6-10" => "*Wolves and dogs set up a howling when character was born",
-	"11-20" => "*Mother died in childbirth",
+	"11-20" => [ "*Mother died in childbirth", function(State $s) {
+		$ac = $s->getActiveCharacter();
+		if($ac->hasMother()) {
+			$ac->getMother()->kill();
+		}
+	}],
 	"21-23" => "All glassware in house suddenly shattered",
 	"24-25" => "*All milk in area soured at character birth",
 	"26-27" => "Father believes child is from another man",
