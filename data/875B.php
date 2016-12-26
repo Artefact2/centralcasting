@@ -13,6 +13,7 @@ if($ae->getSourceID() !== "875") {
 }
 
 $punishments = [];
+$prisonyears = 0;
 
 $traverse = function(Entry $e) use(&$punishments, &$traverse) {
 	if($e->getSourceID() !== "875A") return;
@@ -29,18 +30,19 @@ $traverse = function(Entry $e) use(&$punishments, &$traverse) {
 	}
 };
 
+$p = [];
 $ptable = [
-	"1" => Roll("d3")." year(s) imprisonment",
-	"2" => Roll("d4")." year(s) imprisonment",
-	"3" => Roll("d6")." year(s) imprisonment",
-	"4" => Roll("d8")." year(s) imprisonment",
-	"5" => Roll("2d4")." years imprisonment",
-	"6" => Roll("2d8")." years imprisonment",
-	"7" => Roll("d10")." year(s) imprisonment",
-	"8" => Roll("2d10")." years imprisonment",
-	"9" => "Heretic is imprisoned until heresy is renounced (or burned, or ".Roll("2d10")." years imprisonment)",
-	"10" => "NPCs put to death, life sentence (".Roll("d20+20")." years imprisonment) for PCs",
-	"11" => Roll("d6")." year(s) imprisonment",
+	"1" => ($p["1"] = Roll("d3"))." year(s) imprisonment",
+	"2" => ($p["2"] = Roll("d4"))." year(s) imprisonment",
+	"3" => ($p["3"] = Roll("d6"))." year(s) imprisonment",
+	"4" => ($p["4"] = Roll("d8"))." year(s) imprisonment",
+	"5" => ($p["5"] = Roll("2d4"))." years imprisonment",
+	"6" => ($p["6"] = Roll("2d8"))." years imprisonment",
+	"7" => ($p["7"] = Roll("d10"))." year(s) imprisonment",
+	"8" => ($p["8"] = Roll("2d10"))." years imprisonment",
+	"9" => "Heretic is imprisoned until heresy is renounced (or burned, or ".($p["9"] = Roll("2d10"))." years imprisonment)",
+	"10" => "NPCs put to death, life sentence (".($p["10"] = Roll("d20+20"))." years imprisonment) for PCs",
+	"11" => ($p["11"] = Roll("d6"))." year(s) imprisonment",
 	"12" => "5 years imprisonment",
 	"13" => "Pilloried (placed on public display in stocks for a week, -".Roll("d4")." Charisma)",
 	"14" => "Publicly flogged (-".Roll("d4")." Charisma)",
@@ -51,7 +53,12 @@ $ptable = [
 	"DD" => null,
 ];
 
+$addpyears = function(int $n) use(&$prisonyears): callable {
+	return function() use(&$prisonyears, $n) { $prisonyears += $n; };
+};
+
 $pactions = [
+	"12" => $addpyears(5),
 	"16" => function(State $s) { if(Roll("d6") === 6) $s->invoke("870"); },
 ];
 
@@ -91,8 +98,16 @@ if($ac->getModifier('TiMod') > 0) {
 	$ptable["6"] = Roll("2d8*1000")." gp fine";
 	$ptable["7"] = Roll("d10*1000")." gp fine";
 	$ptable["8"] = Roll("2d10*1000")." gp fine";
+
+	$start = 9;
+} else {
+	$start = 1;
 }
 $ac->setActiveEntry($lc);
+
+for($i = $start; $i <= 11; ++$i) {
+	$pactions[(string)$i] = $addpyears($p[(string)$i]);
+}
 	
 foreach($punishments as $p) {
 	$p = explode(', ', $p);
@@ -117,5 +132,8 @@ foreach($punishments as $p) {
 
 $ac->setActiveEntry($ae);
 
-/* XXX if imprisoned, invoke 540 */
+if($prisonyears > 0) {
+	$s->invoke("540");
+}
+
 /* XXX reduce prison time for wealthy chars */
