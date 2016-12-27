@@ -109,6 +109,11 @@ class Entry {
 	public function setParent(?Entry $p): void { $this->parent = $p; }
 
 	public function getChildren(): array { return $this->children; }
+	public function getNeighbors(): array {
+		if($this->parent === null) return [ $this ];
+		return $this->parent->getChildren();
+	}
+	public function getLatestChild(): ?Entry { return end($this->children); }
 
 	public function isEmpty(): bool {
 		return $this->children === [] && $this->lines === [];
