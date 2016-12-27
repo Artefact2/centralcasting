@@ -1,0 +1,27 @@
+#!/usr/bin/env php
+<?php
+/* Author: Romain Dal Maso <artefact2@gmail.com>
+ *
+ * This program is free software. It comes without any warranty, to the
+ * extent permitted by applicable law. You can redistribute it and/or
+ * modify it under the terms of the Do What The Fuck You Want To Public
+ * License, Version 2, as published by Sam Hocevar. See
+ * http://sam.zoy.org/wtfpl/COPYING for more details. */
+
+namespace HeroesOfLegend;
+
+require __DIR__.'/../inc/root.php';
+
+assert(file_exists($argv[1]));
+$data = json_decode(file_get_contents($argv[1]), true);
+assert(is_array($data['names']) && is_array($data['links']));
+
+$parentsof = $argv[2];
+
+$s = sprintf("Parents/Invokers of %s: %s", $parentsof, $data['names'][$parentsof] ?? '(Unknown/NI)');
+printf("%s\n%s\n", $s, str_repeat('=', strlen($s)));
+
+foreach($data['links'] as $src => $l) {
+	if(!isset($l[$parentsof])) continue;
+	printf("%5.5s: %s\n", $src, $data['names'][$src] ?? '(Unknown/NI)');
+}

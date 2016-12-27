@@ -12,16 +12,6 @@ namespace HeroesOfLegend;
 
 require __DIR__.'/../inc/root.php';
 
-function colorize(string $s): string {
-	if($s !== '' && ctype_digit($s[0])) {
-		$i = (int)$s[0];
-		if($i > 0 && $i < 9) {
-			return '/set39/'.$s[0];
-		}
-	}
-	return '/set39/9';
-}
-
 function get_full_name(string $name, string $path, string $contents) {
 	preg_match('%/\*<<< Name: (.+) >>>\*/%U', $contents, $match);
 	if(isset($match[1])) {
@@ -36,39 +26,22 @@ function get_full_name(string $name, string $path, string $contents) {
 	return $ch[0]->getSourceName();
 }
 
-echo "digraph {\n";
-echo "rankdir=\"LR\"\n";
-echo "graph [pad=.1 nodesep=.1 ranksep=.5]\n";
-
 $datas = [];
 
 foreach(glob(__DIR__.'/../data/*.php') as $path) {
 	$datas[pathinfo($path, PATHINFO_FILENAME)] = $path;
 }
 
-foreach($datas as $name => $path) {
-	$source = file_get_contents($path);	
-	$fullname = get_full_name($name, $path, $source);
-	$displayname = $fullname ? $name."\n".$fullname : $name;
+$names = [];
+$links = [];
 
+foreach($datas as $name => $path) {
+	$source = file_get_contents($path);
+	
+	$names[$name] = ($fullname = get_full_name($name, $path, $source));
 	if($fullname === null) {
 		fprintf(STDERR, "NOTICE: data %s has no name\n", $name);
 	}
-	
-	if(preg_match('%^[0-9]%', $name)) {
-		if(preg_match('%[A-Z]$%', $name)) {
-			$shape = 'note';
-		} else {
-			$shape = isset($datas[$name.'A']) ? 'folder' : 'box';
-		}
-	} else {
-		$shape = 'doublecircle';
-	}
-	
-	printf(
-		"\"%s\" [style=filled fillcolor=\"%s\" label=\"%s\" shape=%s]\n",
-		$name, colorize($name), $displayname, $shape
-	);
 
 	/* XXX replace this by properly iterating through tables, using ->executeAll() */
 	preg_match_all(
@@ -78,9 +51,12 @@ foreach($datas as $name => $path) {
 	foreach(array_merge($matches['mc'], $matches['sc']) as $m) {
 		preg_match_all('%(?<Q>"|\')(?<tablename>[1-9][0-9]*[A-Z]*|[1-9][0-9]*-[1-9][0-9]*)\k<Q>%sU', $m, $submatches);
 		foreach($submatches['tablename'] as $sm) {
-			printf("\"%s\" -> \"%s\"\n", $name, $sm);
+			$links[$name][$sm] = ($links[$name][$sm] ?? 0) + 1;
 		}
 	}
 }
 
-echo "}\n";
+echo json_encode([
+	'names' => $names,
+	'links' => $links,
+]);
