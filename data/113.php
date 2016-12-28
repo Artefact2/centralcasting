@@ -3,7 +3,7 @@
 namespace HeroesOfLegend;
 
 $nt = new NamedTable("113", "Unusual Birth Circumstance", DiceRoller::from("d100"), [
-	"1-5" => "*Noteworth person near home died when character was born",
+	"1-5" => "*Noteworthy person near home died when character was born",
 	"6-10" => "*Wolves and dogs set up a howling when character was born",
 	"11-20" => [ "*Mother died in childbirth", function(State $s) {
 		$ac = $s->getActiveCharacter();
@@ -66,7 +66,9 @@ $nt = new NamedTable("113", "Unusual Birth Circumstance", DiceRoller::from("d100
 $nt->addPostExecuteHook(function(State $s) {
 	$ch = $s->getActiveCharacter()->getActiveEntry()->getChildren();
 	$lc = end($ch);
-	$fl = $lc->getLines()[0]; /* XXX not always defined */
+	$l = $lc->getLines();
+	if($l === []) return;
+	$fl = $l[0];
 	if($fl[0] === '*') {
 		$lc->replaceLine($fl, substr($fl, 1));
 		$lc->addLine('And people who know this may treat character differently');
