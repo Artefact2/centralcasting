@@ -111,7 +111,7 @@ class RandomTable implements RandomExecutor {
 	public function execute(State $s, ?Roller $roller = null, bool $combineRoll = false): void {
 		if($combineRoll === true) {
 			assert($roller !== null);
-			$roll = $roller($s) + $this->roller->roll($s);
+			$roll = $roller->roll($s) + $this->roller->roll($s);
 		} else {
 			$roll = $roller ? $roller->roll($s) : $this->roller->roll($s);
 		}
