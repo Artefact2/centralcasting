@@ -13,6 +13,7 @@ $nt = new NamedTable("649D", "Allergies", DiceRoller::from("d10"), [
 	"8" => "Unusual medicine type (magical potions, antidotes)",
 	"9" => "Mold (constant sneezing)",
 	"10" => "Magic (cast magic)",
+	"11" => "Cold and damp", /* XXX 535B */
 ]);
 
 $nt->addPostExecuteHook(function(State $s) {

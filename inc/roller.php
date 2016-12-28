@@ -35,7 +35,7 @@ class DiceRoller implements Roller {
 	}
 
 	public static function from(string $dicespec): DiceRoller {
-		trigger_error('DiceRoller::from($spec) is deprecated, use new DiceRoller($s) instead', E_USER_NOTICE);
+		//trigger_error('DiceRoller::from($spec) is deprecated, use new DiceRoller($s) instead', E_USER_NOTICE);
 		return new self($dicespec);
 	}
 

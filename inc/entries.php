@@ -26,7 +26,7 @@ class Entry {
 
 	public function replaceLine(?string $old, ?string $new): bool {
 		if($old === null) {
-			$this->addLine($new);
+			$this->prependLine($new);
 			return true;
 		}
 		

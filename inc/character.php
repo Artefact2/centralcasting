@@ -20,6 +20,23 @@ class Character {
 	const MALE = 20;
 	const FEMALE = 21;
 
+	/* XXX find a better place to put this */
+	const MILITARY_RANKS = [ /* index => [ rank, roll on 538 ] */
+		1 =>  [     1,  10 ],
+		2 =>  [     2,  12 ],
+		3 =>  [     3,  15 ],
+		4 =>  [     5,  16 ],
+		5 =>  [     8,  18 ],
+		6 =>  [    15,  20 ],
+		7 =>  [    25,  24 ],
+		8 =>  [   100,  25 ],
+		9 =>  [   500, 101 ],
+		10 => [  1000, 102 ],
+		11 => [  3000, 103 ],
+		12 => [  6000, 104 ],
+		13 => [ 10000, 105 ],
+	];
+
 	private $name;
 	private $type;
 	private $ageRange;
@@ -27,6 +44,8 @@ class Character {
 	private $gender;
 	private $enslaved; /* bool */
 	private $imprisoned; /* bool */
+	private $inmilitary; /* bool */
+	private $militaryrank;
 
 	private $modifiers = [
 		'CuMod' => 0, /* Cultural modifier */
@@ -34,6 +53,7 @@ class Character {
 		'LegitMod' => 0, /* Birth legitimacy modifier */
 		'BiMod' => 0, /* Birth modifier */
 		'TiMod' => 0, /* Title modifier */
+		'ViMod' => 0, /* Military victories modifier */
 	];
 
 	private $mother; /* ?Character */
@@ -79,6 +99,8 @@ class Character {
 		$this->gender = null;
 		$this->enslaved = false;
 		$this->imprisoned = false;
+		$this->inmilitary = false;
+		$this->militaryrank = 0;
 
 		$this->rootEntry = new Entry("000", "Root entry");
 		$this->activeEntry = $this->rootEntry;
@@ -195,6 +217,33 @@ class Character {
 
 	public function isImprisoned(): bool { return $this->imprisoned; }
 	public function setImprisoned(bool $i): void { $this->imprisoned = $i; }
+
+	public function isEnlistedInMilitary(): bool { return $this->inmilitary; }
+	public function setEnlistedInMilitary(bool $e): void { $this->inmilitary = $e; }
+
+	public function getMilitaryRank(): int { return $this->militaryrank; }
+	public function setMilitaryRank(int $r): void {
+		assert($r === 0 || isset(self::MILITARY_RANKS[$r]));
+		$this->militaryrank = $r;
+	}
+	public function promote(State $s): void {
+		$s->pushActiveCharacter($this);
+		if(isset(self::MILITARY_RANKS[$this->militaryrank + 1])) {
+			LineAdder("And character gets promoted")($s);
+			++$this->militaryrank;
+			$s->invokeTable("538", new TrivialRoller(self::MILITARY_RANKS[$this->militaryrank][1]));
+		}
+		$s->popActiveCharacter();
+	}
+	public function demote(State $s): void {
+		$s->pushActiveCharacter($this);
+		if(isset(self::MILITARY_RANKS[$this->militaryrank - 1])) {
+			LineAdder("And character gets demoted")($s);
+			--$this->militaryrank;
+			$s->invokeTable("538", new TrivialRoller(self::MILITARY_RANKS[$this->militaryrank][1]));
+		}
+		$s->popActiveCharacter();
+	}
 
 	public function getModifier(string $mod): int {
 		assert(isset($this->modifiers[$mod]));

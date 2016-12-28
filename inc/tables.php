@@ -133,6 +133,7 @@ class RandomTable implements RandomExecutor {
 			return;
 		}
 
+		fprintf(STDERR, "Table %s might be incomplete (rolled %d)\n", $this->id, $roll);
 		assert(false);
 	}
 
