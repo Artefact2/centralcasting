@@ -77,6 +77,13 @@ class Entry {
 		$this->lines[] = $line;
 	}
 
+	public function prependLine(?string $line): void {
+		if($line === null) return;
+		
+		assert(strpos($line, "\n") === false);
+		array_unshift($this->lines, $line);
+	}
+
 	public function addChild(Entry $child): void {
 		if(($parent = $child->getParent()) !== null) {
 			assert($parent->removeChild($child) === true);
