@@ -1,0 +1,37 @@
+#!/usr/bin/env php
+<?php
+/* Author: Romain Dal Maso <artefact2@gmail.com>
+ *
+ * This program is free software. It comes without any warranty, to the
+ * extent permitted by applicable law. You can redistribute it and/or
+ * modify it under the terms of the Do What The Fuck You Want To Public
+ * License, Version 2, as published by Sam Hocevar. See
+ * http://sam.zoy.org/wtfpl/COPYING for more details. */
+
+namespace HeroesOfLegend;
+
+require __DIR__.'/inc/root.php';
+
+if($argc === 1 || $argc > 3) {
+	fprintf(STDERR, "Usage: %s <iterations> [script]\n", $argv[0]);
+	die(1);
+}
+
+$iter = (int)$argv[1];
+assert($iter > 0);
+
+chdir(__DIR__);
+
+if($argc === 2) {
+	passthru('find data -type f -name "*.php" -print0 | xargs -0 -P $(getconf _NPROCESSORS_ONLN) -n 1 ./fuzz '.$iter);
+	die();
+}
+
+assert(preg_match('%^data/(?<s>.+)\.php$%', $argv[2], $match) === 1);
+$script = $match['s'];
+
+for($i = 0; $i < $iter; ++$i) {
+	$c = Character::NPC("Default Character");
+	$s = new State($c);
+	$s->invoke($script);
+}
