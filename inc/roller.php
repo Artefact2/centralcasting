@@ -14,43 +14,90 @@ interface Roller {
 }
 
 class DiceRoller implements Roller {
-	private $ndice;
-	private $nsides;
-	private $modifiers;
+	private $func; /* Callable(?State) */
 
-	public function __construct(int $ndice, int $nsides, array $modifiers = []) {
-		assert($ndice >= 0);
-		assert($nsides >= 1);
-		
-		$this->ndice = $ndice;
-		$this->nsides = $nsides;
-		$this->modifiers = $modifiers;
+	public static function validateSpec(string $spec): bool {
+		$ret = preg_match(
+			'%
+            ^(
+              (?<term>
+                (?<ndice>[1-9][0-9]*)?(d|D)(?<nsides>[1-9][0-9]*)
+                |(?<modifier>[A-Z][A-Za-z]+Mod)
+                |(?<const>0|[1-9][0-9]*)
+              )(?<op>\+|-|\*|$)
+            )+
+            $%x',
+			$spec
+		);
+
+		assert($ret === 0 || $ret === 1);
+		return (bool)$ret;
 	}
 
-	public static function from(string $dicespec): DiceRoller {		
-		$ret = preg_match(
-			'%^(?<ndice>[1-9][0-9]*)?(d|D)(?<nsides>[1-9][0-9]*)(?<modifiers>((\+|-|\*)([A-Z][A-Za-z]+Mod|[1-9][0-9]*))*)?$%',
-			$dicespec, $match
-		);
-		assert($ret === 1);
+	public static function from(string $dicespec): DiceRoller {
+		trigger_error('DiceRoller::from($spec) is deprecated, use new DiceRoller($s) instead', E_USER_NOTICE);
+		return new self($dicespec);
+	}
 
-		$modifiers = [];
-		if($match['modifiers'] !== '') {
-			$parts = preg_split('%(\+|-|\*)%', $match['modifiers'], null, PREG_SPLIT_DELIM_CAPTURE);
-			array_shift($parts);
+	public function __construct(string $dicespec) {
+		$funcs = [];
 
-			while($parts !== []) {
-				$op = array_shift($parts);
-				$val = array_shift($parts);
-				if(ctype_digit($val)) $val = (int)$val;
-				$modifiers[] = [ $op, $val ];
+		assert(self::validateSpec($dicespec));
+		$parts = preg_split('%(\+|-|\*)%', $dicespec, null, PREG_SPLIT_DELIM_CAPTURE);
+		array_unshift($parts, '+');
+
+		while($parts !== []) {
+			$op = array_shift($parts);
+			$term = array_shift($parts);
+
+			if(ctype_digit($term)) {
+				$term = (int)$term;
+				$getval = function() use($term) { return $term; };
+			} else if(preg_match('%^(?<modifier>[A-Z][A-Za-z]+Mod)$%', $term, $match)) {
+				$mod = $match['modifier'];
+				$getval = function(?State $s) use($mod) {
+					return $s->getActiveCharacter()->getModifier($mod);
+				};
+			} else if(preg_match('%^(?<ndice>[1-9][0-9]*)?(d|D)(?<nsides>[1-9][0-9]*)$%', $term, $match)) {
+				$ndice = $match['ndice'] ? (int)$match['ndice'] : 1;
+				$nsides = (int)$match['nsides'];
+				assert($ndice >= 0 && $nsides >= 1);
+				$getval = function() use($ndice, $nsides) {
+					$s = 0;
+					while(--$ndice >= 0) $s += 1 + (mt_rand() % $nsides);
+					return $s;
+				};
+			} else {
+				assert(false);
 			}
+
+			assert(is_callable($getval));
+			$funcs[] = function(?State $s, int $accum) use($op, $getval): int {
+				switch($op) {
+				case '+':
+				return $accum + $getval($s);
+
+				case '-':
+				return $accum - $getval($s);
+
+				case '*':
+				return $accum * $getval($s);
+				}
+
+				assert(false);
+			};
 		}
 
-		return new self((int)$match['ndice'] ?: 1, (int)$match['nsides'], $modifiers);
+		$this->func = function(?State $s) use($funcs): int {
+			$acc = 0;
+			foreach($funcs as $f) $acc = $f($s, $acc);
+			return $acc;
+		};
 	}
 
 	public function roll(?State $s = null): int {
+		return ($this->func)($s);
+		
 		$total = 0;
 		for($i = 0; $i < $this->ndice; ++$i) {
 			$total += 1 + (mt_rand() % $this->nsides);
