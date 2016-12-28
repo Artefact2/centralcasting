@@ -86,10 +86,10 @@ class RandomTable implements RandomExecutor {
 			}
 
 			$payload = $this->pc->createPayload($text, $action);
-			$this->actions[] = [ $range, $lo, $hi, function(State $s) use($payload) {
-					$payload($s);
+			$this->actions[] = [ $range, $lo, $hi, function(State $s, int $roll) use($payload) {
+					$payload($s, $roll);
 					foreach($this->posthooks as $ph) {
-						$ph($s);
+						$ph($s, $roll);
 					}
 				}];
 		}
@@ -129,7 +129,7 @@ class RandomTable implements RandomExecutor {
 			}
 
 			$s->getActiveCharacter()->markVisitedTableRange($this->id, $range);
-			$payload($s);
+			$payload($s, $roll);
 			return;
 		}
 
@@ -156,7 +156,7 @@ class NamedTable extends RandomTable implements PayloadCreator {
 	}
 	
 	public function createPayload(?string $text, ?callable $action): callable {
-		return function(State $s) use($text, $action) {
+		return function(State $s, int $roll) use($text, $action) {
 			$sub = new Entry($this->id, $this->name, $text);
 			
 			$ch = $s->getActiveCharacter();
@@ -165,7 +165,7 @@ class NamedTable extends RandomTable implements PayloadCreator {
 			if($action === null) return;
 			
 			$ch->setActiveEntry($sub);
-			$newtext = $action($s);
+			$newtext = $action($s, $roll);
 			
 			if(is_string($newtext)) {
 				if($newtext === '') $newtext = null;
@@ -184,14 +184,14 @@ class AnonymousSubtable extends RandomTable implements PayloadCreator {
 	}
 
 	public function createPayload(?string $text, ?callable $action): callable {
-		return function(State $s) use($text, $action) {			
+		return function(State $s, int $roll) use($text, $action) {			
 			$ch = $s->getActiveCharacter();
 			$e = $ch->getActiveEntry();
 
 			if($text !== null) $e->addLine($text);			
 			if($action === null) return;
 			
-			$newtext = $action($s);
+			$newtext = $action($s, $roll);
 			
 			if(is_string($newtext)) {
 				if($newtext === '') $newtext = null;
