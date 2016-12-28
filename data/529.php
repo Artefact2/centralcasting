@@ -26,7 +26,7 @@ return new NamedTable("529", "Wonderful Event", DiceRoller::from("d20+SolMod"), 
 		return [
 			"Character is adopted in wealthy family",
 			"Character is treated like a son in a wealthy family",
-		][(int)($ac->hasMother() || $s->hasFather() || $s->hasGuardian())];
+		][(int)($ac->hasMother() || $ac->hasFather() || $ac->hasGuardian())];
 	},
 	"5" => [ "Character's village/city portion is destroyed", function(State $s) {
 		LineAdder("But gets rebuilt and is more prosperous")($s);
