@@ -48,8 +48,5 @@ return new NamedTable("870", "Serious Wound", DiceRoller::from("d20"), [
 	"17" => "Throat injury (".Roll("d10*10")."% voice loss)",
 	"18" => "Back injury, -".Roll("d6")." Strength",
 	"19" => "Liver damage, alcohol becomes poisonous, -1 Constitution",
-	"20" => function(State $s) {
-		$s->getActiveCharacter()->forgetVisitedTableRange("870", "20");
-		Repeater(Roll("d2+1"), Invoker("870"))($s);
-	},
+	"20" => Repeater(Roll("d2+1"), Invoker("870")),
 ], RandomTable::REROLL_DUPLICATES);
