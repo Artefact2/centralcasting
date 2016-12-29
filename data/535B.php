@@ -23,7 +23,7 @@ return new NamedTable("535B", "Military Event", DiceRoller::from("d20"), [
 			$s->invokeTable("535C", new DiceRoller("d20"));
 		}
 	}],
-	"13" => [ "Character's unit ambushed by superior force", TableInvoker("535C", new DiceRoller("d20+ViMod-d4-d20")) ],
+	"13" => [ "Character's unit ambushed by superior force", TableInvoker("535C", new DiceRoller("d4"), true) ],
 	"14" => function(State $s) {
 		$ac = $s->getActiveCharacter();
 		$pv = min(3, $ac->getModifier('ViMod'));

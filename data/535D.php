@@ -94,4 +94,10 @@ return new NamedTable("535D", "Battle Event", new DiceRoller($spec), [
 			$s->getActiveCharacter()->increaseModifier('ViMod', 1);
 		}
 	}],
+	"23-" => function(State $s) {
+		/* This can happen when 535B:13 rolls high. The book doesn't
+		 * really say what to do in this uncharted territory. */
+		$s->invokeTable("535D", new DiceRoller("d4"), true);
+		return '';
+	},
 ]);
