@@ -11,12 +11,18 @@ namespace HeroesOfLegend;
 
 assert_options(ASSERT_ACTIVE, 1);
 assert_options(ASSERT_WARNING, 1);
-assert_options(ASSERT_CALLBACK, function() {
+assert_options(ASSERT_CALLBACK, $die = function(...$args) {
 	ob_start();
+	var_dump($args);
 	debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
 	fwrite(STDERR, ob_get_clean());
+	die(255);
 });
-assert_options(ASSERT_BAIL, 1);
+
+error_reporting(-1);
+set_error_handler($die, -1);
+set_exception_handler($die);
+
 
 function generic_message(string $channel, string $class, string ...$args): void {
 	static $filters = null;
