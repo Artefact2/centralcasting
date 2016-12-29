@@ -80,6 +80,9 @@ return new NamedTable("544", "Exotic Event", DiceRoller::from("d20"), [
 		while(($ae = $ae->getParent()) !== null) {
 			if($ae->getSourceID() === "544") continue;
 			if(!preg_match('%(^|\s)events?(\s|$)%i', $ae->getSourceName())) continue;
+
+			/* Don't reroll "fake" categories */
+			if((int)$ae->getSourceID() % 100 === 0) continue;
 			
 			Repeater(Roll("d3+1"), Invoker($ae->getSourceID()))($s);
 			return;
