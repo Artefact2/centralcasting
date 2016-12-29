@@ -111,6 +111,11 @@ class RandomTable implements RandomExecutor {
 
 	public function execute(State $s, ?Roller $roller = null, bool $combineRoll = false): void {
 		trace('tableexec', 'executing %s', $this->id);
+
+		if(++$this->rerollcounter === 10) {
+			err('tableexec', 'wiping visited ranges after 10 failed rerolls in %s', $this->id);
+			$s->getActiveCharacter()->forgetVisitedTableRange($this->id, null);
+		}
 		
 		if($combineRoll === true) {
 			assert($roller !== null);
@@ -127,15 +132,15 @@ class RandomTable implements RandomExecutor {
 			if($this->flags & self::REROLL_DUPLICATES) {
 				if($s->getActiveCharacter()->isTableRangeVisited($this->id, $range)) {
 					trace('tableexec', 'rerolling duplicate %d of %s', $roll, $this->id);
-					assert(++$this->rerollcounter < 10);
 					$this->execute($s, $roller, $combineRoll);
 					return;
 				}
 			}
 
 			$s->getActiveCharacter()->markVisitedTableRange($this->id, $range);
+			trace('tableexec', 'rolled %d in range [%d;%d], executing payload now', $roll, $lo, $hi);
 			$payload($s, $roll);
-			trace('tableexec', 'done executing %s (rolled %d in [%d;%d])', $this->id, $roll, $lo, $hi);
+			trace('tableexec', 'done executing %s', $this->id);
 			$this->rerollcounter = 0;
 			return;
 		}

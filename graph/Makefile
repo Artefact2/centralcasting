@@ -1,6 +1,6 @@
 SOURCES=$(shell find ../data -type f -name "*.php")
 
-NPARTS=50
+NPARTS=100
 PCOUNT=1000
 PARTS=$(shell seq 0 $(NPARTS))
 DATAS=$(addprefix datap, $(addsuffix .json, $(PARTS)))

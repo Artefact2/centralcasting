@@ -9,19 +9,31 @@
 
 namespace HeroesOfLegend;
 
-assert_options(ASSERT_ACTIVE, 1);
-assert_options(ASSERT_WARNING, 1);
-assert_options(ASSERT_CALLBACK, $die = function(...$args) {
+function print_bt(): void {
 	ob_start();
-	var_dump($args);
 	debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
 	fwrite(STDERR, ob_get_clean());
-	die(255);
-});
+}
+
+assert_options(ASSERT_ACTIVE, 1);
+assert_options(ASSERT_WARNING, 1);
 
 error_reporting(-1);
-set_error_handler($die, -1);
-set_exception_handler($die);
+set_error_handler(function(int $errno, string $errstr, string $errfile, int $errline) {
+	fprintf(STDERR, "\nPHP Error(%d) in %s:%d, %s\n", $errno, $errfile, $errline, $errstr);
+	print_bt();
+	die(251);
+}, -1);
+set_exception_handler(function(Throwable $t) {
+	fprintf(STDERR, "\nUncaught Exception(%d) in %s:%d, %s\n",
+	        $t->getCode(),
+	        $t->getFile(),
+	        $t->getLine(),
+	        $t->getMessage()
+	);
+	fwrite(STDERR, $t->getTraceAsString());
+	die(252);
+});
 
 
 function generic_message(string $channel, string $class, string ...$args): void {
