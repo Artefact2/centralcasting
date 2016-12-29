@@ -253,11 +253,13 @@ class Character {
 	public function setModifier(string $mod, int $v): void {
 		assert(isset($this->modifiers[$mod]));
 		$this->modifiers[$mod] = $v;
+		trace("char", "setModifier: %s = %d", $mod, $v);
 	}
 
 	public function increaseModifier(string $mod, int $v): void {
 		assert(isset($this->modifiers[$mod]));
 		$this->modifiers[$mod] += $v;
+		trace("char", "increaseModifier: %s += %d (now %d)", $mod, $v, $this->modifiers[$mod]);
 	}
 
 	public function getNumTraits(string $type): int {

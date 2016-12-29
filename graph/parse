@@ -40,7 +40,7 @@ foreach($datas as $name => $path) {
 	
 	$names[$name] = ($fullname = get_full_name($name, $path, $source));
 	if($fullname === null) {
-		fprintf(STDERR, "NOTICE: data %s has no name\n", $name);
+		warn("parse", "data %s has no name", $name);
 	}
 
 	/* XXX replace this by properly iterating through tables, using ->executeAll() */

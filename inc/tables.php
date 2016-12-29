@@ -109,6 +109,8 @@ class RandomTable implements RandomExecutor {
 	public function addPostExecuteHook(callable $c) { $this->posthooks[] = $c; }
 
 	public function execute(State $s, ?Roller $roller = null, bool $combineRoll = false): void {
+		trace('tableexec', 'executing %s', $this->id);
+		
 		if($combineRoll === true) {
 			assert($roller !== null);
 			$roll = $roller->roll($s) + $this->roller->roll($s);
@@ -123,6 +125,7 @@ class RandomTable implements RandomExecutor {
 
 			if($this->flags & self::REROLL_DUPLICATES) {
 				if($s->getActiveCharacter()->isTableRangeVisited($this->id, $range)) {
+					trace('tableexec', 'rerolling duplicate %d of %s', $roll, $this->id);
 					$this->execute($s, $roller, $combineRoll);
 					return;
 				}
@@ -130,10 +133,11 @@ class RandomTable implements RandomExecutor {
 
 			$s->getActiveCharacter()->markVisitedTableRange($this->id, $range);
 			$payload($s, $roll);
+			trace('tableexec', 'done executing %s (rolled %d in [%d;%d])', $this->id, $roll, $lo, $hi);
 			return;
 		}
 
-		fprintf(STDERR, "Table %s might be incomplete (rolled %d)\n", $this->id, $roll);
+		err('tableexec', 'table %s is incomplete, rolled %d', $this->id, $roll);
 		assert(false);
 	}
 

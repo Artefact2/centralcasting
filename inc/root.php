@@ -18,6 +18,33 @@ assert_options(ASSERT_CALLBACK, function() {
 });
 assert_options(ASSERT_BAIL, 1);
 
+function generic_message(string $channel, string $class, string ...$args): void {
+	static $filters = null;
+
+	if($filters === null) {
+		$filters = [];
+		$env = getenv('CCDEBUG') ?: '';
+		
+		foreach(explode(',', $env) as $ep) {
+			if(!preg_match('%^(?<class>err|warn|fixme|trace)?(?<op>\+|-)(?<chn>[a-z]+)$%', $ep, $match)) continue;
+			$filters[$match['class'] ?: 'all'][$match['chn']] = ($match['op'] === '+');
+		}
+	}
+
+	if($filters[$class][$channel]
+	   ?? $filters['all'][$channel]
+	   ?? $filters[$class]['all']
+	   ?? $filters['all']['all']
+	   ?? in_array($class, [ 'warn', 'err' ], true)) {
+		fprintf(STDERR, "%s:%s:%s\n", $class, $channel, sprintf(...$args));
+	}
+}
+
+function trace(string $channel, ...$args): void { generic_message($channel, 'trace', ...$args); }
+function fixme(string $channel, ...$args): void { generic_message($channel, 'fixme', ...$args); }
+function warn(string $channel, ...$args): void  { generic_message($channel, 'warn',  ...$args); }
+function err(string $channel, ...$args): void   { generic_message($channel, 'err',   ...$args); }
+
 require __DIR__.'/state.php';
 require __DIR__.'/character.php';
 require __DIR__.'/entries.php';

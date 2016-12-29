@@ -40,7 +40,7 @@ class State {
 		foreach($datas as $data) {
 			$f = __DIR__.'/../data/'.$data.'.php';
 			if(!file_exists($f)) {
-				fprintf(STDERR, "WARNING: script %s not implemented\n", $data);
+				warn("invoke", "script %s not implemented", $data);
 				continue;
 			}
 
