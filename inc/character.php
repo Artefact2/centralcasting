@@ -106,6 +106,8 @@ class Character {
 		$this->activeEntry = $this->rootEntry;
 
 		$this->tableInfo = [];
+
+		trace('char', 'finished constructing char %s', $name);
 	}
 
 	public static function PC(): Character {

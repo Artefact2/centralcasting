@@ -12,26 +12,52 @@ namespace HeroesOfLegend;
 
 require __DIR__.'/inc/root.php';
 
-if($argc === 1 || $argc > 3) {
-	fprintf(STDERR, "Usage: %s <iterations> [script]\n", $argv[0]);
+if($argc === 2 && in_array(strtolower($argv[1]), [ "--help", "-h", "-?", "/h" ], true)) {
+	fprintf(STDERR, "Usage: %s [processes] [scripts...]\n", $argv[0]);
 	die(1);
 }
 
-$iter = (int)$argv[1];
-assert($iter > 0);
-
-chdir(__DIR__);
-
-if($argc === 2) {
-	passthru('find data -type f -name "*.php" -print0 | xargs -0 -P $(getconf _NPROCESSORS_ONLN) -n 1 ./fuzz '.$iter);
-	die();
+if($argc === 1) {
+	fprintf(STDERR, "Auto-detecting number of CPUs... ");
+	$cpus = shell_exec('getconf _NPROCESSORS_ONLN');
+	if($cpus === null || !ctype_digit(trim($cpus))) {
+		fprintf(STDERR, "failed, falling back to %d\n", $processes = 2);
+	} else {
+		fprintf(STDERR, "found %d\n", $processes = intval($cpus));
+	}
+} else {
+	$processes = intval($argv[1]);
 }
 
-assert(preg_match('%^data/(?<s>.+)\.php$%', $argv[2], $match) === 1);
-$script = $match['s'];
+if($argc < 3) {
+	foreach(glob(__DIR__.'/data/*.php') as $path) {
+		$datas[] = pathinfo($path, PATHINFO_FILENAME);
+	}
+} else {
+	array_shift($argv);
+	array_shift($argv);
+	$datas = $argv;
+}
 
-for($i = 0; $i < $iter; ++$i) {
-	$c = Character::NPC("Default Character");
-	$s = new State($c);
-	$s->invoke($script);
+if($processes === 0) {
+	/* Loop mode */
+	array_pop($datas);	
+	do {
+		passthru(escapeshellcmd(__FILE__).' -1000 '.implode(' ', array_map('escapeshellarg', $datas)), $ret);
+	} while($ret === 0);
+} else if($processes < 0) {
+	/* Work mode */
+	while(++$processes) {
+		foreach($datas as $d) {
+			$c = Character::NPC("Fuzzman");
+			$s = new State($c);
+			$s->invoke($d);
+		}
+		fprintf(STDERR, ".");
+	}
+	fprintf(STDERR, "\n");
+} else {
+	/* Spawn mode */
+	fprintf(STDERR, "Starting fuzz testing with %d processes. Hit ^C to cancel.\n", $processes);
+	passthru('seq 1 '.$processes.' | xargs -P '.$processes.' -n 1 ./fuzz 0 '.implode(' ', array_map('escapeshellarg', $datas)));
 }

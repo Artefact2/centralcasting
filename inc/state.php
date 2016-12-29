@@ -16,6 +16,7 @@ class State {
 	public function __construct(Character $root) {
 		$this->rootChar = $root;
 		$this->activeCharStack = [ $this->rootChar ];
+		trace('state', 'created new state');
 	}
 
 	public function getRootCharacter(): Character {

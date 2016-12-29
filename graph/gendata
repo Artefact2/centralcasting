@@ -10,6 +10,8 @@
 
 namespace HeroesOfLegend;
 
+ini_set('memory_limit', -1); /* XXX */
+
 require __DIR__.'/../inc/root.php';
 
 $names = [];
@@ -60,42 +62,30 @@ function analyze(Entry $e, ?string $parent): void {
 foreach(glob(__DIR__.'/../data/*.php') as $path) {
 	$datas[$d = pathinfo($path, PATHINFO_FILENAME)] = $path;
 	$invokes[$d] = 0;
-
-	if(!preg_match('%^[0-9]%', $d)) {
-		$rootscripts[] = $d;
-	}
 }
 
-$rcount = 1000;
+$rcount = (int)($argv[1] ?? 1000);
 for($i = 1; $i <= $rcount; ++$i) {
 	if($i % 10 === 0) {
-		fprintf(STDERR, "\rFuzzing table paths... %5.5d/%5.5d", $i, $rcount);
+		fprintf(STDERR, ".");
 	}
 
-	foreach($rootscripts as $d) {
-		$c = Character::NPC("Noname");
-		$s = new State($c);
-		$s->invoke($d);
+	$c = Character::NPC("Noname");
+	$s = new State($c);
+	$s->invoke('pc'$);
 
-		$re = $c->getRootEntry();
-		if($re->getSourceName() !== "/") {
-			maybe_name($d, $re->getSourceName());
-		}
+	$re = $c->getRootEntry();
+	if($re->getSourceName() !== "/") {
+		maybe_name($d, $re->getSourceName());
+	}
 
-		$rc = $s->getActiveCharacter()->getRootEntry()->getChildren();
-		if(count($rc) === 1 && $rc[0]->getSourceID() === $d) {
-			analyze($rc[0], null);
-		} else {
-			++$invokes[$d];
+	$rc = $s->getActiveCharacter()->getRootEntry()->getChildren();
+	++$invokes['pc'];
 			
-			foreach($rc as $c) {
-				analyze($c, $d);
-			}
-		}
+	foreach($rc as $c) {
+		analyze($c, 'pc');
 	}
 }
-
-fprintf(STDERR, " Done.\nWriting output...");
 
 ksort($names);
 ksort($links);
@@ -108,4 +98,4 @@ echo json_encode([
 	'invokes' => $invokes,
 ]);
 
-fprintf(STDERR, " Done.\n");
+fprintf(STDERR, "\n");
