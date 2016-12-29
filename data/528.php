@@ -54,7 +54,7 @@ return new NamedTable("528", "Tragedy", DiceRoller::from("d20+SolMod"), [
 		LineAdder("And parents hide in a different culture level");
 		/* XXX only change CuMod if character actually follows */
 		$s->getActiveCharacter()->setModifier('CuMod', 0);
-		$s->invoke("103");
+		$s->invoke("102"); /* Aaah, book typo! (103) */
 	})],
 	"11" => [ "Character sold into slavery", Invoker("539") ],
 	"12" => [ "Character receives severe injury", Combiner(Invoker("870"), SubtableInvoker(DiceRoller::from("d8"), [
