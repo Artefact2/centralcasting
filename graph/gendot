@@ -26,6 +26,21 @@ function colorize(string $s): string {
 	return '/set39/9';
 }
 
+function colorizepc(float $pc): string {
+	static $cinfo = [
+		1 => 'gray80',
+		5 => 'gray60',
+		20 => 'gray40',
+		80 => 'gray20',
+		100000 => 'gray0',
+	];
+
+	foreach($cinfo as $k => $v) {
+		if($pc <= $k) return $v;
+	}
+	return $v;
+}
+
 echo "digraph \"\" {\n";
 echo "rankdir=\"TB\"\n";
 echo "graph [pad=.2 nodesep=.2 ranksep=.5 splines=ortho]\n";
@@ -49,23 +64,21 @@ foreach($data['names'] as $n => $fn) {
 
 foreach($data['links'] as $src => $l) {
 	foreach($l as $tgt => $count) {
-		$a = (int)$src;
-		$b = (int)$tgt;
-
-		if($a === $b) {
-			$weight = 1000;
-		} else if($a - ($a % 100) === $b - ($b % 100)) {
-			$weight = 100;
-		} else if($a < $b) {
-			$weight = 10;
-		} else {
-			$weight = 1;
-		}
+		$pc = 100.0 * $count / $data['invokes'][$src];
+		$weight = (int)($pc * $pc * $pc);
 		
 		printf(
-			"\"%s\" -> \"%s\" [weight=%d tooltip=\"%s\"]\n",
-			$src, $tgt, $count * $weight,
-			sprintf("%s: %s -> %s: %s", $src, $data['names'][$src], $tgt, $data['names'][$tgt])
+			"\"%s\" -> \"%s\" [weight=%d xlabel=\"%s\" tooltip=\"%s\" color=\"%s\" fontcolor=\"%s\" penwidth=%d]\n",
+			$src, $tgt, $weight,
+			sprintf("%.1f%%", $pc),
+			sprintf(
+				"[%.1f%%] %s: %s -> %s: %s",
+				$pc,
+				$src, $data['names'][$src],
+				$tgt, $data['names'][$tgt]
+			),
+			colorizepc($pc), colorizepc($pc),
+			max(1, (int)round($pc / 100.0))
 		);
 	}
 }
