@@ -32,3 +32,9 @@ SubentryCreator(
 )($s);
 
 $s->invoke("318");
+
+SubentryCreator("300", "Done!", "Now what?", function(State $s) {
+	LineAdder("Reread 'Motivations' (page 8)")($s);
+	LineAdder("Reread 'Linking Events' (page 11)")($s);
+	LineAdder("Write up your character history (page 12)")($s);
+})($s);
