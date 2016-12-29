@@ -118,7 +118,7 @@ return new NamedTable("528", "Tragedy", DiceRoller::from("d20+SolMod"), [
 			LineAdder("And all belongings are destroyed")($s);
 			if(Roll("d6") === 6) {
 				LineAdder("And social status drops by one level")($s);
-				$s->getActiveCharacter()->increaseModifer('SolMod', -2);
+				$s->getActiveCharacter()->increaseModifier('SolMod', -2);
 			}
 		}],
 	])],
