@@ -37,8 +37,7 @@ return new NamedTable("546B", "Other Event", new DiceRoller("d20"), [
 	"15" => "Book found in attic is a spell book, contains ".Roll("d20")." spell(s) of various levels of power",
 	"16" => "Evil uncle claims the estate for himself",
 	"17" => function(State $s) {
-		$sib = $s->getActiveCharacter()->getNumBrothers() + $s->getActiveCharacter()->getNumSisters();
-		if($sib > 0) {
+		if($s->getActiveCharacter()->getNumSiblings() > 0) {
 			return "Siblings fight over parent's personal belongings";
 		}
 

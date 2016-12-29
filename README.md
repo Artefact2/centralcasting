@@ -70,7 +70,7 @@ Player Character                         (CuMod: +2, SolMod: -3, LegitMod: +0, B
 To Do
 =====
 
-* Finish all the tables!
+* ~~Finish all the tables!~~
 * Explain how to extend tables and how to write scripts
 * Write scripts for NPCs, evil guys, good guys, etc.
 * ~~Fuzz testing~~
