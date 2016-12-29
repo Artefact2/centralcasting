@@ -27,8 +27,8 @@ function colorize(string $s): string {
 }
 
 echo "digraph {\n";
-echo "rankdir=\"LR\"\n";
-echo "graph [pad=.1 nodesep=.1 ranksep=.5]\n";
+echo "rankdir=\"TB\"\n";
+echo "graph [pad=.2 nodesep=.2 ranksep=.5 splines=ortho]\n";
 
 foreach($data['names'] as $n => $fn) {
 	if(preg_match('%^[0-9]%', $n)) {
@@ -49,9 +49,20 @@ foreach($data['names'] as $n => $fn) {
 
 foreach($data['links'] as $src => $l) {
 	foreach($l as $tgt => $count) {
-		while(--$count >= 0) {
-			printf("\"%s\" -> \"%s\"\n", $src, $tgt);
+		$a = (int)$src;
+		$b = (int)$tgt;
+
+		if($a === $b) {
+			$weight = 1000;
+		} else if($a - ($a % 100) === $b - ($b % 100)) {
+			$weight = 100;
+		} else if($a < $b) {
+			$weight = 10;
+		} else {
+			$weight = 1;
 		}
+		
+		printf("\"%s\" -> \"%s\" [weight=%d]\n", $src, $tgt, $count * $weight);
 	}
 }
 
