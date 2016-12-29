@@ -4,7 +4,7 @@ namespace HeroesOfLegend;
 
 return new NamedTable("543A", "Who?", DiceRoller::from("d10"), [
 	"1-2" => [ "Government official", Invoker("752") ],
-	"3" => [ "Family member", Invoker("763") ],
+	"3" => [ "Family member", Invoker("753") ], /* Book typo! (763) */
 	"4" => [ "Nonhuman", Invoker("751") ],
 	"5" => [ "Foreigner", Invoker("750") ],
 	"6-7" => [ "Noble person", Invoker("758") ],
