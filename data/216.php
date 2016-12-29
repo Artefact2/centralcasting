@@ -2,20 +2,21 @@
 
 namespace HeroesOfLegend;
 
-/*<<< Name: Special Event of Childhood & Adolescence >>>*/
+SubentryCreator("216", "Special Event Age Check", null, function(State $s) {
 
-switch($s->getActiveCharacter()->getAgeRange()) {
-case Character::CHILD:
-	$s->invoke("216A");
-	break;
+	switch($s->getActiveCharacter()->getAgeRange()) {
+	case Character::CHILD:
+		$s->invoke("216A");
+		break;
 
-case Character::ADOLESCENT:
-	$s->invoke("216B");
-	break;
+	case Character::ADOLESCENT:
+		$s->invoke("216B");
+		break;
 
-case Character::ADULT:
-	break;
+	case Character::ADULT:
+		break;
 
-default:
-	assert(false);
-}
+	default:
+		assert(false);
+	}
+})($s);

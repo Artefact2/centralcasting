@@ -14,7 +14,7 @@ return new NamedTable("871", "Special Nobility Title", DiceRoller::from("d1"), [
 		foreach($ch as $c) {
 			$l = $c->getLines();
 			assert(count($l) === 1);
-			assert($e->removeChild($c) === true);
+			$c->replaceLine($l[0], null);
 			
 			if($l[0] === '') continue;
 			if($line === null) $line = $l[0];

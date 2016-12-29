@@ -12,16 +12,26 @@ namespace HeroesOfLegend;
 
 require __DIR__.'/../inc/root.php';
 
-assert(file_exists($argv[1]));
-$data = json_decode(file_get_contents($argv[1]), true);
-assert(is_array($data['names']) && is_array($data['links']));
+if($argc !== 2) {
+	fprintf(STDERR, "Usage: %s <dataname>\n", $argv[0]);
+	die(1);
+}
 
-$parentsof = $argv[2];
+$data = json_decode(file_get_contents(__DIR__.'/data.json'), true);
+assert(is_array($data['names']) && is_array($data['links']) && is_array($data['invokes']));
 
-$s = sprintf("Parents/Invokers of %s: %s", $parentsof, $data['names'][$parentsof] ?? '(Unknown/NI)');
-printf("%s\n%s\n", $s, str_repeat('=', strlen($s)));
+$parentsof = $argv[1];
+
+printf("Parents/Invokers of %s: %s\n", $parentsof, $data['names'][$parentsof] ?? '(Unknown/NI)');
+echo str_repeat('=', 80), "\n";
 
 foreach($data['links'] as $src => $l) {
 	if(!isset($l[$parentsof])) continue;
-	printf("%5.5s: %s\n", $src, $data['names'][$src] ?? '(Unknown/NI)');
+	
+	printf(
+		"%5.1f%%: %-63.63s (%-5.5s)\n",
+		100.0 * $l[$parentsof] / $data['invokes'][$src],
+		$data['names'][$src] ?? '(Unknown/NI)',
+		$src
+	);
 }

@@ -45,7 +45,7 @@ foreach($rawdata as $k => [ $title, $timod, $titles, $hchance, $holdings ]) {
 $cumod = $s->getActiveCharacter()->getModifier('CuMod');
 
 if($cumod <= -2) {
-	return new NamedTable("758A", "Nobles", DiceRoller::from("d100"), [
+	return new NamedTable("758", "Nobles", DiceRoller::from("d100"), [
 		"1" => $tdata["HK"],
 		"2-30" => $tdata["CT"],
 		"31-100" => $tdata["SCT"],
@@ -53,7 +53,7 @@ if($cumod <= -2) {
 }
 
 if($cumod <= 0) {
-	return new NamedTable("758B", "Nobles", DiceRoller::from("d100"), [
+	return new NamedTable("758", "Nobles", DiceRoller::from("d100"), [
 		"1-10" => $tdata["KA"],
 		"11-40" => $tdata["CT"],
 		"41-80" => $tdata["SCT"],
@@ -62,7 +62,7 @@ if($cumod <= 0) {
 }
 
 if($cumod <= 2) {
-	return new NamedTable("758C", "Nobles", DiceRoller::from("d100"), [
+	return new NamedTable("758", "Nobles", DiceRoller::from("d100"), [
 		"1-2" => $tdata["HK"],
 		"3-15" => $tdata["KI"],
 		"16-25" => $tdata["PR"],
@@ -75,7 +75,7 @@ if($cumod <= 2) {
 	]);
 }
 
-return new NamedTable("758D", "Nobles", DiceRoller::from("d100"), [
+return new NamedTable("758", "Nobles", DiceRoller::from("d100"), [
 	"1" => $tdata["E"],
 	"2-5" => $tdata["K"],
 	"6-15" => $tdata["PR"],

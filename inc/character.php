@@ -102,7 +102,7 @@ class Character {
 		$this->inmilitary = false;
 		$this->militaryrank = 0;
 
-		$this->rootEntry = new Entry("000", "Root entry");
+		$this->rootEntry = new Entry("000", "/");
 		$this->activeEntry = $this->rootEntry;
 
 		$this->tableInfo = [];

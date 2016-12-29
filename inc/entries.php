@@ -106,6 +106,7 @@ class Entry {
 
 	public function getSourceID(): string { return $this->sourceID;	}
 	public function getSourceName(): string { return $this->sourceName;	}
+	public function setSourceName(string $s): void { $this->sourceName = $s; }
 
 	public function getLines(): array {
 		/* Arrays are passed by value */
@@ -136,11 +137,13 @@ class Entry {
 
 		if($this->isTrivial()) {
 			$canprune = true;
-			
-			foreach($this->children as $c) {
-				if($c->getSourceID() !== $this->getSourceID()) {
-					$canprune = false;
-					break;
+
+			if(!preg_match('%\s(\(_P\)|Check)$%', $this->getSourceName())) {
+				foreach($this->children as $c) {
+					if($c->getSourceID() !== $this->getSourceID()) {
+						$canprune = false;
+						break;
+					}
 				}
 			}
 

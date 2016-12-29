@@ -26,7 +26,7 @@ function colorize(string $s): string {
 	return '/set39/9';
 }
 
-echo "digraph {\n";
+echo "digraph \"\" {\n";
 echo "rankdir=\"TB\"\n";
 echo "graph [pad=.2 nodesep=.2 ranksep=.5 splines=ortho]\n";
 
@@ -62,7 +62,11 @@ foreach($data['links'] as $src => $l) {
 			$weight = 1;
 		}
 		
-		printf("\"%s\" -> \"%s\" [weight=%d]\n", $src, $tgt, $count * $weight);
+		printf(
+			"\"%s\" -> \"%s\" [weight=%d tooltip=\"%s\"]\n",
+			$src, $tgt, $count * $weight,
+			sprintf("%s: %s -> %s: %s", $src, $data['names'][$src], $tgt, $data['names'][$tgt])
+		);
 	}
 }
 

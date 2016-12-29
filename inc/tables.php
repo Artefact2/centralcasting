@@ -11,7 +11,6 @@ namespace HeroesOfLegend;
 
 interface RandomExecutor {
 	public function execute(State $s, ?Roller $roller = null, bool $combineRoll = false): void;
-	public function executeAll(State $s): void;
 }
 
 interface PayloadCreator {
@@ -139,10 +138,6 @@ class RandomTable implements RandomExecutor {
 
 		err('tableexec', 'table %s is incomplete, rolled %d', $this->id, $roll);
 		assert(false);
-	}
-
-	public function executeAll(State $s): void {
-		/* TODO */
 	}
 }
 

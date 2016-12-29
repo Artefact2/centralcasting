@@ -2,8 +2,6 @@
 
 namespace HeroesOfLegend;
 
-/*<<< Name: Victim & Punishment >>>*/
-
 $ac = $s->getActiveCharacter();
 $ae = $ac->getActiveEntry();
 
@@ -117,7 +115,7 @@ foreach($punishments as $p) {
 		if(count($x) === 1) {
 			$addto = $pe; 
 		} else {
-			$addto = new Entry("875", "Choose one of", null);
+			$addto = new Entry("875Z", "Choose one of", null);
 			$pe->addChild($addto);
 		}
 			

@@ -2,9 +2,8 @@
 
 namespace HeroesOfLegend;
 
-/*<<< Name: Player Character >>>*/
-
 $pc = $s->getRootCharacter();
+$pc->getRootEntry()->setSourceName('Player Character');
 
 $pc->setName('Player Character');
 $pc->setType(Character::PC);

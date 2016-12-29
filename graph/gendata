@@ -1,0 +1,111 @@
+#!/usr/bin/env php
+<?php
+/* Author: Romain Dal Maso <artefact2@gmail.com>
+ *
+ * This program is free software. It comes without any warranty, to the
+ * extent permitted by applicable law. You can redistribute it and/or
+ * modify it under the terms of the Do What The Fuck You Want To Public
+ * License, Version 2, as published by Sam Hocevar. See
+ * http://sam.zoy.org/wtfpl/COPYING for more details. */
+
+namespace HeroesOfLegend;
+
+require __DIR__.'/../inc/root.php';
+
+$names = [];
+$links = [];
+$invokes = [];
+$datas = [];
+$rootscripts = [];
+
+function maybe_name(string $id, string $name): void {
+	global $names;
+
+	if(array_key_exists($id, $names)) {
+		if($names[$id] !== $name) {
+			err("consistency", "inconsistent names for %s: got '%s' and '%s'", $id, $names[$id], $name);
+			assert(false);
+		}
+	} else {
+		$names[$id] = $name;
+	}
+}
+
+function analyze(Entry $e, ?string $parent): void {
+	global $links, $invokes, $datas;
+
+	assert($parent === null || array_key_exists($parent, $datas));
+	
+	$id = $e->getSourceID();
+	if(!array_key_exists($id, $datas)) {
+		/* Made up entry */
+		foreach($e->getChildren() as $c) {
+			analyze($c, $parent);
+		}
+		return;
+	}
+
+	maybe_name($id, $e->getSourceName());
+	if($parent !== null) {
+		$links[$parent][$id] = ($links[$parent][$id] ?? 0) + 1;
+	}
+	++$invokes[$id];
+
+	foreach($e->getChildren() as $c) {
+		analyze($c, $id);
+	}
+}
+
+
+foreach(glob(__DIR__.'/../data/*.php') as $path) {
+	$datas[$d = pathinfo($path, PATHINFO_FILENAME)] = $path;
+	$invokes[$d] = 0;
+
+	if(!preg_match('%^[0-9]%', $d)) {
+		$rootscripts[] = $d;
+	}
+}
+
+$rcount = 1000;
+for($i = 1; $i <= $rcount; ++$i) {
+	if($i % 10 === 0) {
+		fprintf(STDERR, "\rFuzzing table paths... %5.5d/%5.5d", $i, $rcount);
+	}
+
+	foreach($rootscripts as $d) {
+		$c = Character::NPC("Noname");
+		$s = new State($c);
+		$s->invoke($d);
+
+		$re = $c->getRootEntry();
+		if($re->getSourceName() !== "/") {
+			maybe_name($d, $re->getSourceName());
+		}
+
+		$rc = $s->getActiveCharacter()->getRootEntry()->getChildren();
+		if(count($rc) === 1 && $rc[0]->getSourceID() === $d) {
+			analyze($rc[0], null);
+		} else {
+			++$invokes[$d];
+			
+			foreach($rc as $c) {
+				analyze($c, $d);
+			}
+		}
+	}
+}
+
+fprintf(STDERR, " Done.\nWriting output...");
+
+ksort($names);
+ksort($links);
+foreach($links as &$l) ksort($l);
+ksort($invokes);
+
+echo json_encode([
+	'names' => $names,
+	'links' => $links,
+	'invokes' => $invokes,
+]);
+
+fprintf(STDERR, " Done.\n");
