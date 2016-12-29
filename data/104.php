@@ -8,7 +8,8 @@ $illegit = function(State $s) {
 	$ac->setModifier('TiMod', 0); /* XXX unless he is the sole heir */
 	
 	if($ac->getModifier('SolMod') >= 0) {
-		$ac->increaseModifier('SolMod', -$ac->getModifier('LegitMod'));
+		/* XXX the book kind of assumes SolMod >= -3, this is troublesome */
+		$ac->increaseModifier('SolMod', -min(3, $ac->getModifier('LegitMod')));
 	}
 
 	$s->invoke("105");
