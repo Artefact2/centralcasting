@@ -23,6 +23,7 @@ class RandomTable implements RandomExecutor {
 	private $actions; /* [ string $range, int $lo, int $hi, callable $payload ] */
 	private $pc;
 	private $posthooks;
+	private $rerollcounter;
 
 	const REROLL_DUPLICATES = 1;
 	
@@ -52,6 +53,7 @@ class RandomTable implements RandomExecutor {
 		$this->actions = [];
 		$this->pc = $pc;
 		$this->posthooks = [];
+		$this->rerollcounter = 0;
 		$this->flags = $flags;
 		
 		foreach($entries as $range => $e) {
@@ -125,6 +127,7 @@ class RandomTable implements RandomExecutor {
 			if($this->flags & self::REROLL_DUPLICATES) {
 				if($s->getActiveCharacter()->isTableRangeVisited($this->id, $range)) {
 					trace('tableexec', 'rerolling duplicate %d of %s', $roll, $this->id);
+					assert(++$this->rerollcounter < 10);
 					$this->execute($s, $roller, $combineRoll);
 					return;
 				}
@@ -133,6 +136,7 @@ class RandomTable implements RandomExecutor {
 			$s->getActiveCharacter()->markVisitedTableRange($this->id, $range);
 			$payload($s, $roll);
 			trace('tableexec', 'done executing %s (rolled %d in [%d;%d])', $this->id, $roll, $lo, $hi);
+			$this->rerollcounter = 0;
 			return;
 		}
 
