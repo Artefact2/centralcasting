@@ -157,7 +157,6 @@ class RandomTable extends InstanceCounter implements RandomExecutor {
 }
 
 class NamedTable extends RandomTable implements PayloadCreator {
-	private $id;
 	private $name;
 
 	public function __construct(string $id, string $name, Roller $roller, array $entries, int $flags = 0) {

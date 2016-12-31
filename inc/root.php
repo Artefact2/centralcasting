@@ -9,6 +9,11 @@
 
 namespace HeroesOfLegend;
 
+/* XXX Runs out of memory randomly without it, probably becasue of too
+ * many nested tables. Perhaps a possible memory leak with closures
+ * and/or circular references as well. */
+ini_set('memory_limit', -1);
+
 function print_bt(): void {
 	ob_start();
 	debug_print_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
