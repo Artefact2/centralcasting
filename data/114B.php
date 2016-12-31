@@ -39,45 +39,21 @@ return new NamedTable("114B", "Noteworthy Item", DiceRoller::from("d20"), [
 		"4" => "Has married more than once, current spouse is number ".Roll("d4"), /* XXX is 1 meaningful? d3+1? */
 	])],
 	"15" => [ "NPC originally from different culture", function(State $s) {
-		$ac = $s->getActiveCharacter();
-		$origCuMod = $ac->getModifier('CuMod');
-
 		/* Book doesn't say, but obviously same culture gets rerolled */
-		while(true) {
-			$ac->setModifier('CuMod', 0);
-			$s->invoke("102");
-
-			if($ac->getModifier('CuMod') === $origCuMod) {
-				$children = $ac->getActiveEntry()->getChildren();
-				assert($ac->getActiveEntry()->removeChild(array_pop($children)) === true);
-				continue;
-			}
-
-			break;
-		}
-
-		$ac->setModifier('CuMod', $origCuMod);
+		$ae = $s->getActiveCharacter()->getActiveEntry();
+		do {
+			foreach($ae->getChildren() as $c) $ae->removeChild($c);
+			CharacterSandboxer(true, $p, Invoker("102"))($s);
+		} while($p->getModifier('CuMod') === $s->getActiveCharacter()->getModifier('CuMod'));
 	}],
-	"16" => [ "NPC originally of different social status", function() use(&$s) {
-			$ac = $s->getActiveCharacter();
-			$origSolMod = $ac->getModifier('SolMod');
-
-			/* See previous case */
-			while(true) {
-				$ac->setModifier('SolMod', 0);
-				$s->invoke("103");
-
-				if($ac->getModifier('SolMod') === $origSolMod) {
-					$children = $ac->getActiveEntry()->getChildren();
-					assert($ac->getActiveEntry()->removeChild(array_pop($children)) === true);
-					continue;
-				}
-
-				break;
-			}
-
-			$ac->setModifier('SolMod', $origSolMod);
-		}],
+	"16" => [ "NPC originally of different social status", function(State $s) {
+		/* See previous case */
+		$ae = $s->getActiveCharacter()->getActiveEntry();
+		do {
+			foreach($ae->getChildren() as $c) $ae->removeChild($c);
+			CharacterSandboxer(true, $p, Invoker("103"))($s);
+		} while($p->getModifier('SolMod') === $s->getActiveCharacter()->getModifier('SolMod'));
+	}],
 	"17" => "NPC from foreign land",
 	"18" => [ "NPC has friends/ennemies", SubtableInvoker(DiceRoller::from("d6"), [
 		"1" => [ "Has rival", function(State $s) {
