@@ -67,9 +67,9 @@ $traverse($lc);
 assert($punishments !== []);
 
 $ve = new Entry("875V", "Crime Victim", null);
-$lc->addChild($ve);
+$lc->appendChild($ve);
 $pe = new Entry("875B", "Punishment", null);
-$lc->addChild($pe);
+$lc->appendChild($pe);
 
 $ac->setActiveEntry($ve);
 $s->invoke("750");
@@ -116,7 +116,7 @@ foreach($punishments as $p) {
 			$addto = $pe; 
 		} else {
 			$addto = new Entry("875Z", "Choose one of", null);
-			$pe->addChild($addto);
+			$pe->appendChild($addto);
 		}
 			
 		foreach($x as $y) {

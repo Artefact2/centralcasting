@@ -61,7 +61,7 @@ function SubentryCreator(string $id, string $name, ?string $text, callable ...$a
 	return function(State $s) use($id, $name, $text, $actions) {
 		$sub = new Entry($id, $name, $text);
 		$ac = $s->getActiveCharacter();
-		$ac->getActiveEntry()->addChild($sub);
+		$ac->getActiveEntry()->appendChild($sub);
 		$ac->setActiveEntry($sub);
 
 		foreach($actions as $action) $action($s);
@@ -101,7 +101,7 @@ function CharacterSandboxer(bool $moveEntries, &$puppet, callable ...$actions): 
 		if($moveEntries) {
 			$ae = $s->getActiveCharacter()->getActiveEntry();
 			foreach($puppet->getRootEntry()->getChildren() as $pe) {
-				$ae->addChild($pe);
+				$ae->appendChild($pe);
 			}
 		}
 	};

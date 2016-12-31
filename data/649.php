@@ -10,7 +10,7 @@ SubentryCreator("649", "Exotic Feature (Optional)", null, Invoker("649A"), funct
 	foreach($ae->getChildren() as $c) {
 		assert($c->getSourceID() === "649A");
 		foreach($c->getChildren() as $ch) {
-			$ae->addChild($ch);
+			$ae->appendChild($ch);
 		}
 		assert($ae->removeChild($c) === true);
 	}

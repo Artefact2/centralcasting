@@ -31,7 +31,7 @@ return new NamedTable("542A", "Romantic Event", DiceRoller::from("d20"), [
 		} while($beloved->getModifier('SolMod') === $ac->getModifier('SolMod'));
 
 		foreach($beloved->getRootEntry()->getChildren() as $c) {
-			$ac->getActiveEntry()->addChild($c);
+			$ac->getActiveEntry()->appendChild($c);
 		}
 	}],
 	"12" => [ "Beloved has a different culture", function(State $s) {
@@ -42,7 +42,7 @@ return new NamedTable("542A", "Romantic Event", DiceRoller::from("d20"), [
 		} while($beloved->getModifier('CuMod') === $ac->getModifier('CuMod'));
 
 		foreach($beloved->getRootEntry()->getChildren() as $c) {
-			$ac->getActiveEntry()->addChild($c);
+			$ac->getActiveEntry()->appendChild($c);
 		}
 	}],
 	"13" => "Beloved is sold into slavery (E)",

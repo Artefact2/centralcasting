@@ -174,7 +174,7 @@ class NamedTable extends RandomTable implements PayloadCreator {
 			$sub = new Entry($this->id, $this->name, $text);
 			
 			$ch = $s->getActiveCharacter();
-			$ch->getActiveEntry()->addChild($sub);
+			$ch->getActiveEntry()->appendChild($sub);
 			
 			if($action === null) return;
 			

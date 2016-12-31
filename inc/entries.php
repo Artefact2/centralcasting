@@ -84,13 +84,33 @@ class Entry {
 		array_unshift($this->lines, $line);
 	}
 
-	public function addChild(Entry $child): void {
+	public function appendChild(Entry $child): void {
 		if(($parent = $child->getParent()) !== null) {
 			assert($parent->removeChild($child) === true);
 		}
-		
 		$child->setParent($this);
+		
 		$this->children[] = $child;
+	}
+
+	public function insertChildBefore(Entry $child, Entry $before): void {
+		if(($parent = $child->getParent()) !== null) {
+			assert($parent->removeChild($child) === true);
+		}
+		$child->setParent($this);
+
+		$i = 0;
+		$found = false;
+		foreach($this->children as $c) {			
+			if($before === $c) {
+				$found = true;
+				break;
+			}
+			++$i;
+		}
+
+		assert($found);
+		array_splice($this->children, $i, 0, [ $child ]);
 	}
 
 	public function removeChild(Entry $child): bool {
@@ -149,7 +169,7 @@ class Entry {
 
 			if($canprune) {
 				foreach($this->children as $c) {
-					$this->parent->addChild($c);
+					$this->parent->insertChildBefore($c, $this);
 				}
 				
 				assert($this->isEmpty());
