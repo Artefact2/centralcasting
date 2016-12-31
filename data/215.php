@@ -56,14 +56,11 @@ return new NamedTable("215", "Significant Event of Childhood & Adolescence", Dic
 	"23" => [ "Something wonderful occurs", Combiner(LightsideTrait(), Invoker("529")) ],
 	"24" => [ "Tragedy occurs", Combiner(DarksideTrait(), Invoker("528")) ],
 	"25" => function(State $s) {
-		$soc = $s->getActiveCharacter()->getRootEntry()->findDescendantByID("103");
-		if($soc === null || !in_array($soc->getLines()[0], [ "Wealthy", "Extremely Wealthy" ], true)) {
-			$mod = "+2";
-		} else {
-			$mod = "+5";
-		}
-
-		$s->invokeTable("215", DiceRoller::from("d20+SolMod".$mod));
+		$ac = $s->getActiveCharacter();
+		$sol = $ac->getModifier('SolMod');
+		$ti = $ac->getModifier('TiMod');
+		if($ti > 0) $sol -= 5;
+		$s->invokeTable("215", new DiceRoller("d20+SolMod+".($sol >= 4 ? "5" : "2")));
 	},
 	"26" => [ "Character is bethrothed in a political marriage upon reaching majority", DarksideTrait() ],
 	"27" => [ "Head of household made close advisor to local ruler", RandomTrait() ],
