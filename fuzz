@@ -43,7 +43,10 @@ if($processes === 0) {
 	/* Loop mode */
 	array_pop($datas);	
 	do {
-		passthru(escapeshellcmd(__FILE__).' -1000 '.implode(' ', array_map('escapeshellarg', $datas)), $ret);
+		/* XXX: runs out of memory if too many iterations.
+		 * find the leak and fix it!
+		 * probably some circular references that PHP doesn't like */
+		passthru(escapeshellcmd(__FILE__).' -50 '.implode(' ', array_map('escapeshellarg', $datas)), $ret);
 	} while($ret === 0);
 } else if($processes < 0) {
 	/* Work mode */
@@ -55,7 +58,6 @@ if($processes === 0) {
 		}
 		fprintf(STDERR, ".");
 	}
-	fprintf(STDERR, "\n");
 } else {
 	/* Spawn mode */
 	fprintf(STDERR, "Starting fuzz testing with %d processes. Hit ^C to cancel.\n", $processes);
