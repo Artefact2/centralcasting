@@ -24,7 +24,7 @@ set_error_handler(function(int $errno, string $errstr, string $errfile, int $err
 	print_bt();
 	die(251);
 }, -1);
-set_exception_handler(function(Throwable $t) {
+set_exception_handler(function($t) {
 	fprintf(STDERR, "\nUncaught Exception(%d) in %s:%d, %s\n",
 	        $t->getCode(),
 	        $t->getFile(),
@@ -63,6 +63,7 @@ function fixme(string $channel, ...$args): void { generic_message($channel, 'fix
 function warn(string $channel, ...$args): void  { generic_message($channel, 'warn',  ...$args); }
 function err(string $channel, ...$args): void   { generic_message($channel, 'err',   ...$args); }
 
+require __DIR__.'/mem.php';
 require __DIR__.'/state.php';
 require __DIR__.'/character.php';
 require __DIR__.'/entries.php';

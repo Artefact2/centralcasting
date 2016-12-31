@@ -17,8 +17,8 @@ interface PayloadCreator {
 	public function createPayload(?string $text, ?callable $action): callable;
 }
 
-class RandomTable implements RandomExecutor {
-	private $id;
+class RandomTable extends InstanceCounter implements RandomExecutor {
+	protected $id;
 	private $roller;
 	private $actions; /* [ string $range, int $lo, int $hi, callable $payload ] */
 	private $pc;
@@ -105,6 +105,12 @@ class RandomTable implements RandomExecutor {
 			assert($phi === null || $lo === $phi + 1);
 			$phi = $hi;
 		}
+		
+		parent::__construct();
+	}
+
+	public function __destruct() {
+		parent::__destruct();
 	}
 
 	public function addPostExecuteHook(callable $c) { $this->posthooks[] = $c; }

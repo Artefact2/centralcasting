@@ -9,14 +9,19 @@
 
 namespace HeroesOfLegend;
 
-class State {
+class State extends InstanceCounter {	
 	private $rootChar; /* Character */
 	private $activeCharStack; /* Character[] */
 
 	public function __construct(Character $root) {
+		parent::__construct();
+		
 		$this->rootChar = $root;
 		$this->activeCharStack = [ $this->rootChar ];
-		trace('state', 'created new state');
+	}
+
+	public function __destruct() {
+		parent::__destruct();
 	}
 
 	public function getRootCharacter(): Character {
