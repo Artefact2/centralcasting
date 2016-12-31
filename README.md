@@ -65,6 +65,35 @@ Player Character                         (CuMod: +2, SolMod: -3, LegitMod: +0, B
 |   Darkside Trait: Self-doubting (unsure of self and abilities)                             (648  )
 |   Trait Strength (Optional): Weak                                                          (318D )
 |   Alignment: Neutral                                                                       (318C )
+Done!: Now what?                                                                             (300  )
+       Reread 'Motivations' (page 8)
+       Reread 'Linking Events' (page 11)
+       Write up your character history (page 12)
+~~~
+
+Generate a NPC:
+
+~~~
+./cast npc
+
+Non Player Character          (CuMod: +7, SolMod: +0, LegitMod: +0, BiMod: +0, TiMod: +0, ViMod: +0)
+====================================================================================================
+Gender: Female                                                                               (7101 )
+Character Race: Human                                                                        (101  )
+Cultural Background: Civilized-Decadent                                                      (102  )
+Social Status: Comfortable                                                                   (103  )
+Noteworthy Item: NPC has special relationship with family:                                   (114B )
+                 Is unfaithful to spouse                                                            
++ Alignment & Attitude:                                                                      (318  )
+|   Darkside Trait: Harsh (ungentle, sharp tongue)                                           (648  )
+|   Trait Strength (Optional): Strong                                                        (318D )
+|   Darkside Trait: Disrespectful (does not show respect)                                    (648  )
+|   Trait Strength (Optional): Trivial                                                       (318D )
+|   Alignment: Darksided                                                                     (318C )
+Done!: Now what?                                                                             (300  )
+       Give the NPC a name                                                                          
+       Decide whether the NPC is famous, well known, unknown or mysterious                          
+       Select NPC's age (page 4)   
 ~~~
 
 To Do
@@ -72,7 +101,7 @@ To Do
 
 * ~~Finish all the tables!~~
 * Explain how to extend tables and how to write scripts
-* Write scripts for NPCs, evil guys, good guys, etc.
+* ~~Write scripts for NPCs, evil guys, good guys, etc.~~ (Still improvable)
 * ~~Fuzz testing~~
 * ~~A tree-like structure for table results (better for nested things)~~
 * ~~Keep a lot more state (children, parents, etc.) to avoid nonsensical results~~ (Still improvable)
