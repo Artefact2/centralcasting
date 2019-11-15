@@ -20,9 +20,7 @@ function print_bt(): void {
 	fwrite(STDERR, ob_get_clean());
 }
 
-assert_options(ASSERT_ACTIVE, 1);
-assert_options(ASSERT_WARNING, 1);
-
+ini_set('zend.assertions', 1);
 error_reporting(-1);
 set_error_handler(function(int $errno, string $errstr, string $errfile, int $errline) {
 	fprintf(STDERR, "\nPHP Error(%d) in %s:%d, %s\n", $errno, $errfile, $errline, $errstr);
@@ -47,7 +45,7 @@ function generic_message(string $channel, string $class, string ...$args): void 
 	if($filters === null) {
 		$filters = [];
 		$env = getenv('CCDEBUG') ?: '';
-		
+
 		foreach(explode(',', $env) as $ep) {
 			if(!preg_match('%^(?<class>err|warn|fixme|trace)?(?<op>\+|-)(?<chn>[a-z]+)$%', $ep, $match)) continue;
 			$filters[$match['class'] ?: 'all'][$match['chn']] = ($match['op'] === '+');
