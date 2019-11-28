@@ -2,33 +2,12 @@
 
 namespace HeroesOfLegend;
 
-$doCrossbreed = function(array $entries, array &$races) use(&$doCrossbreed): string {
-	assert(count($entries) === 2);
-	foreach($entries as $e) {
-		if(count($e->getChildren()) === 2) {
-			$doCrossbreed($e->getChildren(), $races);
-		} else {
-			$race = $e->getLines()[0];
-			if($race === 'Other Race') {
-				$race = $e->getChildren()[0]->getLines()[0];
-			}
-			$races[$race] = true;
-		}
-	}
-
-	$rv = array_keys($races);
-	if(count($rv) === 1 && $rv[0] === 'Human') {
-		$rv[0] = 'Elf';
-	}
-	return sprintf('Human with %s blood', implode(' and ', array_filter($rv, function(string $r) { return $r !== 'Human'; })));
-};
-
 return new NamedTable("101", "Character Race", DiceRoller::from("d20"), [
 	"1-14" => "Human",
 	"15-16" => "Elf",
 	"17" => "Dwarf",
 	"18" => "Halfling",
-	"19" => [ "Crossbreed", function(State $s) use($doCrossbreed) {
+	"19" => [ "Crossbreed", function(State $s) {
 		$s->invoke("101");
 		$s->invoke("101");
 
