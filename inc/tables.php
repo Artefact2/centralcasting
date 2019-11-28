@@ -26,7 +26,7 @@ class RandomTable extends InstanceCounter implements RandomExecutor {
 	private $rerollcounter;
 
 	const REROLL_DUPLICATES = 1;
-	
+
 	private $flags;
 
 	public static function parseRange(string $range): array {
@@ -42,28 +42,28 @@ class RandomTable extends InstanceCounter implements RandomExecutor {
 			assert($lo <= $hi);
 			return [ (int)$lo, (int)$hi ];
 		}
-		
+
 		if(is_string($range) && $range[0] === 'm') $range = -intval(substr($range, 1));
 		return [ (int)$range, (int)$range ];
 	}
-	
+
 	public function __construct(string $id, Roller $roller, array $entries, PayloadCreator $pc, int $flags = 0) {
 		$this->id = $id;
-		$this->roller = $roller;		
+		$this->roller = $roller;
 		$this->actions = [];
 		$this->pc = $pc;
 		$this->posthooks = [];
 		$this->rerollcounter = 0;
 		$this->flags = $flags;
-		
+
 		foreach($entries as $range => $e) {
 			list($lo, $hi) = self::parseRange($range);
-			
+
 			if(is_array($e)) {
 				assert(is_string($e[0]) || $e[0] === null);
 				if(count($e) === 1) {
 					$e = $e[0];
-				} else {					
+				} else {
 					assert(count($e) === 2 && is_callable($e[1]));
 
 					if($e[0] === null) {
@@ -105,7 +105,7 @@ class RandomTable extends InstanceCounter implements RandomExecutor {
 			assert($phi === null || $lo === $phi + 1);
 			$phi = $hi;
 		}
-		
+
 		parent::__construct();
 	}
 
@@ -122,7 +122,7 @@ class RandomTable extends InstanceCounter implements RandomExecutor {
 			err('tableexec', 'wiping visited ranges after 10 failed rerolls in %s', $this->id);
 			$s->getActiveCharacter()->forgetVisitedTableRange($this->id, null);
 		}
-		
+
 		if($combineRoll === true) {
 			assert($roller !== null);
 			$roll = $roller->roll($s) + $this->roller->roll($s);
@@ -131,7 +131,7 @@ class RandomTable extends InstanceCounter implements RandomExecutor {
 		}
 
 		assert(is_int($roll));
-		
+
 		foreach($this->actions as [ $range, $lo, $hi, $payload ]) {
 			if($roll < $lo || $roll > $hi) continue;
 
@@ -161,29 +161,29 @@ class NamedTable extends RandomTable implements PayloadCreator {
 
 	public function __construct(string $id, string $name, Roller $roller, array $entries, int $flags = 0) {
 		parent::__construct($id, $roller, $entries, $this, $flags);
-		
+
 		assert(preg_match('%^[1-9][0-9]*[A-Z]*$%', $id));
 		assert($name !== '');
-		
+
 		$this->id = $id;
 		$this->name = $name;
 	}
-	
+
 	public function createPayload(?string $text, ?callable $action): callable {
 		return function(State $s, int $roll) use($text, $action) {
 			$sub = new Entry($this->id, $this->name, $text);
-			
+
 			$ch = $s->getActiveCharacter();
 			$ch->getActiveEntry()->appendChild($sub);
-			
+
 			if($action === null) return;
-			
+
 			$ch->setActiveEntry($sub);
 			$newtext = $action($s, $roll);
-			
+
 			if(is_string($newtext)) {
 				if($newtext === '') $newtext = null;
-				assert($sub->replaceLine($text, $newtext) === true);
+				assume($sub->replaceLine($text, $newtext) === true);
 			} else {
 				assert($newtext === null);
 			}
@@ -198,18 +198,18 @@ class AnonymousSubtable extends RandomTable implements PayloadCreator {
 	}
 
 	public function createPayload(?string $text, ?callable $action): callable {
-		return function(State $s, int $roll) use($text, $action) {			
+		return function(State $s, int $roll) use($text, $action) {
 			$ch = $s->getActiveCharacter();
 			$e = $ch->getActiveEntry();
 
-			if($text !== null) $e->addLine($text);			
+			if($text !== null) $e->addLine($text);
 			if($action === null) return;
-			
+
 			$newtext = $action($s, $roll);
-			
+
 			if(is_string($newtext)) {
 				if($newtext === '') $newtext = null;
-				assert($e->replaceLine($text, $newtext) === true);
+				assume($e->replaceLine($text, $newtext) === true);
 			} else {
 				assert($newtext === null);
 			}

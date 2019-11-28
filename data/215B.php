@@ -13,7 +13,7 @@ return new NamedTable("215B", "Family Change Event", DiceRoller::from("d6"), [
 
 			if($ac->getModifier('CuMod') === $orig) {
 				$ch = $ac->getActiveEntry()->getChildren();
-				assert($ac->getActiveEntry()->removeChild(array_pop($ch)) === true);
+				assume($ac->getActiveEntry()->removeChild(array_pop($ch)) === true);
 				continue;
 			}
 
@@ -30,7 +30,7 @@ return new NamedTable("215B", "Family Change Event", DiceRoller::from("d6"), [
 
 			if($ac->getModifier('SolMod') === $orig) {
 				$ch = $ac->getActiveEntry()->getChildren();
-				assert($ac->getActiveEntry()->removeChild(array_pop($ch)) === true);
+				assume($ac->getActiveEntry()->removeChild(array_pop($ch)) === true);
 				continue;
 			}
 

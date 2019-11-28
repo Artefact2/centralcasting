@@ -17,7 +17,7 @@ class Entry {
 	private $parent = null;
 	private $children = [];
 
-	public function __construct(string $id, string $name, $line = null) {		
+	public function __construct(string $id, string $name, $line = null) {
 		$this->sourceID = $id;
 		$this->sourceName = $name;
 
@@ -29,12 +29,12 @@ class Entry {
 			$this->prependLine($new);
 			return true;
 		}
-		
+
 		foreach($this->lines as $k => &$val) {
 			if($val === $old) {
 				if($new !== null) $val = $new;
 				else unset($this->lines[$k]);
-				
+
 				return true;
 			}
 		}
@@ -72,36 +72,36 @@ class Entry {
 
 	public function addLine(?string $line): void {
 		if($line === null) return;
-		
+
 		assert(strpos($line, "\n") === false);
 		$this->lines[] = $line;
 	}
 
 	public function prependLine(?string $line): void {
 		if($line === null) return;
-		
+
 		assert(strpos($line, "\n") === false);
 		array_unshift($this->lines, $line);
 	}
 
 	public function appendChild(Entry $child): void {
 		if(($parent = $child->getParent()) !== null) {
-			assert($parent->removeChild($child) === true);
+			assume($parent->removeChild($child) === true);
 		}
 		$child->setParent($this);
-		
+
 		$this->children[] = $child;
 	}
 
 	public function insertChildBefore(Entry $child, Entry $before): void {
 		if(($parent = $child->getParent()) !== null) {
-			assert($parent->removeChild($child) === true);
+			assume($parent->removeChild($child) === true);
 		}
 		$child->setParent($this);
 
 		$i = 0;
 		$found = false;
-		foreach($this->children as $c) {			
+		foreach($this->children as $c) {
 			if($before === $c) {
 				$found = true;
 				break;
@@ -120,7 +120,7 @@ class Entry {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 
@@ -171,13 +171,13 @@ class Entry {
 				foreach($this->children as $c) {
 					$this->parent->insertChildBefore($c, $this);
 				}
-				
+
 				assert($this->isEmpty());
 			}
 		}
-		
+
 		if($this->isEmpty()) {
-			assert($this->parent->removeChild($this) === true);
+			assume($this->parent->removeChild($this) === true);
 			return;
 		}
 	}

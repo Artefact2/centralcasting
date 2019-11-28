@@ -12,6 +12,6 @@ SubentryCreator("649", "Exotic Feature (Optional)", null, Invoker("649A"), funct
 		foreach($c->getChildren() as $ch) {
 			$ae->appendChild($ch);
 		}
-		assert($ae->removeChild($c) === true);
+		assume($ae->removeChild($c) === true);
 	}
 })($s);

@@ -20,7 +20,14 @@ function print_bt(): void {
 	fwrite(STDERR, ob_get_clean());
 }
 
-ini_set('zend.assertions', 1);
+/* Asserts can be completely disabled in php.ini, with no way to
+ * re-enable them in a script. This is a work-around for “impure”
+ * assertions with side effects. */
+function assume($x): void {
+	if($x) return;
+	throw new \Exception('assumption failed');
+}
+
 error_reporting(-1);
 set_error_handler(function(int $errno, string $errstr, string $errfile, int $errline) {
 	fprintf(STDERR, "\nPHP Error(%d) in %s:%d, %s\n", $errno, $errfile, $errline, $errstr);
