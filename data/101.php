@@ -38,7 +38,7 @@ return new NamedTable("101", "Character Race", DiceRoller::from("d20"), [
 			$races[0] = 'Human';
 		}
 
-		$ent->appendChild(new Entry("101", "Racial mix", sprintf(
+		$ent->appendChild(new Entry("101Z", "Racial Mix", sprintf(
 			"%d%%/%d%% (optional)",
 			$bp = Roll("d10+9")*5,
 			100 - $bp
