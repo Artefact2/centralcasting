@@ -4,14 +4,12 @@ namespace HeroesOfLegend;
 
 return new NamedTable("114A", "Occupation", DiceRoller::from("d20"), [
 	"1-12" => [ "Head of household has one occupation", Invoker("420-423") ],
-	"13-14" => [ "Head of household has one full-time occupation and another part-time occupation", Combiner(
-		LineAdder("Full-time occupation:"),
-		Invoker("420-423"),
-		LineAdder("Part-time occupation:"),
-		ModifierIncreaser("CuMod", -2),
-		Invoker("420-423"),
-		ModifierIncreaser("CuMod", 2)
-	)],
+	"13-14" => [ "Head of household has one full-time occupation and another part-time occupation", function(State $s) {
+		SubentryCreator("114A", "Full-time occupation", null, Invoker("420-423"))($s);
+		ModifierIncreaser("CuMod", -2)($s);
+		SubentryCreator("114A", "Full-time occupation", null, Invoker("420-423"))($s);
+		ModifierIncreaser("CuMod", 2)($s);
+	}],
 	"15-16" => [ "Head of household has no occupation, other parent works", function(State $s) {
 		$ac = $s->getActiveCharacter();
 		if(!$ac->hasMother() || !$ac->hasFather()) {
@@ -23,7 +21,7 @@ return new NamedTable("114A", "Occupation", DiceRoller::from("d20"), [
 		if($r === 6) $add = 2;
 		else if($r >= 4) $add = -2;
 		else $add = 0;
-		
+
 		ModifierIncreaser("CuMod", $add);
 		Invoker("420-423");
 		ModifierIncreaser("CuMod", -$add);
