@@ -43,7 +43,7 @@ class DiceRoller implements Roller {
 		$funcs = [];
 
 		assert(self::validateSpec($dicespec));
-		$parts = preg_split('%(\+|-|\*)%', $dicespec, null, PREG_SPLIT_DELIM_CAPTURE);
+		$parts = preg_split('%(\+|-|\*)%', $dicespec, -1, PREG_SPLIT_DELIM_CAPTURE);
 		array_unshift($parts, '+');
 
 		while($parts !== []) {
@@ -97,7 +97,7 @@ class DiceRoller implements Roller {
 
 	public function roll(?State $s = null): int {
 		return ($this->func)($s);
-		
+
 		$total = 0;
 		for($i = 0; $i < $this->ndice; ++$i) {
 			$total += 1 + (mt_rand() % $this->nsides);
@@ -133,7 +133,7 @@ class DiceRoller implements Roller {
 class RerollFilter implements Roller {
 	private $roller;
 	private $filter;
-	
+
 	public function __construct(Roller $roller, callable $filter) {
 		$this->roller = $roller;
 		$this->filter = $filter;
@@ -149,7 +149,7 @@ class RerollFilter implements Roller {
 
 class TrivialRoller implements Roller {
 	private $val;
-	
+
 	public function __construct(int $val) {
 		$this->val = $val;
 	}
